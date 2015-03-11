@@ -22,8 +22,11 @@ def populate():
 
 	create_band('My chemical bromance', 'Glasgow', 'AWESOME', 'Jaakko')
 
+	make_advert('My chemical bromance', 'deaf drummer wanted', 'no headphones for you', 'drums')
 
+	write_message('Pick mee', "I'm the best", 'Jaakko1', ['Jaakko'])
 
+	write_message('whatever', '', 'Jaakko', ["Jaakko1","Reni"])
 
 
 
@@ -49,8 +52,20 @@ def create_band(name, location, description, founder_username):
 		b.save()
 	except:
 		print "User with the given username doesn't exist"
-	print b.members.all()
+	#print b.members.all()
 
+
+def write_message(title, content, sender, recipients):
+	m = Message.objects.get_or_create(title = title, content = content, sender = Player.objects.get(user__username__exact = sender))[0]
+	for r in recipients:
+		user_recipient = Player.objects.get(user__username__exact = r)
+		m.recipients.add(user_recipient)
+	m.save()
+
+def make_advert(band, title, content, looking_for):
+	ad = Advert.objects.get_or_create(title = title, content = content, looking_for = looking_for,
+	 band = Band.objects.get(name__exact = band))[0]
+	ad.save()
 
 
 

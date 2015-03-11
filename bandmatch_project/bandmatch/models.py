@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib import admin
 
 
 
@@ -19,7 +20,7 @@ class Player(models.Model):
 	instrument = models.CharField(max_length = 128, default = 'None') #Need to have this as a list of strings
 	location = models.CharField(max_length = 256, default = 'Nowhere')
 	image = models.ImageField(upload_to ='profile_images', blank = True)
-
+	
 	def __unicode__(self):
 		return self.user.username
 	
@@ -36,7 +37,7 @@ class Message(models.Model):
 #	---> Use 'Player' rather than Player
 #	See https://docs.djangoproject.com/en/1.7/ref/models/fields/#lazy-relationships
 	recipients = models.ManyToManyField('Player') 
-	date = models.DateField()
+	date = models.DateField(auto_now_add=True)
 
 	def __unicode__(self):
 		return self.title + ': ' + self.content
@@ -67,8 +68,12 @@ class Advert(models.Model):
 	band = models.ForeignKey(Band) #Cascade deletion?
 	title = models.CharField(max_length = 128)
 	content = models.TextField()
-	date = models.DateField()
+	date = models.DateField(auto_now_add=True) #date is set when the object is created, cannot be edited
 	looking_for = models.CharField(max_length = 256) #Need to have this as a list??
 
 	def __unicode__(self):
 		return self.title
+
+
+admin.site.register(Advert)
+admin.site.register(Message)
