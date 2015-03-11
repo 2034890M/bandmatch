@@ -34,8 +34,8 @@ def populate():
 
 
 def add_player(username, contact_info, description):
-	user = User.objects.get_or_create(username = username)[0]
-	p = Player.objects.get_or_create(user = user)[0]
+	user = User.objects.get_or_create(username__exact = username)[0]
+	p = Player.objects.get_or_create(user__exact = user)[0]
 	p.description = description
 	p.contact_info = contact_info
 	p.save()
@@ -44,11 +44,13 @@ def add_player(username, contact_info, description):
 def create_band(name, location, description, founder_username):
 	b = Band.objects.get_or_create(name = name, location = location, description = description)[0]
 	try:
-		user = User.objects.get_or_create(username = founder_username)[0]
-		founder = Player.objects.get_or_create(user = user)[0]
-		b.members.add(founder)
+		founder = Player.objects.get_or_create(user__username__exact = founder_username)[0]
+		b.members.add(Player.objects.get(user__username__exact = founder.user.username))
+		b.save()
 	except:
 		print "User with the given username doesn't exist"
+	print b.members.all()
+
 
 
 
