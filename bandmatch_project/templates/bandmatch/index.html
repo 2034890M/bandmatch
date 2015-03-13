@@ -1,9 +1,23 @@
 <!DOCTYPE html>
 
-<li><a href="{% url 'band' bandname %}">Your bands</a></li>
-<li><a href="{% url 'profile' %}"> Your Profile </a></li>
+{% if user.is_authenticated %}
+<li><a href="{% url 'your_bands' %}">Your bands</a></li>
+<li><a href="{% url 'your_profile' %}"> Your Profile </a></li>
 						
-<li><a href="{% url 'registration_register' %}">Register Here</a></li>
-<li><a href="{% url 'auth_login' %}">Login</a></li>
+{% else %}
+<li><a href="{% url 'register_profile' %}">Register Here</a></li>
+<!-- <li><a href="{% url 'register_profile' %}">Login</a></li> #We don't have this yet -->
 						
+{% endif %}
 <li><a href="{% url 'about' %}">About</a></li>
+
+<p>BANDS</p>
+{% if bands %}
+    <ul class="list-group">
+        {% for band in bands %}
+            <li class="list-group-item"><a href="{% url 'band'  band.slug %}">{{ band.name }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <strong>There are no bands.</strong>
+{% endif %}

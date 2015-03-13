@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib import admin
+from django.template.defaultfilters import slugify
 
 
 
@@ -54,6 +55,11 @@ class Band(models.Model):
 	description = models.TextField()
 	image = models.ImageField(upload_to = 'band_images', blank = True)
 	members = models.ManyToManyField('Player')
+	slug = models.SlugField(unique=True)
+
+	def save(self, *args, **kwargs):
+		self.slug = slugify(self.name)
+		super(Band, self).save(*args, **kwargs)
 
 	def __unicode__(self):
 		return self.name

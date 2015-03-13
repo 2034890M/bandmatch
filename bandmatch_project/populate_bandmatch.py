@@ -52,7 +52,7 @@ def create_band(name, location, description, founder_username):
 		b.save()
 	except:
 		print "User with the given username doesn't exist"
-	#print b.members.all()
+	print b.members.all()
 
 
 def write_message(title, content, sender, recipients):

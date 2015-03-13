@@ -1,7 +1,12 @@
-<li><a href="{% url 'logout' %}?next=/rango/">Logout</a></li>
-<li><a href="{% url 'band' %}">Your bands</a></li>
-<li><a href="{% url 'profile' %}"> Your Profile </a></li>
-<li><a href="{% url 'registration_register' %}">Register Here</a></li>
-<li><a href="{% url 'auth_login' %}">Login</a></li>
+<!DOCTYPE html>
+
+{% if user.is_authenticated %}
+<li><a href="{% url 'your_bands' %}">Your bands</a></li>
+<li><a href="{% url 'your_profile' %}"> Your Profile </a></li>
 						
-<li><a href="{% url 'about' %}">About</a></li>
+{% else %}
+<li><a href="{% url 'register_profile' %}">Register Here</a></li>
+						
+{% endif %}
+
+ <p>Searching...jk I'm not implemented</p>
