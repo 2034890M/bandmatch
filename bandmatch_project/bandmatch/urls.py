@@ -2,7 +2,7 @@ from django.conf.urls import patterns, url
 from bandmatch import views
 
 urlpatterns = patterns('',
-    url(r'^$', views.index, name='index'),
+    url(r'^', views.index, name='index'),
     url(r'^about/$', views.about, name='about'),
     url(r'^your_bands/$', views.your_bands, name='your_bands'), # NEW MAPPING!
     url(r'^band/(?P<band_name_slug>[\w\-]+)/$', views.band, name='band'),
