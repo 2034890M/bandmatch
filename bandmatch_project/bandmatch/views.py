@@ -1,15 +1,23 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from bandmatch.models import Band, Player, Message, Advert
+from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request):
 
     context_dict = {}
 
-    band_list = Band.objects.order_by('name')[:5]
+    user = request.user
 
-    context_dict['bands'] = band_list
+    if not user.is_authenticated():
+    	return redurect('bandmatch/about/')
+
+    recent_messages = user.message_set.all().order_by('date')[:5]
+
+    context_dict['messages'] = recent_messages
+
 
     response = render(request,'bandmatch/index.html', context_dict)
     return response
@@ -26,7 +34,9 @@ def your_bands(request):
 
 	user = request.user
 
-	user_bands = user.band_set.all() #should get all the bands that have that user as a member
+	player = player = Player.objects.get(user = user)
+
+	user_bands = player.band_set.all() #should get all the bands that have that user as a member
 
 	context_dict['bands'] = user_bands
 
@@ -62,18 +72,24 @@ def add_band(request):
 	return render(request, 'bandmatch/add_band.html', {})
 
 
-def profile(request, username):
+def profile(request, username): #could possibly use user_id here
 	context_dict = {}
 
 	user = User.objects.get(username = username)
 
 	player = Player.objects.get(user = user)
 
-	context_dict['name'] = user.name #should be field for first/sir name
+	context_dict['first name'] = user.first_name
+
+	context_dict['first name'] = user.last_name
 
 	context_dict['description'] = player.description
 
 	context_dict['instruments'] = player.instruments #should probably be checked how it works when instruments are a list
+
+	user_bands = player.band_set.all()
+
+	context_dict['bands'] = user_bands
 
 	#we could do this or pass privacy to the html with the context_dict
 	#and choose what to display there
@@ -95,6 +111,12 @@ def profile(request, username):
 		context_dict['pic'] = player.image.url
 	else:
 		context_dict['pic'] = ''
+
+	#can use this in html to display link to edit profile
+	if request.user == user:
+		context_dict['is_user'] = 1
+	else:
+		context_dict['is_user'] = 0
 
 	return render(request, 'bandmatch/profile.html', context_dict)
 
