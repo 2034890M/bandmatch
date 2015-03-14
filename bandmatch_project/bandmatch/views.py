@@ -2,10 +2,10 @@ from django.shortcuts import render
 
 from django.http import HttpResponse, HttpResponseRedirect
 
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
-from bandmatch.models import Band, Player, Message, Advert
+from bandmatch.models import Band, Player, Message, Advert, User
 from bandmatch.forms import UserForm, PlayerForm
 
 # Create your views here.
@@ -17,10 +17,10 @@ def index(request):
 
     if not user.is_authenticated():
     	return HttpResponseRedirect('/bandmatch/about/')
-
-    recent_messages = user.message_set.all().order_by('date')[:5]
-
-    context_dict['messages'] = recent_messages
+   	
+	player = Player.objects.get(user = user)
+	recent_messages = player.message_set.all().order_by('date')[:5]
+	context_dict['messages'] = recent_messages
 
 
     response = render(request,'bandmatch/index.html', context_dict)
@@ -38,7 +38,7 @@ def your_bands(request):
 
 	user = request.user
 
-	player = player = Player.objects.get(user = user)
+	player = Player.objects.get(user = user)
 
 	user_bands = player.band_set.all() #should get all the bands that have that user as a member
 
@@ -90,7 +90,7 @@ def profile(request, username): #could possibly use user_id here
 
 	context_dict['description'] = player.description
 
-	context_dict['instruments'] = player.instruments #should probably be checked how it works when instruments are a list
+	context_dict['instruments'] = player.instrument #should probably be checked how it works when instruments are a list
 
 	user_bands = player.band_set.all()
 
@@ -163,6 +163,11 @@ def register_profile(request):
 
             # Update our variable to tell the template registration was successful.
             registered = True
+            username = request.POST['username']
+            password = request.POST['password']
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            return HttpResponseRedirect('/bandmatch/')
 
         # Invalid form or forms - mistakes or something else?
         # Print problems to the terminal.
@@ -187,5 +192,13 @@ def search_bands(request):
 
 def search_players(request):
 	return render(request, 'bandmatch/search_players.html', {})
+
+@login_required
+def user_logout(request):
+    #Since we know the user is logged in, we can now just log them out.
+   logout(request)
+
+    #Take the user back to the homepage.
+   return HttpResponseRedirect('/rango/')
 
 	

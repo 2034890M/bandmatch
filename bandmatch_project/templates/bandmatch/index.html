@@ -2,11 +2,11 @@
 
 {% if user.is_authenticated %}
 <li><a href="{% url 'your_bands' %}">Your bands</a></li>
-<li><a href="{% url 'your_profile' %}"> Your Profile </a></li>
+<li><a href="{% url 'profile' user.username %}"> Your Profile </a></li>
 						
 {% else %}
 <li><a href="{% url 'register_profile' %}">Register Here</a></li>
-<!-- <li><a href="{% url 'register_profile' %}">Login</a></li> #We don't have this yet -->
+<li><a href="{% url 'logout' %}">Login</a></li>
 						
 {% endif %}
 <li><a href="{% url 'about' %}">About</a></li>
