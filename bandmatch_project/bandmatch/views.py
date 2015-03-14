@@ -1,8 +1,12 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from bandmatch.models import Band, Player, Message, Advert
+
+from django.http import HttpResponse, HttpResponseRedirect
+
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
+
+from bandmatch.models import Band, Player, Message, Advert
+from bandmatch.forms import UserForm, PlayerForm
 
 # Create your views here.
 def index(request):
@@ -12,7 +16,7 @@ def index(request):
     user = request.user
 
     if not user.is_authenticated():
-    	return redurect('bandmatch/about/')
+    	return HttpResponseRedirect('/bandmatch/about/')
 
     recent_messages = user.message_set.all().order_by('date')[:5]
 
@@ -72,6 +76,7 @@ def add_band(request):
 	return render(request, 'bandmatch/add_band.html', {})
 
 
+#Displayes the user profile, and allows modification if its the user's own page
 def profile(request, username): #could possibly use user_id here
 	context_dict = {}
 
@@ -120,11 +125,61 @@ def profile(request, username): #could possibly use user_id here
 
 	return render(request, 'bandmatch/profile.html', context_dict)
 
+#Might not be necessary.
 def edit_profile(request):
 	return HttpResponse("Template missing")
 
 def register_profile(request):
-	HttpResponse("Template missing")
+    # A boolean value for telling the template whether the registration was successful.
+    # Set to False initially. Code changes value to True when registration succeeds.
+    registered = False
+
+    # If it's a HTTP POST, we're interested in processing form data.
+    if request.method == 'POST':
+        # Attempt to grab information from the raw form information.
+        user_form = UserForm(data=request.POST)
+        player_form = PlayerForm(data=request.POST)
+
+        # If the two forms are valid...
+        if user_form.is_valid() and player_form.is_valid():
+            # Save the user's form data to the database.
+            user = user_form.save()
+
+            # Now we hash the password with the set_password method.
+            # Once hashed, we can update the user object.
+            user.set_password(user.password)
+            user.save()
+
+            # Now sort out the UserProfile instance.
+            # Since we need to set the user attribute ourselves, we set commit=False.
+            # This delays saving the model until we're ready to avoid integrity problems.
+            profile = player_form.save(commit=False)
+            profile.user = user
+
+            #Demo? Picture?
+
+            # Now we save the UserProfile model instance.
+            profile.save()
+
+            # Update our variable to tell the template registration was successful.
+            registered = True
+
+        # Invalid form or forms - mistakes or something else?
+        # Print problems to the terminal.
+        # They'll also be shown to the user.
+        else:
+            print user_form.errors, player_form.errors
+
+    # Not a HTTP POST, so we render our form using two ModelForm instances.
+    # These forms will be blank, ready for user input.
+    else:
+        user_form = UserForm()
+        player_form = PlayerForm()
+
+    # Render the template depending on the context.
+    return render(request,
+            'registration/registration_form.html',
+            {'user_form': user_form, 'player_form': player_form, 'registered': registered} )
 
 def search_bands(request):
 	#should only search in bands, might be able to do it without bing, maybe not

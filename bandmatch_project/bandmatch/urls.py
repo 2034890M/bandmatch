@@ -10,7 +10,7 @@ urlpatterns = patterns('',
     url(r'^profile/$', views.profile, name='your_profile'),
     url(r'^profile/edit/$', views.edit_profile, name='edit_profile'),
     url(r'^profile/show/(?P<username>[\w\-]+)', views.profile, name='profile'),
-    url(r'^add_profile/$', views.register_profile, name='register_profile'),
+    url(r'^register/$', views.register_profile, name='register_profile'),
     url(r'^search_bands/', views.search_bands, name='search_bands'),
     url(r'^search_players/', views.search_players, name='search_players'),
       )
