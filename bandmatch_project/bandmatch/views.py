@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 
 from bandmatch.models import Band, Player, Message, Advert, User
-from bandmatch.forms import UserForm, PlayerForm
+from bandmatch.forms import UserForm, PlayerForm, BandForm
 
 # Create your views here.
 def index(request):
@@ -46,6 +46,7 @@ def your_bands(request):
 
 	return render(request, 'bandmatch/your_bands.html', context_dict)
 
+#View to display the band page.
 def band(request, band_name_slug):
 	context_dict = {}
 	band = Band.objects.get(slug = band_name_slug)
@@ -71,9 +72,45 @@ def band(request, band_name_slug):
 
 	return render(request, 'bandmatch/band.html', context_dict)
 
-
+#A view to create a band. Used with make_a_band.html and BandForm
+@login_required
 def add_band(request):
-	return render(request, 'bandmatch/add_band.html', {})
+
+	context_dict = {}
+	context_dict['created'] = False
+
+	if request.method == 'POST':
+		#Create the band and take the user to the created bands site
+		band_form = BandForm(request.POST, request.FILES)
+		if band_form.is_valid():
+			newband = band_form.save(commit=False)
+			user = request.user
+			founder = Player.objects.get(user__exact = user)
+			
+			newband.save()
+
+			newband.members.add(founder)
+
+			if 'image' in request.FILES:
+				newband.image = request.FILES['image']
+
+			if 'demo' in request.FILES:
+				newband.demo = request.FILES['demo']
+
+			context_dict['created'] = True
+			#A redirection to the created band's site would be nice
+			#Is there a more elegant way?
+			url = '/bandmatch/band/' #Hardcoded! Bad :((
+			url = url + newband.name
+			return HttpResponseRedirect(url)
+
+
+	else:
+		#Display bandform
+		context_dict['band_form'] = BandForm()
+
+
+	return render(request, 'bandmatch/make_a_band.html', context_dict)
 
 
 #Displayes the user profile, and allows modification if its the user's own page
@@ -86,7 +123,7 @@ def profile(request, username): #could possibly use user_id here
 
 	context_dict['first name'] = user.first_name
 
-	context_dict['first name'] = user.last_name
+	context_dict['last name'] = user.last_name
 
 	context_dict['description'] = player.description
 

@@ -14,6 +14,9 @@ from django.contrib.auth.models import User
 
 
 def populate():
+
+
+
 	add_player('Jaakko1', 'Call me xxx', "I'm handsome")
 
 	add_player('Jaakko', "Call me xoxo", "I'm in a band!!")
@@ -35,10 +38,9 @@ def populate():
 
 
 
-
 def add_player(username, contact_info, description):
-	user = User.objects.get_or_create(username__exact = username)[0]
-	p = Player.objects.get_or_create(user__exact = user)[0]
+	user = User.objects.get_or_create(username = username)[0]
+	p = Player.objects.get_or_create(user = user)[0]
 	p.description = description
 	p.contact_info = contact_info
 	p.save()

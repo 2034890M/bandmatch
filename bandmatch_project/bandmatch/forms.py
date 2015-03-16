@@ -1,5 +1,5 @@
 from django import forms
-from bandmatch.models import Player
+from bandmatch.models import Player, Band
 from django.contrib.auth.models import User
 
 
@@ -23,3 +23,19 @@ class PlayerForm(forms.ModelForm):
 	class Meta:
 		model = Player
 		exclude = ('location', 'privacy', 'user')
+
+#A form to create a band. Adding a player will need to be done after a creating a band.
+class BandForm(forms.ModelForm):
+
+	name = forms.CharField(max_length = 128)
+
+	location = forms.CharField(max_length = 256, initial = 'Nowhere')
+	description = forms.CharField(widget=forms.Textarea)
+
+
+	demo = forms.FileField(required = False)
+	image = forms.ImageField(required = False)
+
+	class Meta:
+		model = Band
+		exclude = ('slug', 'members')

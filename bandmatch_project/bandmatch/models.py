@@ -55,7 +55,7 @@ class Band(models.Model):
 	description = models.TextField()
 	image = models.ImageField(upload_to = 'band_images', blank = True)
 	members = models.ManyToManyField('Player')
-	slug = models.SlugField(unique=True)
+	slug = models.SlugField(unique=True) #With this we can't have bands with same names.
 
 	def save(self, *args, **kwargs):
 		self.slug = slugify(self.name)
