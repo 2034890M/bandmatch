@@ -1,10 +1,23 @@
-{% if user.is_authenticated %}
-<li><a href="{% url 'your_bands' %}">Your bands</a></li>
-<li><a href="{% url 'profile' user.username %}"> Your Profile </a></li>
-						
-{% else %}
-<li><a href="{% url 'register_profile' %}">Register Here</a></li>
-<li><a href="{% url 'logout' %}">Login</a></li>
-						
-{% endif %}
-<li><a href="{% url 'about' %}">About</a></li>
+
+{% extends 'bandmatch/base.html' %}
+{% load staticfiles %}
+
+<h1> {{user.name}} </h1>
+<p align=right><img src="{{user.picture}}" alt="A picture of {{user.name}}.">
+
+<h3> Instruments </h3>
+         <div class="row placeholders">
+            <div class="col-xs-12 col-sm-6 placeholder">
+
+              {% if instruments %}
+                    <ul class="list-group">
+                        {% for instrument in instruments %}
+                         <p>{{instrument.name}}</p>
+                        {% endfor %}
+                    </ul class="list-group">
+                {% else %}
+                    <strong>This player does not play any instruments.</strong>
+                {% endif %}
+
+            </div>
+		</div>

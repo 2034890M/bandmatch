@@ -1,10 +1,27 @@
-{% if user.is_authenticated %}
-<li><a href="{% url 'your_bands' %}">Your bands</a></li>
-<li><a href="{% url 'profile' user.username %}"> Your Profile </a></li>
-						
-{% else %}
-<li><a href="{% url 'register_profile' %}">Register Here</a></li>
-<li><a href="{% url 'logout' %}">Login</a></li>
-						
-{% endif %}
-<li><a href="{% url 'about' %}">About</a></li>
+
+{% extends 'bandmatch/base.html' %}
+{% load staticfiles %}
+
+        {% block body_block %}
+    <div class="page-header">
+
+                <h1>Your Bands</h1>
+            {% else %}
+                </div>
+
+         <div class="row placeholders">
+            <div class="col-xs-12 col-sm-6 placeholder">
+
+              {% if bands %}
+                    <ul class="list-group">
+                        {% for band in bands %}
+                         <li class="list-group-item"><a href="{% url 'band'  band.slug %}">{{ band.name }}</a></li class="list-group-item">
+                        {% endfor %}
+                    </ul class="list-group">
+                {% else %}
+                    <strong>You aren't a part of any bands yet. <a href ="{% url 'make_a_band' %}">Start a Band!</a></strong>
+                {% endif %}
+
+            </div>
+		</div>
+		{% endblock %}
