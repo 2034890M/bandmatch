@@ -1,26 +1,9 @@
 <!DOCTYPE html>
-{% extends 'rango/base.html' %}
+{% extends 'bandmatch/base.html' %}
 {% load staticfiles %}
-{% if user.is_authenticated %}
-<li><a href="{% url 'your_bands' %}">Your bands</a></li>
-<li><a href="{% url 'profile' user.username %}"> Your Profile </a></li>
-						
-{% else %}
-<li><a href="{% url 'register_profile' %}">Register Here</a></li>
-<li><a href="{% url 'logout' %}">Login</a></li>
-						
-{% endif %}
-<li><a href="{% url 'about' %}">About</a></li>
 
-
-<!-- you can remove this bit that was to test the band links -->
-<p>BANDS</p>
-{% if bands %}
-    <ul class="list-group">
-        {% for band in bands %}
-            <li class="list-group-item"><a href="{% url 'band'  band.slug %}">{{ band.name }}</a></li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <strong>There are no bands.</strong>
-{% endif %}
+<html>
+<body>
+Welcome to Bandmatch!
+</body>
+</html>

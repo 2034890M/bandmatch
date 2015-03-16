@@ -3,15 +3,16 @@
     <head>
         <title>Rango</title>
     </head>
-
+	{% extends 'bandmatch/base.html' %}
     <body>
-        <h1>Register with Rango</h1>
+	{% block body_block %}
+        <h1>Register with Bandmatch</h1>
 
         {% if registered %}
-        Rango says: <strong>thank you for registering!</strong>
+        Bandmatch says: <strong>thank you for registering!</strong>
         <a href="/bandmatch/">Return to the homepage.</a><br />
         {% else %}
-        Rango says: <strong>register here!</strong><br />
+        Bandmatch says: <strong>register here!</strong><br />
 
         <form id="user_form" method="post" action="/bandmatch/register/"
                 enctype="multipart/form-data">
@@ -28,5 +29,6 @@
             <input type="submit" name="submit" value="Register" />
         </form>
         {% endif %}
+		{% endblock %}
     </body>
 </html>
