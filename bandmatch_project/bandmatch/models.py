@@ -3,8 +3,33 @@ from django.contrib.auth.models import User
 from django.contrib import admin
 from django.template.defaultfilters import slugify
 
+import ast
 
+class ListField(models.TextField):
+    __metaclass__ = models.SubfieldBase
+    description = "Stores a python list"
 
+    def __init__(self, *args, **kwargs):
+        super(ListField, self).__init__(*args, **kwargs)
+
+    def to_python(self, value):
+        if not value:
+            value = []
+
+        if isinstance(value, list):
+            return value
+
+        return ast.literal_eval(value)
+
+    def get_prep_value(self, value):
+        if value is None:
+            return value
+
+        return unicode(value)
+
+    def value_to_string(self, obj):
+        value = self._get_val_from_obj(obj)
+        return self.get_db_prep_value(value)
 
 
 
@@ -18,7 +43,8 @@ class Player(models.Model):
 	#Preferences can be included in your own description?
 	privacy = models.IntegerField(default=1)
 	demo = models.FileField(upload_to = 'player_demos', blank = True) #How to have multiple (from 0 to n) demos? 
-	instrument = models.CharField(max_length = 128, default = 'None') #Need to have this as a list of strings
+	instruments = ListField()
+	#instrument = models.CharField(max_length = 128, default = 'None') #Need to have this as a list of strings
 	location = models.CharField(max_length = 256, default = 'Nowhere')
 	image = models.ImageField(upload_to ='profile_images', blank = True)
 	
