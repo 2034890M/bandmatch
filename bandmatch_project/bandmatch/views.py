@@ -72,6 +72,13 @@ def band(request, band_name_slug):
 	else:
 		context_dict['demo']= ''
 
+	context_dict['is_member']= 0
+
+	if request.user.is_authenticated():
+		player = Player.objects.get(user = request.user)
+		if player in members_list:
+			context_dict['is_member']= 1
+
 	return render(request, 'bandmatch/band.html', context_dict)
 
 #A view to create a band. Used with make_a_band.html and BandForm
