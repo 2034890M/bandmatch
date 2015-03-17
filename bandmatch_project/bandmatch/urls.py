@@ -5,6 +5,7 @@ urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
     url(r'^about/$', views.about, name='about'),
     url(r'^your_bands/$', views.your_bands, name='your_bands'), # NEW MAPPING!
+    #url(r'^band/(?P<band_name_slug>[\W\-]+)/post_advert/$', views.post_advert, name = 'post_advert')
     url(r'^band/(?P<band_name_slug>[\w\-]+)/$', views.band, name='band'),
     url(r'^profile/add_band/$', views.add_band, name='make_a_band'),
     #url(r'^profile/$', views.profile, name='your_profile'), using the same url for your and other profiles

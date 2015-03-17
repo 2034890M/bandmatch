@@ -1,0 +1,14 @@
+Search
+
+search tickboxes for band/players + advanced search
+
+Add check if player is a member of the band
+
+Edit band 
+
+Form for advanced search
+
+Default pictures
+
+Message search for recipients
+
