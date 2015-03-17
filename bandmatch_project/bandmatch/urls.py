@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     url(r'^register/$', views.register_profile, name='register_profile'),
     url(r'^search_bands/', views.search_bands, name='search_bands'),
     url(r'^search_players/', views.search_players, name='search_players'),
+    url(r'^advanced_search/', views.advanced_search, name='advanced_search'),
     url(r'^logout/', views.user_logout, name='logout'),
       )
 #    url(r'^register/$', views.register, name='register'), # ADD NEW PATTERN!

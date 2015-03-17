@@ -36,10 +36,10 @@
           <ul class="nav navbar-nav navbar-right">
                 <li><a href="{% url 'index' %}">Home</a></li>
                     {% if user.is_authenticated %}
-						<li><a href="{% url 'profile' %}">Profile</a></li>
+						<li><a href="{% url 'profile' user.username %}">Profile</a></li>
                         <li><a href="{% url 'make_a_band' %}">Make a Band</a></li>
                         <li><a href="{% url 'your_bands' %}">Your bands</a></li>
-                        <li><a href="{% url 'auth_logout' %}?next=/about/">Logout</a></li>
+                        <li><a href="{% url 'logout' %}?next=/about/">Logout</a></li>
                     {% else %}
                         <li><a href="http://127.0.0.1:8000/bandmatch/register/">Register Here</a></li> <!--fix this url later -->
                         <li><a href="http://127.0.0.1:8000/bandmatch/login/">Log In</a></li> <!-- fix url later -->
@@ -56,7 +56,7 @@
         <div class="col-sm-3 col-md-2 sidebar">
                 {% block side_block %}
 					{% if user.is_authenticated %}
-	<form class="form-inline" id="user_form" method="post" action="{% url 'search' %}">
+	<form class="form-inline" id="user_form" method="post" action="{% url 'advanced_search' %}"><!--this id and action should be changed-->
 	     {% csrf_token %}
 	     <!-- Display the search form elements here -->
 	     <input class="form-control" type="text" size="50" name="query" value="{{query}}" id="query" />

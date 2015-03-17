@@ -16,7 +16,7 @@ class PlayerForm(forms.ModelForm):
 	description = forms.CharField(widget=forms.Textarea)
 	#Add privacy!
 	demo = forms.FileField(required = False)
-	instrument = forms.CharField(max_length = 128, initial = 'None')
+	instruments = forms.CharField(max_length = 128, initial = 'None')
 	location = forms.CharField(max_length = 256, initial = 'Nowhere')
 	image = forms.ImageField(required = False)
 

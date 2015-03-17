@@ -1,8 +1,10 @@
+import re
+
 from django.shortcuts import render
 
 from django.http import HttpResponse, HttpResponseRedirect
 
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 from bandmatch.models import Band, Player, Message, Advert, User
@@ -127,7 +129,7 @@ def profile(request, username): #could possibly use user_id here
 
 	context_dict['description'] = player.description
 
-	context_dict['instruments'] = player.instrument #should probably be checked how it works when instruments are a list
+	context_dict['instruments'] = player.instruments #should probably be checked how it works when instruments are a list
 
 	user_bands = player.band_set.all()
 
@@ -174,43 +176,53 @@ def register_profile(request):
     # If it's a HTTP POST, we're interested in processing form data.
     if request.method == 'POST':
         # Attempt to grab information from the raw form information.
-        user_form = UserForm(data=request.POST)
-        player_form = PlayerForm(data=request.POST)
+		user_form = UserForm(data=request.POST)
+		player_form = PlayerForm(data=request.POST)
 
-        # If the two forms are valid...
-        if user_form.is_valid() and player_form.is_valid():
-            # Save the user's form data to the database.
-            user = user_form.save()
+		instruments_list = player_form.data['instruments'].encode('ascii', 'ignore').lower().split(",")
+		for i in range(len(instruments_list)):
+			instruments_list[i] = re.sub(r"[^a-z]+", '', instruments_list[i])
+		print instruments_list
+		player_form.data['instruments'] = instruments_list
 
-            # Now we hash the password with the set_password method.
-            # Once hashed, we can update the user object.
-            user.set_password(user.password)
-            user.save()
 
-            # Now sort out the UserProfile instance.
-            # Since we need to set the user attribute ourselves, we set commit=False.
-            # This delays saving the model until we're ready to avoid integrity problems.
-            profile = player_form.save(commit=False)
-            profile.user = user
+		# If the two forms are valid...
+		if user_form.is_valid() and player_form.is_valid():
+			
 
-            #Demo? Picture?
+			# Save the user's form data to the database.
+			user = user_form.save()
 
-            # Now we save the UserProfile model instance.
-            profile.save()
+			# Now we hash the password with the set_password method.
+			# Once hashed, we can update the user object.
+			user.set_password(user.password)
+			user.save()
 
-            # Update our variable to tell the template registration was successful.
-            registered = True
-            username = request.POST['username']
-            password = request.POST['password']
-            user = authenticate(username=username, password=password)
-            login(request, user)
-            return HttpResponseRedirect('/bandmatch/')
+			# Now sort out the UserProfile instance.
+			# Since we need to set the user attribute ourselves, we set commit=False.
+			# This delays saving the model until we're ready to avoid integrity problems.
+			profile = player_form.save(commit=False)
+			profile.user = user
 
-        # Invalid form or forms - mistakes or something else?
-        # Print problems to the terminal.
-        # They'll also be shown to the user.
-        else:
-            print user_form.errors, player_form.errors
+
+			#Demo? Picture?
+
+			# Now we save the UserProfile model instance.
+			profile.save()
+
+			# Update our variable to tell the template registration was successful.
+			registered = True
+			username = request.POST['username']
+			password = request.POST['password']
+			user = authenticate(username=username, password=password)
+			login(request, user)
+			return HttpResponseRedirect('/bandmatch/')
+
+		# Invalid form or forms - mistakes or something else?
+		# Print problems to the terminal.
+		# They'll also be shown to the user.
+		else:
+			print user_form.errors, player_form.errors
 
     # Not a HTTP POST, so we render our form using two ModelForm instances.
     # These forms will be blank, ready for user input.
@@ -230,12 +242,15 @@ def search_bands(request):
 def search_players(request):
 	return render(request, 'bandmatch/search_players.html', {})
 
+def advanced_search(request):
+	return render(request, 'bandmatch/advanced_search.html', {})
+
 @login_required
 def user_logout(request):
     #Since we know the user is logged in, we can now just log them out.
    logout(request)
 
     #Take the user back to the homepage.
-   return HttpResponseRedirect('/rango/')
+   return HttpResponseRedirect('/bandmatch/')
 
 	
