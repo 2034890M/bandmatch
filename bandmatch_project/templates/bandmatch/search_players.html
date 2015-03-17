@@ -1,9 +1,19 @@
 {% extends 'bandmatch/base.html' %}
 {% load staticfiles %}
-<li><a href="{% url 'logout' %}?next=/rango/">Logout</a></li>
-<li><a href="{% url 'band' %}">Your bands</a></li>
-<li><a href="{% url 'profile' %}"> Your Profile </a></li>
-<li><a href="{% url 'registration_register' %}">Register Here</a></li>
-<li><a href="{% url 'auth_login' %}">Login</a></li>
-						
-<li><a href="{% url 'about' %}">About</a></li>
+{% block title %}Player Search{% endblock %}
+
+{% block body_block %}
+
+<table>
+{% if results %}
+	{% for player in results %}
+	<tr>
+		<td><a href="{% url 'profile'  player.user.username %}">{{ player.user.username }}</a></td>
+		<td> Plays: {% for instr in player.instruments %}{{instr}}{% endfor %}</td>
+	</tr>
+	{% endfor %}
+{% else %}
+<p> There are no bands matching this query. <p>
+{% endif %}
+
+{% endblock %}

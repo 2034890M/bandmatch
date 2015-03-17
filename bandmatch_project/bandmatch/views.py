@@ -236,11 +236,66 @@ def register_profile(request):
             {'user_form': user_form, 'player_form': player_form, 'registered': registered} )
 
 def search_bands(request):
-	#should only search in bands, might be able to do it without bing, maybe not
-	return render(request, 'bandmatch/search_bands.html', {})
+	context_dict = {}
+
+	result_list = []
+
+	query = request.POST['bandsquery'].lower() #maybe should include if check for request method
+
+	#search band name
+	bands_list = Band.objects.filter(name__contains = query)
+
+	for band in bands_list:
+		result_list.append(band)
+
+	#search advert
+	adverts_list = Advert.objects.filter(looking_for__contains = query)
+
+	for ad in adverts_list:
+		result_list.append(ad.band)
+
+	#should we search description???
+
+	context_dict['results'] = result_list
+
+	return render(request, 'bandmatch/search_bands.html', context_dict)
 
 def search_players(request):
-	return render(request, 'bandmatch/search_players.html', {})
+	context_dict = {}
+
+	result_list = []
+
+	query = request.POST['playersquery']
+
+	#search name
+
+	players_list = Player.objects.filter(user__username__contains = query)
+
+	for player in players_list:
+		result_list.append(player)
+
+	players_list = Player.objects.filter(user__first_name__contains = query)
+
+	for player in players_list:
+		result_list.append(player)
+
+	players_list = Player.objects.filter(user__last_name__contains = query)
+
+	for player in players_list:
+		result_list.append(player)
+
+	#search instruments
+	players_list_instr = Player.objects.all()
+
+	for player in players_list_instr:
+		if query in player.instruments:
+			result_list.append(player)
+
+	#description???
+
+	context_dict['results'] = result_list
+
+	return render(request, 'bandmatch/search_players.html', context_dict)
 
 def advanced_search(request):
 	return render(request, 'bandmatch/advanced_search.html', {})
