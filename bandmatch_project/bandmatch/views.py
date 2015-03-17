@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 from bandmatch.models import Band, Player, Message, Advert, User
-from bandmatch.forms import UserForm, PlayerForm, BandForm
+from bandmatch.forms import UserForm, PlayerForm, BandForm, AdvertForm
 
 # Create your views here.
 def index(request):
@@ -34,7 +34,7 @@ def about(request):
 
 	return render(request, 'bandmatch/about.html', {})
 
-
+@login_required
 def your_bands(request):
 	context_dict = {}
 
@@ -103,7 +103,7 @@ def add_band(request):
 			#A redirection to the created band's site would be nice
 			#Is there a more elegant way?
 			url = '/bandmatch/band/' #Hardcoded! Bad :((
-			url = url + newband.name
+			url = url + newband.slug
 			return HttpResponseRedirect(url)
 
 
@@ -308,4 +308,23 @@ def user_logout(request):
     #Take the user back to the homepage.
    return HttpResponseRedirect('/bandmatch/')
 
-	
+
+#A view for posting an advert
+#Maybe take in the band-name-slug as an argument, and map this ad to that band using the slug.
+def post_advert(request, band_name_slug):
+
+	if request.method == 'POST':
+		#Make the advert, post it, and direct user somewhere
+		advert_form = AdvertForm(request.POST)
+		advert = advert_form.save(commit=False)
+
+		advert.band = Band.objects.get(slug = band_name_slug)
+
+		advert.save()
+
+
+
+	else:
+		advert_form = AdvertForm()
+
+		return render(request, 'bandmatch/post_advert.html', {'advert_form' : advert_form})
