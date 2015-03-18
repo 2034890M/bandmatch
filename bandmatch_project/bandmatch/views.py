@@ -3,6 +3,7 @@ import re
 from django.shortcuts import render
 
 from django.http import HttpResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -75,8 +76,9 @@ def band(request, band_name_slug):
 	context_dict['is_member']= 0
 
 	context_dict['slug'] = band.slug
+	advert_list = Advert.objects.filter(band__exact = band)
+	context_dict['adverts'] = advert_list.order_by('-date')
 
-	print context_dict['slug']
 	if request.user.is_authenticated():
 		player = Player.objects.get(user = request.user)
 		if player in members_list:
@@ -332,9 +334,16 @@ def post_advert(request, band_name_slug):
 
 		advert.save()
 
+		return HttpResponseRedirect(reverse('band', args=[band_name_slug])) #Return the user back to the bandpage.
+
+
 
 
 	else:
 		advert_form = AdvertForm()
 
-		return render(request, 'bandmatch/post_advert.html', {'advert_form' : advert_form})
+		return render(request, 'bandmatch/post_advert.html', {'advert_form' : advert_form, 'band_name_slug' : band_name_slug})
+
+
+def display_advert(request, band_name_slug, advert):
+	return HttpResponse("Lol")

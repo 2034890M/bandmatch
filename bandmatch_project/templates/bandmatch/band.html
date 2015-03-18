@@ -10,7 +10,7 @@
 <img align=right src="{{band.pic}}">
 
 {% for advert in adverts %}
-	<p>{{advert}}</p>
+	<p><a href="{% url 'display_advert' slug %}">{{advert}}</a></p>
 {% endfor %}
 
 <a href="{% url 'post_advert' slug %}">Post an advert</a>
