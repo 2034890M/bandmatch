@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from bandmatch.models import Band, Player, Message, Advert, User
 from bandmatch.forms import UserForm, PlayerForm, BandForm, AdvertForm
 
+
 # Create your views here.
 def index(request):
 
@@ -88,6 +89,64 @@ def band(request, band_name_slug):
 
 	return render(request, 'bandmatch/band.html', context_dict)
 
+def edit_band(request, band_name_slug):
+
+	context_dict = {}
+
+	context_dict['slug'] = band_name_slug
+
+	band = Band.objects.get(slug = band_name_slug)
+
+	context_dict['name'] = band.name
+
+	members_list = band.members.all()
+	context_dict['members'] = members_list # a for loop in the html should be able to get the members
+
+	context_dict['location'] = band.location
+
+	context_dict['description'] = band.description
+
+	if band.demo:
+		context_dict['pic'] = band.image.url 
+	else:
+		context_dict['pic']= ''
+
+	if band.demo:
+		context_dict['demo'] = band.demo.url #not sure if this is how you get a file url
+	else:
+		context_dict['demo']= ''
+
+	context_dict['is_member']= 0
+
+	if request.user.is_authenticated():
+		player = Player.objects.get(user = request.user)
+		if player in members_list:
+			context_dict['is_member']= 1
+
+	context_dict['slug'] = band.slug
+	advert_list = Advert.objects.filter(band__exact = band)
+	context_dict['adverts'] = advert_list.order_by('-date')
+
+	context_dict['band_form'] = BandForm(instance = band)
+
+	if request.method == 'POST':
+		#Create the band and take the user to the created bands site
+		band_form = BandForm(request.POST, request.FILES, instance= band)
+
+		if band_form.is_valid():
+			print 'valid'
+			band = band_form.save(commit=False)			
+
+			if 'image' in request.FILES:
+				band.image = request.FILES['image']
+
+			if 'demo' in request.FILES:
+				band.demo = request.FILES['demo']
+
+			band.save()
+
+	return render(request, 'bandmatch/edit_band.html', context_dict)
+
 #A view to create a band. Used with make_a_band.html and BandForm
 @login_required
 def add_band(request):
@@ -115,7 +174,7 @@ def add_band(request):
 			if 'demo' in request.FILES:
 				newband.demo = request.FILES['demo']
 
-                        newband.save()
+			newband.save()
                                 
 
 			context_dict['created'] = True
@@ -376,8 +435,30 @@ def display_advert(request, band_name_slug, advert):
 
 	return render(request, 'bandmatch/display_advert.html', context_dict)
 
-
-
-
-
 	return HttpResponse(advertobject.content)
+
+
+
+def get_usernames_list(max_results=10, starts_with=''):
+        userlist = []
+        if starts_with:
+                user_list = Players.objects.filter(user__username__istartswith=starts_with)
+
+        if max_results > 0:
+                if len(user_list) > max_results:
+                        user_list = user_list[:max_results]
+
+        return user_list
+
+
+def suggest_username(request):
+
+        user_list = []
+        starts_with = ''
+        if request.method == 'GET':
+                starts_with = request.GET['suggestion']
+
+        user_list = get_usernames_list(10, starts_with)
+
+        return render(request, 'bandmatch/user_list.html', {'user_list': user_list })
+

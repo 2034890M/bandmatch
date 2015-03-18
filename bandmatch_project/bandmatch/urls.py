@@ -8,6 +8,7 @@ urlpatterns = patterns('',
     url(r'^band/(?P<band_name_slug>[\w\-]+)/post_advert/$', views.post_advert, name='post_advert'),
     url(r'^band/(?P<band_name_slug>[\w\-]+)/display_advert/(?P<advert>\d+)/$', views.display_advert, name='display_advert'),    
     url(r'^band/(?P<band_name_slug>[\w\-]+)/$', views.band, name='band'),
+    url(r'^band/(?P<band_name_slug>[\w\-]+)/edit/$', views.edit_band, name='edit_band'),
     url(r'^profile/add_band/$', views.add_band, name='make_a_band'),
     #url(r'^profile/$', views.profile, name='your_profile'), using the same url for your and other profiles
     url(r'^profile/edit/$', views.edit_profile, name='edit_profile'),
@@ -17,6 +18,7 @@ urlpatterns = patterns('',
     url(r'^search_players/', views.search_players, name='search_players'),
     url(r'^advanced_search/', views.advanced_search, name='advanced_search'),
     url(r'^logout/', views.user_logout, name='logout'),
+    url(r'^suggest_username/$', views.suggest_username, name='suggest_username'),
       )
 #    url(r'^register/$', views.register, name='register'), # ADD NEW PATTERN!
 #    url(r'^login/$', views.user_login, name='login'),

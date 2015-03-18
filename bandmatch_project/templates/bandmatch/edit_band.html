@@ -1,0 +1,80 @@
+{% extends 'bandmatch/base.html' %}
+{% load staticfiles %}
+
+{% block title %}Edit Band {{name}} {% endblock %}
+
+{% block body_block %}
+
+<h1>{{name}}</h1>
+ 
+<img align=right src="{{pic}}">
+
+<ul>
+	<li>Name: {{ name }}</li>
+	<li>Location: {{ location }}</li>
+	<li>Description: {{ description }}</li>
+	<li><a href='{{ band.demo.url }}'> Demo </a></li>
+</ul>
+
+{% for member in members %}
+
+<p><a href="{% url 'profile' member.user.username %}">{{ member.user.first_name }} {{member.user.last_name}} </a></p>
+
+{% endfor %}
+
+{% for advert in adverts %}
+	<p><a href="{% url 'display_advert' slug advert.id %}">{{advert}}</a></p>
+{% endfor %}
+
+{% if is_member == 1%}
+
+<!-- add members !!!-->
+
+<div class="container-fluid">
+	<div class="row">
+		<ul class="nav nav-list">
+		    <li class="nav-header">Find a User</li>
+		    <form>
+		    <label></label>
+		    <li><input  class="search-query span10" type="text" name="suggestion" value="" id="suggestion" /></li>
+		    </form>
+		</ul>
+		<div id="user_list">
+		{% block user_list %}
+
+		{% endblock user_list %}			
+		</div>
+		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+			<div>
+		        
+		    </div>
+		</div>
+	</div>
+</div>
+
+
+<div>
+<form role="form"  id="edit_band_form" method="post" action="{% url 'edit_band' slug %}">
+
+        {% csrf_token %}
+        {% for hidden in band_form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+
+        {% for field in band_form.visible_fields %}
+            {{ field.errors }}
+            {{ field.help_text }}<br/>
+            {{ field }}<br/>
+        {% endfor %}
+
+        <br/>
+    <button class="btn btn-primary" type="submit" name="submit">Save Changes</button>
+</form>
+</div>
+
+{% else %}
+<p> Only members of this band can edit. </p>
+{% endif %}
+
+
+{% endblock %}

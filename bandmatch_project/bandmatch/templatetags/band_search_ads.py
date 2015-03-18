@@ -15,3 +15,8 @@ def get_ads_looking_for(band):
 	return (looking_for_list)
 
 register.tag('band_search_ads', get_ads_looking_for)
+
+
+
+
+
