@@ -1,13 +1,18 @@
 {% extends 'bandmatch/base.html' %}
 {% load staticfiles %}
-	{% block title %}{{band.name}}{% endblock %}
+	{% block title %}{{name}}{% endblock %}
 		
 
 {% block body_block %}
 
- <h1>{{band.name}}</h1>
+ <h1>{{name}}</h1>
  
 <img align=right src="{{band.pic}}">
 
+{% for advert in adverts %}
+	<p>{{advert}}</p>
+{% endfor %}
+
+<a href="{% url 'post_advert' slug %}">Post an advert</a>
 
 {% endblock %}

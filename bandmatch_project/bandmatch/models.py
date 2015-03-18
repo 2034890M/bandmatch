@@ -107,5 +107,17 @@ class Advert(models.Model):
 		return self.title
 
 
+class Reply(models.Model):
+
+	advert = models.ForeignKey('Advert')
+	replier = models.ForeignKey('Player')
+	content = models.TextField()
+	date = models.DateTimeField(auto_now_add=True)
+
+	
+
+
+
 admin.site.register(Advert)
 admin.site.register(Message)
+admin.site.register(Reply)

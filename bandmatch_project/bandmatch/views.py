@@ -74,6 +74,9 @@ def band(request, band_name_slug):
 
 	context_dict['is_member']= 0
 
+	context_dict['slug'] = band.slug
+
+	print context_dict['slug']
 	if request.user.is_authenticated():
 		player = Player.objects.get(user = request.user)
 		if player in members_list:
