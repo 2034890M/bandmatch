@@ -12,6 +12,7 @@ class UserForm(forms.ModelForm):
 
 class PlayerForm(forms.ModelForm):
 
+	gender = forms.ChoiceField(choices = (('unknown', 'do not wish to specify'), ('m', 'male'),('f', 'female')))
 	contact_info = forms.CharField(widget=forms.Textarea) #http://stackoverflow.com/questions/7302889/textfield-missing-in-django-forms
 	description = forms.CharField(widget=forms.Textarea)
 	#Add privacy!

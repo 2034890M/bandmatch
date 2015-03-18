@@ -47,6 +47,10 @@ class Player(models.Model):
 	#instrument = models.CharField(max_length = 128, default = 'None') #Need to have this as a list of strings
 	location = models.CharField(max_length = 256, default = 'Nowhere')
 	image = models.ImageField(upload_to ='profile_images', blank = True)
+
+	GENDER_CHOICES = [('unknown', 'do not wish to specify'), ('m', 'male'),('f', 'female')]
+
+	gender = models.CharField(max_length = 25, choices = GENDER_CHOICES, default = 'unknown')
 	
 	def __unicode__(self):
 		return self.user.username

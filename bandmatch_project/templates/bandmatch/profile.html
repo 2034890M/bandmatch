@@ -1,9 +1,17 @@
-<html>
 {% extends 'bandmatch/base.html' %}
 {% load staticfiles %}
-<body>
-<h1> {{user.name}} </h1>
-<p align=right><img src="{{user.picture}}" alt="A picture of {{user.name}}.">
+
+{% block title %}View Profile{% endblock %}
+
+{% block body_block %}
+
+<div class="page-header">
+  <h1>{{ username }}</h1>
+</div>
+
+<div>
+    <img src="{{ pic }}"/>
+</div>
 
 <h3> Instruments </h3>
          <div class="row placeholders">
@@ -21,5 +29,5 @@
 
             </div>
 		</div>
-	</body>
-	</html>
+
+{% endblock %}

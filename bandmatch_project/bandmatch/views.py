@@ -110,7 +110,7 @@ def add_band(request):
 			if 'image' in request.FILES:
 				newband.image = request.FILES['image']
 			else:
-                                newband.image = settings.MEDIA_URL + 'b.png'
+				newband.image = settings.MEDIA_URL + 'b.png'
 
 			if 'demo' in request.FILES:
 				newband.demo = request.FILES['demo']
@@ -230,8 +230,12 @@ def register_profile(request):
 
 			if 'image' in request.FILES:
 				profile.image = request.FILES['image']
-			else:
-                                profile.image = settings.MEDIA_URL + '\m.jpg'
+			elif profile.gender == 'm':
+				profile.image = settings.STATIC_URL + 'images\m.jpg'
+			elif profile.gender == 'f':
+				profile.image = settings.STATIC_URL + 'images\pf.jpg'
+			elif profile.gender == 'unknown':
+				profile.image = settings.STATIC_URL + 'images\o.png'
 
 			if 'demo' in request.FILES:
 				profile.demo = request.FILES['demo']
