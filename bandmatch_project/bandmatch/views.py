@@ -361,6 +361,19 @@ def post_advert(request, band_name_slug):
 
 		return render(request, 'bandmatch/post_advert.html', {'advert_form' : advert_form, 'band_name_slug' : band_name_slug})
 
-
+#A view to display an advert. Accessible from band site. Will display the adverts contents, and it's replies.
 def display_advert(request, band_name_slug, advert):
-	return HttpResponse("Lol")
+	context_dict = {}
+
+	advertobject = Advert.objects.get(id = advert)
+	context_dict['content'] = advertobject.content
+
+	#Get replies!
+
+	return render(request, 'bandmatch/display_advert.html', context_dict)
+
+
+
+
+
+	return HttpResponse(advertobject.content)
