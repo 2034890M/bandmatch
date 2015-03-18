@@ -1,5 +1,5 @@
 from django import forms
-from bandmatch.models import Player, Band, Advert, Message
+from bandmatch.models import Player, Band, Advert, Message, Reply
 from django.contrib.auth.models import User
 
 
@@ -60,4 +60,12 @@ class AdvertForm(forms.ModelForm):
 	class Meta:
 		model = Advert
 		exclude = ('band', 'date')
+
+class ReplyForm(forms.ModelForm):
+
+	content = forms.CharField(widget = forms.Textarea)
+
+	class Meta:
+		model = Reply
+		fields = ('content', )
 
