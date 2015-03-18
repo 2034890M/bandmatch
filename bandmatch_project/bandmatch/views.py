@@ -2,6 +2,8 @@ import re
 
 from django.shortcuts import render
 
+from django.conf import settings
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
@@ -107,9 +109,14 @@ def add_band(request):
 
 			if 'image' in request.FILES:
 				newband.image = request.FILES['image']
+			else:
+                                newband.image = settings.MEDIA_URL + 'b.png'
 
 			if 'demo' in request.FILES:
 				newband.demo = request.FILES['demo']
+
+                        newband.save()
+                                
 
 			context_dict['created'] = True
 			#A redirection to the created band's site would be nice
@@ -135,9 +142,11 @@ def profile(request, username): #could possibly use user_id here
 
 	player = Player.objects.get(user = user)
 
-	context_dict['first name'] = user.first_name
+	context_dict['username'] = username
 
-	context_dict['last name'] = user.last_name
+	context_dict['first_name'] = user.first_name
+
+	context_dict['last_name'] = user.last_name
 
 	context_dict['description'] = player.description
 
@@ -218,6 +227,14 @@ def register_profile(request):
 
 
 			#Demo? Picture?
+
+			if 'image' in request.FILES:
+				profile.image = request.FILES['image']
+			else:
+                                profile.image = settings.MEDIA_URL + '\m.jpg'
+
+			if 'demo' in request.FILES:
+				profile.demo = request.FILES['demo']
 
 			# Now we save the UserProfile model instance.
 			profile.save()
