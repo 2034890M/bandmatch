@@ -1,33 +1,14 @@
+<html>
 {% extends 'bandmatch/base.html' %}
 {% load staticfiles %}
-
-{% block title %}View Profile{% endblock %}
-
+<body>
+<h1> {{user.username}} </h1>
 {% block body_block %}
-
-<div class="page-header">
-  <h1>{{ username }}</h1>
-</div>
-
-<div>
-    <img src="{{ pic }}"/>
-</div>
-
-<h3> Instruments </h3>
-         <div class="row placeholders">
-            <div class="col-xs-12 col-sm-6 placeholder">
-
-              {% if instruments %}
-                    <ul class="list-group">
-                        {% for instrument in instruments %}
-                         <p>{{instrument.name}}</p>
-                        {% endfor %}
-                    </ul class="list-group">
-                {% else %}
-                    <strong>This player does not play any instruments.</strong>
-                {% endif %}
-
-            </div>
-		</div>
-
+<p> {{user.first_name}} {{user.last_name}}</p>
+{% if player.image.url %}
+<p align=right><img src="{{player.image.url}}" alt="A picture of {{user.first_name}}.">
+{% endif %}
+<h3> Instruments - {{player.instruments}}</h3>
 {% endblock %}
+	</body>
+	</html>
