@@ -6,4 +6,15 @@ $(document).ready( function() {
          $('#user_list').html(data);
         });
 	});
+
+	$('#suggest_mem').keyup(function(){
+        var query;
+        query = $(this).val();
+        var slug;
+        slug = $('#band_slug').text()
+        console.log(slug)
+        $.get('/bandmatch/suggest_member/'+slug+'/', {suggest_mem: query}, function(data){
+         $('#member_list').html(data);
+        });
+	});
 });

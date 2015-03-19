@@ -19,8 +19,9 @@ urlpatterns = patterns('',
     url(r'^advanced_search/', views.advanced_search, name='advanced_search'),
     url(r'^logout/', views.user_logout, name='logout'),
     url(r'^suggest_username/$', views.suggest_username, name='suggest_username'),
+    url(r'^suggest_member/(?P<band_name_slug>[\w\-]+)/$', views.suggest_member, name='suggest_member'),
     url(r'^login/$', views.user_login, name='login'),
-    url(r'^band/(?P<band_name_slug>[\w\-]+)/edit/add_player/(?P<username>[\w\-]+)/$', views.add_player, name='add_player'),
+    #url(r'^band/(?P<band_name_slug>[\w\-]+)/edit/add_player/(?P<username>[\w\-]+)/$', views.add_player, name='add_player'),
 
       )
 #    url(r'^register/$', views.register, name='register'), # ADD NEW PATTERN!

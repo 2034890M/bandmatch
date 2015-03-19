@@ -133,11 +133,18 @@ def edit_band(request, band_name_slug):
 		#Create the band and take the user to the created bands site
 		band_form = BandForm(request.POST, request.FILES, instance= band)
 
-		new_member = request.POST['suggestion']
+		if request.POST.__contains__('suggestion'):
+			new_member = request.POST['suggestion']
+			band.members.add(Player.objects.get(user__username = new_member))#try/except?
+			band.save()
 
-		band.members.add(Player.objects.get(user__username = new_member))
+		if request.POST.__contains__('suggest_mem'):
+			removed_member = request.POST['suggest_mem']
+			band.members.remove(Player.objects.get(user__username = removed_member))
+			band.save()
 
-		band.save()
+		members_list = band.members.all()
+		context_dict['members'] = members_list
 
 		if band_form.is_valid():
 			band = band_form.save(commit=False)			
@@ -152,20 +159,35 @@ def edit_band(request, band_name_slug):
 
 	return render(request, 'bandmatch/edit_band.html', context_dict)
 
-def add_player(request, band_name_slug, player_username):
+# def add_player(request, band_name_slug, player_username):
 
-	band = Band.objects.get(slug = band_name_slug)
+# 	band = Band.objects.get(slug = band_name_slug)
 
-	try:
-		player = Player.objects.get(user = player_username)
-	except Exception, e:
-		return HttpResponse('This user does not exist')
+# 	try:
+# 		player = Player.objects.get(user = player_username)
+# 	except Exception, e:
+# 		return HttpResponse('This user does not exist')
 	
 
-	band.members.add(player)
-	band.save()
+# 	band.members.add(player)
+# 	band.save()
 
-	return HttpResponseRedirect('/bandmatch/band/band_name_slug/edit')
+# 	return HttpResponseRedirect('/bandmatch/band/band_name_slug/edit')
+
+# def remove_player(request, band_name_slug, player_username):
+
+# 	band = Band.objects.get(slug = band_name_slug)
+
+# 	try:
+# 		player = Player.objects.get(user = player_username)
+# 	except Exception, e:
+# 		return HttpResponse('This user does not exist')
+	
+
+# 	band.members.remove(player)
+# 	band.save()
+
+# 	return HttpResponseRedirect('/bandmatch/band/band_name_slug/edit')
 
 
 #A view to create a band. Used with make_a_band.html and BandForm
@@ -563,9 +585,22 @@ def suggest_username(request):
         if starts_with != '':
         	user_list = get_usernames_list(10, starts_with)
 
-        print user_list
-
         return render(request, 'bandmatch/user_list.html', {'user_list': user_list })
+
+
+def suggest_member(request, band_name_slug):
+	band = Band.objects.get(slug = band_name_slug)
+	user_list = []
+	starts_with = ''
+
+	if request.method == 'GET':
+		starts_with = request.GET['suggest_mem']
+
+	if starts_with != '':
+		user_list = band.members.all().filter(user__username__istartswith = starts_with)
+
+	return render(request, 'bandmatch/user_list.html', {'user_list': user_list })
+
 
 def user_login(request):
 

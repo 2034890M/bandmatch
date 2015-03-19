@@ -6,6 +6,8 @@
 {% block body_block %}
 
 <h1>{{name}}</h1>
+
+<imput name="band_slug" value="{{slug}}" id="band_slug">{{slug}}</imput>
  
 <img align=right src="{{pic}}">
 
@@ -29,7 +31,7 @@
 {% if is_member == 1%}
 
 <!-- add members !!!-->
-
+<p>Add Player</p>
 <div class="container-fluid">
 	<div class="row">
 		    <form method="post" action="{% url 'edit_band' slug %}">
@@ -39,6 +41,20 @@
 			<div class="row" id="user_list" >		    	        
 	   		</div>
 		    <button class="btn btn-primary" type="submit" name="submit">Add Player</button>
+		    </form>	
+</div>
+
+<!-- remove players -->
+<p>Remove Player</p>
+<div class="container-fluid">
+	<div class="row">
+		    <form method="post" action="{% url 'edit_band' slug %}">
+		    {% csrf_token %}
+		    <input  class="search-query span10" type="text" name="suggest_mem" value="" id="suggest_mem" list="options"/>
+		    </div>
+			<div class="row" id="member_list" >		    	        
+	   		</div>
+		    <button class="btn btn-primary" type="submit" name="submit">Remove Player</button>
 		    </form>	
 </div>
 
