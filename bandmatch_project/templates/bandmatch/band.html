@@ -6,6 +6,11 @@
 {% block body_block %}
 
  <h1>{{name}}</h1>
+
+ {% if is_member == 1 %}
+<a href="{% url 'edit_band' slug %}">Add players or Edit Band Details</a>
+{%endif%}
+
  
 <img align=right src="{{band.pic}}">
 

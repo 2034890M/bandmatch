@@ -20,6 +20,8 @@ urlpatterns = patterns('',
     url(r'^logout/', views.user_logout, name='logout'),
     url(r'^suggest_username/$', views.suggest_username, name='suggest_username'),
     url(r'^login/$', views.user_login, name='login'),
+    url(r'^band/(?P<band_name_slug>[\w\-]+)/edit/add_player/(?P<username>[\w\-]+)/$', views.add_player, name='add_player'),
+
       )
 #    url(r'^register/$', views.register, name='register'), # ADD NEW PATTERN!
 #    url(r'^login/$', views.user_login, name='login'),

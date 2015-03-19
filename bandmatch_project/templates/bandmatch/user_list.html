@@ -1,14 +1,15 @@
 {% load staticfiles %}
 
 
-{% if user_list %}
-    <ul class="container-fluid">
+{% if user_list %}    
+	<datalist id="options">
     {% for u in user_list %}
-            <li>{{ u }}</li>
+        <option value="{{u}}"/>
     {% endfor %}
+    </datalist>
 
 {% else %}
-    <li> <strong >There are no matching users. </strong></li>
+    <span> <strong >There are no matching users. </strong></span>
 
-    </ul>
+
 {% endif %}

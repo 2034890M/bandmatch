@@ -133,6 +133,12 @@ def edit_band(request, band_name_slug):
 		#Create the band and take the user to the created bands site
 		band_form = BandForm(request.POST, request.FILES, instance= band)
 
+		new_member = request.POST['suggestion']
+
+		band.members.add(Player.objects.get(user__username = new_member))
+
+		band.save()
+
 		if band_form.is_valid():
 			print 'valid'
 			band = band_form.save(commit=False)			
@@ -146,6 +152,22 @@ def edit_band(request, band_name_slug):
 			band.save()
 
 	return render(request, 'bandmatch/edit_band.html', context_dict)
+
+def add_player(request, band_name_slug, player_username):
+
+	band = Band.objects.get(slug = band_name_slug)
+
+	try:
+		player = Player.objects.get(user = player_username)
+	except Exception, e:
+		return HttpResponse('This user does not exist')
+	
+
+	band.members.add(player)
+	band.save()
+
+	return HttpResponseRedirect('/bandmatch/band/band_name_slug/edit')
+
 
 #A view to create a band. Used with make_a_band.html and BandForm
 @login_required

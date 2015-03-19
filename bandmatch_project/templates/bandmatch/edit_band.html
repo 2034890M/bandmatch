@@ -18,7 +18,7 @@
 
 {% for member in members %}
 
-<p><a href="{% url 'profile' member.user.username %}">{{ member.user.first_name }} {{member.user.last_name}} </a></p>
+<p><a href="{% url 'profile' member.user.username %}">{{ member.user.first_name }} {{member.user.last_name}} ({{member.user.username}})</a></p>
 
 {% endfor %}
 
@@ -32,15 +32,14 @@
 
 <div class="container-fluid">
 	<div class="row">
-		    <form>
-		    <input  class="search-query span10" type="text" name="suggestion" value="" id="suggestion" />
-		    </form>
-	</div>
-			<div class="row" id="user_list" >
-			
-		    	        
-	    </div>
-	
+		    <form method="post" action="{% url 'edit_band' slug %}">
+		    {% csrf_token %}
+		    <input  class="search-query span10" type="text" name="suggestion" value="" id="suggestion" list="options"/>
+		    </div>
+			<div class="row" id="user_list" >		    	        
+	   		</div>
+		    <button class="btn btn-primary" type="submit" name="submit">Add Player</button>
+		    </form>	
 </div>
 
 
