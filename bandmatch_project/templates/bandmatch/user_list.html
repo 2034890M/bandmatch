@@ -1,0 +1,14 @@
+{% load staticfiles %}
+
+
+{% if user_list %}
+    <ul class="container-fluid">
+    {% for u in user_list %}
+            <li>{{ u }}</li>
+    {% endfor %}
+
+{% else %}
+    <li> <strong >There are no matching users. </strong></li>
+
+    </ul>
+{% endif %}

@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     url(r'^advanced_search/', views.advanced_search, name='advanced_search'),
     url(r'^logout/', views.user_logout, name='logout'),
     url(r'^suggest_username/$', views.suggest_username, name='suggest_username'),
+    url(r'^login/$', views.user_login, name='login'),
       )
 #    url(r'^register/$', views.register, name='register'), # ADD NEW PATTERN!
 #    url(r'^login/$', views.user_login, name='login'),

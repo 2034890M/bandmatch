@@ -1,7 +1,9 @@
-$('#suggestion').keyup(function(){
+$(document).ready( function() {
+	$('#suggestion').keyup(function(){
         var query;
         query = $(this).val();
-        $.get('/bandmatch/suggest_category/', {suggestion: query}, function(data){
-         $('#cats').html(data);
+        $.get('/bandmatch/suggest_username/', {suggestion: query}, function(data){
+         $('#user_list').html(data);
         });
+	});
 });
