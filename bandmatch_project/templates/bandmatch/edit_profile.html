@@ -1,0 +1,37 @@
+{% extends 'bandmatch/base.html' %}
+{% load staticfiles %}
+<h1> {{first_name}} </h1>
+{% block body_block %}
+<p>First name: {{first_name}} Last name: {{last_name}}</p>
+<p>email: {{email}} contact info: {{contact_info}} location:  {{location}} </p>
+
+<p align=right><img src="{{pic}}" alt="A picture of {{user.first_name}}.">
+
+<h3> Instruments - {{instruments}}</h3>
+
+<!--should be replaced with the latest profile.html content-->
+
+
+
+<h1>Edit Profile</h1>
+
+{% if is_user == 1 %}
+
+        <form id="user_form" method="post" action="{% url 'edit_profile' username %}"
+                enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <!-- Display each form. The as_p method wraps each element in a paragraph
+                 (<p>) element. This ensures each element appears on a new line,
+                 making everything look neater. -->
+            {{ user_form.as_p }}
+            {{ player_form.as_p }}
+
+            <!-- Provide a button to click to submit the form. -->
+            <input type="submit" name="submit" value="Submit Changes" />
+        </form>
+{% else %}
+<p><strong>You can only edit your own profile.</strong></p>
+{% endif %}
+{% endblock %}
