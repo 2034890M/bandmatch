@@ -1,14 +1,11 @@
-<html>
 {% extends 'bandmatch/base.html' %}
 {% load staticfiles %}
-<body>
-<h1> {{user.username}} </h1>
+<h1> {{first_name}} </h1>
 {% block body_block %}
-<p> {{user.first_name}} {{user.last_name}}</p>
-{% if player.image.url %}
-<p align=right><img src="{{player.image.url}}" alt="A picture of {{user.first_name}}.">
-{% endif %}
-<h3> Instruments - {{player.instruments}}</h3>
+<p>First name: {{first_name}} Last name: {{last_name}}</p>
+<p>email: {{email}} contact info: {{contact_info}} location:  {{location}} </p>
+
+<p align=right><img src="{{pic}}" alt="A picture of {{user.first_name}}.">
+
+<h3> Instruments - {{instruments}}</h3>
 {% endblock %}
-	</body>
-	</html>
