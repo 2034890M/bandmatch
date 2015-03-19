@@ -10,8 +10,8 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
-from bandmatch.models import Band, Player, Message, Advert, User
-from bandmatch.forms import UserForm, PlayerForm, BandForm, AdvertForm
+from bandmatch.models import Band, Player, Message, Advert, User, Reply
+from bandmatch.forms import UserForm, PlayerForm, BandForm, AdvertForm, ReplyForm
 
 
 # Create your views here.
@@ -452,12 +452,31 @@ def display_advert(request, band_name_slug, advert):
 
 	advertobject = Advert.objects.get(id = advert)
 	context_dict['content'] = advertobject.content
+	context_dict['band_name_slug'] = band_name_slug
+	context_dict['advert'] = advert
 
-	#Get replies!
+	if request.method == 'POST':
+		#A reply was posted - create it
+		reply_form = ReplyForm(request.POST)
+		newreply = reply_form.save(commit = False)
+
+		newreply.advert = advertobject
+
+		user = request.user
+		replier = Player.objects.get(user = user)
+		newreply.replier = replier
+		newreply.save()
+
+	#Get the replyform
+	context_dict['reply_form'] = ReplyForm()
+
+	#Get all the replies of the advert
+	reply_list = Reply.objects.filter(advert = advertobject)
+	context_dict['reply_list'] = reply_list
+	print reply_list
 
 	return render(request, 'bandmatch/display_advert.html', context_dict)
 
-	return HttpResponse(advertobject.content)
 
 
 

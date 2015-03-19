@@ -5,6 +5,28 @@
 
 {% block body_block %}
 
-{{content}}
+<p>{{content}}</p>
+
+<!-- make a form for submitting -->
+        <form id="reply_form" method="post" action="{% url 'display_advert' band_name_slug advert %}"
+                enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <!-- Display each form. The as_p method wraps each element in a paragraph
+                 (<p>) element. This ensures each element appears on a new line,
+                 making everything look neater. -->
+            {{ reply_form.as_p }}
+
+            <!-- Provide a button to click to submit the form. -->
+            <input type="submit" name="submit" value="Reply" />
+        </form>
+
+        {% for reply in reply_list %}
+        <p>{{reply.replier}} : {{reply.content}}</p>
+        {% endfor %}
+
+
+
 
 {% endblock %}
