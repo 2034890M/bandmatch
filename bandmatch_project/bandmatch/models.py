@@ -118,6 +118,9 @@ class Reply(models.Model):
 	content = models.TextField()
 	date = models.DateTimeField(auto_now_add=True)
 
+	def __unicode__(self):
+		return self.content
+
 	
 
 
