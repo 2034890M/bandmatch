@@ -140,7 +140,6 @@ def edit_band(request, band_name_slug):
 		band.save()
 
 		if band_form.is_valid():
-			print 'valid'
 			band = band_form.save(commit=False)			
 
 			if 'image' in request.FILES:
@@ -239,7 +238,7 @@ def profile(request, username): #could possibly use user_id here
 
 	#we could do this or pass privacy to the html with the context_dict
 	#and choose what to display there
-	if player.privacy == 1: # if 1 is on and 0 is off
+	if player.privacy == 1 and request.user != user: # if 1 is on and 0 is off
 		context_dict['email'] = user.email #only displayed for registered users and if user allows it
 		context_dict['contact_info'] = player.contact_info 
 		context_dict['location'] = player.location
@@ -267,8 +266,91 @@ def profile(request, username): #could possibly use user_id here
 	return render(request, 'bandmatch/profile.html', context_dict)
 
 #Might not be necessary.
-def edit_profile(request):
-	return HttpResponse("Template missing")
+def edit_profile(request, username):
+	context_dict = {}
+
+	user = User.objects.get(username = username)
+
+	player = Player.objects.get(user = user)
+
+	context_dict['username'] = username
+
+	context_dict['first_name'] = user.first_name
+
+	context_dict['last_name'] = user.last_name
+
+	context_dict['description'] = player.description
+
+	context_dict['instruments'] = player.instruments 
+
+	user_bands = player.band_set.all()
+
+	context_dict['bands'] = user_bands
+
+	if player.privacy == 1 and request.user != user: # more security ftw!
+		context_dict['email'] = user.email 
+		context_dict['contact_info'] = player.contact_info 
+		context_dict['location'] = player.location
+	else:
+		context_dict['email'] = ''
+		context_dict['contact_info'] =  ''
+		context_dict['location'] = ''
+
+	if player.demo:
+		context_dict['demo'] = player.demo.url #not sure if this is how you get a file url
+	else:
+		context_dict['demo']= ''
+
+	if player.image:
+		context_dict['pic'] = player.image.url
+	else:
+		context_dict['pic'] = ''
+
+	if request.user == user:
+		context_dict['is_user'] = 1
+	else:
+		context_dict['is_user'] = 0
+ 
+	context_dict['user_form'] = UserForm(instance = user)
+	context_dict['player_form'] = PlayerForm(instance = player)
+
+	if request.method == 'POST':
+        # Attempt to grab information from the raw form information.
+		user_form = UserForm(request.POST, request.FILES, instance= user)
+		player_form = PlayerForm(request.POST, request.FILES, instance= player)
+
+		instruments_list = player_form.data['instruments'].encode('ascii', 'ignore').lower().split(",")
+		for i in range(len(instruments_list)):
+			instruments_list[i] = re.sub(r"[^a-z]+", '', instruments_list[i])
+		print instruments_list
+		player_form.data['instruments'] = instruments_list
+
+		if user_form.is_valid() and player_form.is_valid():
+			
+			user = user_form.save()
+
+			user.set_password(user.password)
+			user.save()
+
+			player = player_form.save(commit=False)
+			player.user = user  #do we need that here
+
+
+			#Demo? Picture?
+
+			if 'image' in request.FILES:
+				profile.image = request.FILES['image']
+
+			if 'demo' in request.FILES:
+				profile.demo = request.FILES['demo']
+
+			player.save()
+
+		else:
+			print user_form.errors, player_form.errors
+
+	return render(request, 'bandmatch/edit_profile.html', context_dict)
+
 
 def register_profile(request):
     # A boolean value for telling the template whether the registration was successful.
