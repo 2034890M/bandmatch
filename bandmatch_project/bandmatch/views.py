@@ -415,12 +415,13 @@ def register_profile(request):
 
 			if 'image' in request.FILES:
 				profile.image = request.FILES['image']
-			elif profile.gender == 'm':
-				profile.image = settings.STATIC_URL + 'images\m.jpg'
-			elif profile.gender == 'f':
-				profile.image = settings.STATIC_URL + 'images\pf.jpg'
-			elif profile.gender == 'unknown':
-				profile.image = settings.STATIC_URL + 'images\o.png'
+			else:
+				if profile.gender == 'm':
+					profile.image = settings.STATIC_URL + 'images\m.jpg'
+				elif profile.gender == 'f':
+					profile.image = settings.STATIC_URL + 'images\pf.jpg'
+				elif profile.gender == 'unknown':
+					profile.image = settings.STATIC_URL + 'images\o.png'
 
 			if 'demo' in request.FILES:
 				profile.demo = request.FILES['demo']
