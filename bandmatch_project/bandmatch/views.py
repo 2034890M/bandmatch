@@ -534,8 +534,10 @@ def advanced_search(request):
 			context_dict["player_instrument_query"] = player_instrument_query
 			context_dict["player_location_query"] = player_location_query
 
+			players_list =  Player.objects.all()
+
 			if player_username_query != "":
-				players_list =  Player.objects.all().filter(user__username__contains = player_username_query)
+				players_list =  players_list.filter(user__username__contains = player_username_query)
 
 			if player_location_query != "":
 				players_list = players_list.filter(location__contains = player_location_query)
@@ -544,18 +546,25 @@ def advanced_search(request):
 				players_list_f = players_list.filter(user__first_name__contains = player_name_query)
 				players_list_l = players_list.filter(user__last_name__contains = player_name_query)
 				for p in players_list_f:
-					result_list.append(p)
+					if p not in result_list:
+						result_list.append(p)
 				for p in players_list_l:
-					result_list.append(p)
+					if p not in result_list:
+						result_list.append(p)
 			else:
 				for p in players_list:
-					result_list.append(p)
+					if p not in result_list:
+						result_list.append(p)
 
-			players_list_instr = Player.objects.all()
+			
+			if player_instrument_query != "":
+				players_list_instr = Player.objects.all()
+				result_list_instr = []
+				for player in players_list_instr:
+					if player_instrument_query in player.instruments and player in result_list:
+						result_list_instr.append(player)
 
-			for player in players_list_instr:
-				if player_instrument_query in player.instruments:
-					result_list.append(player)
+				result_list = result_list_instr
 
 			context_dict["resultsp"] = result_list
 
@@ -568,17 +577,23 @@ def advanced_search(request):
 			context_dict["band_looking_for_query"] = band_looking_for_query
 			context_dict["band_location_query"] = band_location_query
 
+			bands_list = Band.objects.all()
+
 			if band_name_query != "":
-				bands_list = Band.objects.all().filter(name__contains = band_name_query)
+				bands_list = bands_list.filter(name__contains = band_name_query)
 			if band_location_query != "":
 				bands_list = bands_list.filter(location__contains = band_location_query)
 				for b in bands_list:
 					result_list.append(b)
 
 			if band_looking_for_query != "":
+				result_list_ad = []
 				adverts_list = Advert.objects.filter(looking_for__contains = band_looking_for_query)
 				for ad in adverts_list:
-					result_list.append(ad.band)
+					if ad.band in result_list:
+						result_list_ad.append(ad.band)
+
+				result_list = result_list_ad
 
 			context_dict["results"] = result_list
 
