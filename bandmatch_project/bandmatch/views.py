@@ -66,7 +66,7 @@ def band(request, band_name_slug):
 
 	context_dict['description'] = band.description
 
-	if band.demo:
+	if band.image:
 		context_dict['pic'] = band.image.url 
 	else:
 		context_dict['pic']= ''
