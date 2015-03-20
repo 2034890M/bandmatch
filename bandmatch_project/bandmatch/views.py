@@ -516,7 +516,59 @@ def search_players(request):
 	return render(request, 'bandmatch/search_players.html', context_dict)
 
 def advanced_search(request):
-	return render(request, 'bandmatch/advanced_search.html', {})
+    context_dict = {}
+
+    context_dict["results"] = []
+
+    result_list = []
+    if request.method == 'POST':
+        if request.POST["choicep"] == "true":
+            print "player"
+            player_username_query = request.POST["player_username_query"]
+            player_name_query = request.POST["player_name_query"]
+            player_instrument_query = request.POST["player_instrument_query"]
+            player_location_query = request.POST["player_location_query"]
+
+            players_list =  Player.objects.all().filter(user__username__contains = player_username_query)
+            print players_list
+            players_list_f = players_list.filter(user__first_name__contains = player_name_query)
+            players_list_l = players_list.filter(user__last_name__contains = player_name_query)
+            
+            for p in players_list_f:
+                player_list.add(p)
+            for p in players_list_l:
+                player_list.add(p)
+
+            players_list_instr = Player.objects.all()
+
+            for player in players_list_instr:
+                if player_instrument_query in player.instruments:
+                    result_list.append(player)
+
+            players_list = players_list.filter(location__contains = player_location_query)
+
+            context_dict["results"] = players_list
+
+        if request.POST["choiceb"] == "true":
+            band_name_query = request.POST["band_name_query"]
+            band_looking_for_query = request.POST["band_looking_for_query"]
+            band_location_query = request.POST["band_location_query"]
+
+            if band_looking_for_query != "":
+                adverts_list = Advert.objects.filter(looking_for__contains = band_looking_for_query)
+                for ad in adverts_list:
+                        bands_list.append(ad.band)
+
+
+            bands_list = Band.objects.all().filter(name__contains = band_name_query)
+            print bands_list
+            bands_list = bands_list.filter(location__contains = band_location_query)
+
+            context_dict["results"] = bands_list
+
+        print context_dict["results"]
+
+    return render(request, 'bandmatch/advanced_search.html', context_dict)
 
 @login_required
 def user_logout(request):
