@@ -4,6 +4,21 @@
 {% load staticfiles %}
 
 <body>
- {% block body_block %}This is the about page{% endblock %}
+ {% block body_block %}
+
+<h1>WHAT IS THIS ALL ABOUT</h1>
+
+<p>Ever had trouble finding people to make music with? Ever wanted to dump the dumb bass player of your band and find a better one? Do you know good players, but they are too far away? Bandmatch is a tool for connecting performers in the same area with each other!</p>
+
+<h1>GETTING STARTED</h1>
+
+<p>Getting started is easy! You need only to register, and fill in your details (name, address, instruments etc.). Then you can start looking for bands in need of your skill set, or even form a band and start looking for your dream team.</p>
+
+{% if not user.is_authenticated %}
+<a href="{% url 'register_profile' %}">Register</a>
+<a href="{% url 'login' %}">Login</a>
+{% endif %}
+
+ {% endblock %}
 </body>
 </html>
