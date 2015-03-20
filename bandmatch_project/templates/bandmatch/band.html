@@ -18,10 +18,11 @@
 		{% endif %}</p>
 		<p>
 		   <b>Description:</b> {{description}} <br>
+		   <b>Location:</b> {{location}}<br>
 			 <b>Members:</b>
 		   {% if members %}
 			<ul>{% for member in members %}
-				<li><a href="{% url 'profile' user.username %}">{{member}}</a></li><p>
+				<li><a href="{% url 'profile' user.username %}">{{member.user.first_name}} {{member.user.last_name}} ({{member.user.username}})</a></li><p>
 			    {% endfor %} </ul>
 		    {% else %}
 			{{name}} does not have any members.
