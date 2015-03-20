@@ -40,6 +40,7 @@ def populate():
 
 def add_player(username, contact_info, description):
 	user = User.objects.get_or_create(username = username)[0]
+	user.set_password("123")
 	p = Player.objects.get_or_create(user = user)[0]
 	p.description = description
 	p.contact_info = contact_info

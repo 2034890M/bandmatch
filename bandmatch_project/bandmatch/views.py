@@ -659,4 +659,36 @@ def user_login(request):
         # blank dictionary object...
        return render(request, 'bandmatch/login.html', {})
 
+"""
+#A view/function to send messages from request.user to recipients. 
+def send_message(request, recipients):
+#HOW TO GET HOLD OF THE RECIPIENTS? HOW TO GIVE THEM TO THE FUNCTION?
+#Maybe add the recipients one by one with search?
+	if request.method == 'POST':
+		message = MessageForm(request.POST).save(commit=False)
+		
+		sender = request.user
+		message.sender = sender
+
+		for recipient in recipients:
+			message.recipients.add(recipient)
+
+		message.save()
+		return HttpResponse("Message sent?")
+
+
+
+"""
+#A view to display all messages ever recieved
+@login_required
+def display_messages(request):
+	context_dict = {}
+	user = request.user
+
+	player = Player.objects.get(user = user)
+	sent_messages = Message.objects.filter(sender = player)
+	context_dict['sent_messages'] = sent_messages
+
+
+	return render(request, "bandmatch/messages.html", context_dict)
 
