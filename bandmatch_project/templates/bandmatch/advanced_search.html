@@ -1,39 +1,43 @@
 {% extends 'bandmatch/base.html' %}
 {% load staticfiles %}
 {% block body_block%}
- <p>Searching...jk I'm not implemented</p>
- 
-
-	
-
 
 <form class="form-inline" id="search_form" method="post" action="{% url 'advanced_search' %}">
-	<input type="radio" name="choicep" value="true" id="choicep"/>Players<br>
-	<input type="hidden" name="choicep" value="false" id="choicep"/>
-	<input type="radio" name="choiceb" value="true" id="choiceb"/>Bands
-	<input type="hidden" name="choiceb" value="false" id="choiceb"/>
+	<p>Search for</p>
+	<input type="radio" name="choice" value="player" id="player_button" />Player
+	<input type="radio" name="choice" value="band" id="band_button" />	Band
 	<!-- Display the search form elements here -->
-	<p>Username
-	<input class="form-control" type="text" size="40" name="player_username_query" value="{{player_username_query}}" id="player_username_query" />
-	Name
-	<input class="form-control" type="text" size="40" name="player_name_query" value="{{player_name_query}}" id="player_name_query" />
-	Instruments
-	<input class="form-control" type="text" size="40" name="player_instrument_query" value="{{player_instrument_query}}" id="player_instrument_query" />
-	Location
-	<input class="form-control" type="text" size="40" name="player_location_query" value="{{player_location_query}}" id="player_location_query" />
+	<div id="player_search_form">
+		<p>Username:
+		<input class="form-control" type="text" size="40" name="player_username_query" value="{{player_username_query}}" id="player_username_query" />
+		Name:
+		<input class="form-control" type="text" size="40" name="player_name_query" value="{{player_name_query}}" id="player_name_query" />
+		Instruments"
+		<input class="form-control" type="text" size="40" name="player_instrument_query" value="{{player_instrument_query}}" id="player_instrument_query" />
+		Location:</p>
+		<input class="form-control" type="text" size="40" name="player_location_query" value="{{player_location_query}}" id="player_location_query" />
+		<input class="btn btn-primary" type="submit" name="submit" value="Search Players" id="choice"/>
+	</div>
 
-	Name
-	<input class="form-control" type="text" size="40" name="band_name_query" value="{{band_name_query}}" id="band_name_query" />
-	Looking for
-	<input class="form-control" type="text" size="40" name="band_looking_for_query" value="{{band_looking_for_query}}" id="band_looking_for_query" />
-	Location</p>
-	<input class="form-control" type="text" size="40" name="band_location_query" value="{{band_location_query}}" id="band_location_query" />
-	<input class="btn btn-primary" type="submit" name="submit" value="Search" />
+	<div id="band_search_form">
+		<p>Name:
+		<input class="form-control" type="text" size="40" name="band_name_query" value="{{band_name_query}}" id="band_name_query" />
+		Looking for players who play:
+		<input class="form-control" type="text" size="40" name="band_looking_for_query" value="{{band_looking_for_query}}" id="band_looking_for_query" />
+		Location:</p>
+		<input class="form-control" type="text" size="40" name="band_location_query" value="{{band_location_query}}" id="band_location_query" />
+		<input class="btn btn-primary" type="submit" name="submit" value="Search Bands" id="submit"/>
+	</div>
+
 	{% csrf_token %}
 </form>
 
-<p>Results</p>
-{% for r in results %}
+<!--need better way to display results -->
+{% for r in resultsp %}
+<p>{{ r.user.username }}</p>
+{% endfor %}
+
+{% for r in resultsb %}
 <p>{{ r.name }}</p>
 {% endfor %}
 {% endblock %}

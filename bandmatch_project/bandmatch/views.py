@@ -344,7 +344,6 @@ def edit_profile(request, username):
 		instruments_list = player_form.data['instruments'].encode('ascii', 'ignore').lower().split(",")
 		for i in range(len(instruments_list)):
 			instruments_list[i] = re.sub(r"[^a-z]+", '', instruments_list[i])
-		print instruments_list
 		player_form.data['instruments'] = instruments_list
 
 		if user_form.is_valid() and player_form.is_valid():
@@ -388,7 +387,6 @@ def register_profile(request):
 		instruments_list = player_form.data['instruments'].encode('ascii', 'ignore').lower().split(",")
 		for i in range(len(instruments_list)):
 			instruments_list[i] = re.sub(r"[^a-z]+", '', instruments_list[i])
-		print instruments_list
 		player_form.data['instruments'] = instruments_list
 
 
@@ -519,55 +517,70 @@ def search_players(request):
 def advanced_search(request):
     context_dict = {}
 
-    context_dict["results"] = []
-
     result_list = []
+
+    context_dict["resultsp"] = result_list
+    context_dict["resultsb"] = result_list
+    
     if request.method == 'POST':
-        if request.POST["choicep"] == "true":
-            print "player"
-            player_username_query = request.POST["player_username_query"]
-            player_name_query = request.POST["player_name_query"]
-            player_instrument_query = request.POST["player_instrument_query"]
-            player_location_query = request.POST["player_location_query"]
+		if request.POST["submit"] == "Search Players":
+			player_username_query = request.POST["player_username_query"]
+			player_name_query = request.POST["player_name_query"]
+			player_instrument_query = request.POST["player_instrument_query"]
+			player_location_query = request.POST["player_location_query"]
 
-            players_list =  Player.objects.all().filter(user__username__contains = player_username_query)
-            print players_list
-            players_list_f = players_list.filter(user__first_name__contains = player_name_query)
-            players_list_l = players_list.filter(user__last_name__contains = player_name_query)
-            
-            for p in players_list_f:
-                player_list.add(p)
-            for p in players_list_l:
-                player_list.add(p)
+			context_dict["player_username_query"] = player_username_query
+			context_dict["player_name_query"] = player_name_query
+			context_dict["player_instrument_query"] = player_instrument_query
+			context_dict["player_location_query"] = player_location_query
 
-            players_list_instr = Player.objects.all()
+			if player_username_query != "":
+				players_list =  Player.objects.all().filter(user__username__contains = player_username_query)
 
-            for player in players_list_instr:
-                if player_instrument_query in player.instruments:
-                    result_list.append(player)
+			if player_location_query != "":
+				players_list = players_list.filter(location__contains = player_location_query)
 
-            players_list = players_list.filter(location__contains = player_location_query)
+			if player_name_query != "":
+				players_list_f = players_list.filter(user__first_name__contains = player_name_query)
+				players_list_l = players_list.filter(user__last_name__contains = player_name_query)
+				for p in players_list_f:
+					result_list.append(p)
+				for p in players_list_l:
+					result_list.append(p)
+			else:
+				for p in players_list:
+					result_list.append(p)
 
-            context_dict["results"] = players_list
+			players_list_instr = Player.objects.all()
 
-        if request.POST["choiceb"] == "true":
-            band_name_query = request.POST["band_name_query"]
-            band_looking_for_query = request.POST["band_looking_for_query"]
-            band_location_query = request.POST["band_location_query"]
+			for player in players_list_instr:
+				if player_instrument_query in player.instruments:
+					result_list.append(player)
 
-            if band_looking_for_query != "":
-                adverts_list = Advert.objects.filter(looking_for__contains = band_looking_for_query)
-                for ad in adverts_list:
-                        bands_list.append(ad.band)
+			context_dict["resultsp"] = result_list
 
+		if request.POST["submit"] == "Search Bands":
+			band_name_query = request.POST["band_name_query"]
+			band_looking_for_query = request.POST["band_looking_for_query"]
+			band_location_query = request.POST["band_location_query"]
 
-            bands_list = Band.objects.all().filter(name__contains = band_name_query)
-            print bands_list
-            bands_list = bands_list.filter(location__contains = band_location_query)
+			context_dict["band_name_query"] = band_name_query
+			context_dict["band_looking_for_query"] = band_looking_for_query
+			context_dict["band_location_query"] = band_location_query
 
-            context_dict["results"] = bands_list
+			if band_name_query != "":
+				bands_list = Band.objects.all().filter(name__contains = band_name_query)
+			if band_location_query != "":
+				bands_list = bands_list.filter(location__contains = band_location_query)
+				for b in bands_list:
+					result_list.append(b)
 
-        print context_dict["results"]
+			if band_looking_for_query != "":
+				adverts_list = Advert.objects.filter(looking_for__contains = band_looking_for_query)
+				for ad in adverts_list:
+					result_list.append(ad.band)
+
+			context_dict["results"] = result_list
 
     return render(request, 'bandmatch/advanced_search.html', context_dict)
 

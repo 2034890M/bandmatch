@@ -12,7 +12,6 @@ $(document).ready( function() {
         query = $(this).val();
         var slug;
         slug = $('#band_slug').text()
-        console.log(slug)
         $.get('/bandmatch/suggest_member/'+slug+'/', {suggest_mem: query}, function(data){
          $('#member_list').html(data);
         });
