@@ -1,23 +1,44 @@
 {% extends 'bandmatch/base.html' %}
 {% load staticfiles %}
-	{% block title %}{{name}}{% endblock %}
+	{% block title %}- {{name}}{% endblock %}
 		
+	<body>
+		{% load staticfiles %}
+		{% block body_block %}
+		<style>
+			body {
+				margin-left: 200px;
+				margin-right: 300px;
+			}
+		</style>
+		<img style="align:right; float:right;" src="{{pic}}" height="200" alt="A picture of {{name}}.">
+		<h1> {{name}} </h1>
+		<p>  {% if is_member == 1 %}
+		<a href="{% url 'edit_band' slug %}">Add players or Edit Band Details</a>
+		{% endif %}</p>
+		<p>
+		   <b>Description:</b> {{description}} <br>
+			 <b>Members:</b>
+		   {% if members %}
+			<ul>{% for member in members %}
+				<li><a href="{% url 'profile' user.username %}">{{member}}</a></li><p>
+			    {% endfor %} </ul>
+		    {% else %}
+			{{name}} does not have any members.
+		    {% endif %}
 
-{% block body_block %}
-
- <h1>{{name}}</h1>
-
- {% if is_member == 1 %}
-<a href="{% url 'edit_band' slug %}">Add players or Edit Band Details</a>
-{%endif%}
-
- 
-<img align=right src="{{band.pic}}">
-
+		</p>
+{% if adverts %}
+<b>Adverts:</b>
 {% for advert in adverts %}
 	<p><a href="{% url 'display_advert' slug advert.id %}">{{advert}}</a></p>
 {% endfor %}
+{% else %}
+<p> {{name}} does not currently have any adverts. </p>
+{% endif %}
 
-<a href="{% url 'post_advert' slug %}">Post an advert</a>
+<p><a href="{% url 'post_advert' slug %}">Post an advert</a>
+		{% endblock %}</p>
+</body>
 
-{% endblock %}
+
