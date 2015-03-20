@@ -1,32 +1,41 @@
 {% extends 'bandmatch/base.html' %}
 {% load staticfiles %}
+	{% block title %}- {{name}}{% endblock %}
+		
+	<body>
+		{% load staticfiles %}
+		{% block body_block %}
+		<style>
+			body {
+				margin-left: 200px;
+				margin-right: 300px;
+			}
+		</style>
+		<img style="align:right; float:right;" src="{{pic}}" height="200" alt="A picture of {{name}}.">
+		<h1><a href="{% url 'band' slug %}"> {{name}} </a></h1>
+		<p>  {% if is_member == 1 %}
+		{% endif %}</p>
+		<p>
+		   <b>Description:</b> {{description}} <br>
+		   <b>Location:</b> {{location}}<br>
+			 <b>Members:</b>
+		   {% if members %}
+			<ul>{% for member in members %}
+				<li><a href="{% url 'profile' user.username %}">{{member.user.first_name}} {{member.user.last_name}} ({{member.user.username}})</a></li><p>
+			    {% endfor %} </ul>
+		    {% else %}
+			{{name}} does not have any members.
+		    {% endif %}
 
-{% block title %}Edit Band {{name}} {% endblock %}
-
-{% block body_block %}
-
-<h1>{{name}}</h1>
-
-<imput name="band_slug" value="{{slug}}" id="band_slug">{{slug}}</imput>
- 
-<img align=right src="{{pic}}">
-
-<ul>
-	<li>Name: {{ name }}</li>
-	<li>Location: {{ location }}</li>
-	<li>Description: {{ description }}</li>
-	<li><a href='{{ band.demo.url }}'> Demo </a></li>
-</ul>
-
-{% for member in members %}
-
-<p><a href="{% url 'profile' member.user.username %}">{{ member.user.first_name }} {{member.user.last_name}} ({{member.user.username}})</a></p>
-
-{% endfor %}
-
+		</p>
+{% if adverts %}
+<b>Adverts:</b>
 {% for advert in adverts %}
 	<p><a href="{% url 'display_advert' slug advert.id %}">{{advert}}</a></p>
 {% endfor %}
+{% else %}
+<p> {{name}} does not currently have any adverts. </p>
+{% endif %}
 
 {% if is_member == 1%}
 

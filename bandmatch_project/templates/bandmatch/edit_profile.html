@@ -1,19 +1,44 @@
 {% extends 'bandmatch/base.html' %}
 {% load staticfiles %}
-<h1> {{first_name}} </h1>
-{% block body_block %}
-<p>First name: {{first_name}} Last name: {{last_name}}</p>
-<p>email: {{email}} contact info: {{contact_info}} location:  {{location}} </p>
+	<title>
+		{% block title %}Edit Profile {% endblock %}
+	</title>
+	<body>
+		{% load staticfiles %}
+		{% block body_block %}
+		<style>
+			body {
+				margin-left: 200px;
+				margin-right: 300px;
+			}
+		</style>
+		<img style="align:right; float:right;" src="{{pic}}" height="200" alt="A picture of {{first_name}}.">
+		<h1> {{username}} </h1>
+		<p><b>Name:</b> {{first_name}} {{last_name}} <br>
+		   <b>Description:</b> {{description}} <br>
+		   <b>Email:</b> {{email}} <br> 
+		   <b>Contact:</b> {{contact_info}} <br> 
+		   <b>Location:</b>  {{location}} <br>
+		   <b>Instruments:</b>
+		   {% if instruments %}
+			<ul>{% for instrument in instruments %}
+				<li>{{instrument}}</li><p>
+			    {% endfor %} </ul>
+		    {% else %}
+			{{first_name}} does not play any instruments.<br>
+			{% endif %}
+					   <p  style="text-align: right; margin-right: 20px;"> {% if is_user == 1 %} <a href="{% url 'edit_profile' username %}">Edit Your Profile</a> {% endif %}</p>
+			 <b>Bands:</b>
+		   {% if bands %}
+			<ul>{% for band in bands %}
+				<li><a href="{% url 'band' band.slug %}">{{band}}</a></li><p>
+			    {% endfor %} </ul>
+		    {% else %}
+			{{first_name}} is not a member of any bands.
+		    {% endif %}
+		</p>
 
-<p align=right><img src="{{pic}}" alt="A picture of {{user.first_name}}.">
-
-<h3> Instruments - {{instruments}}</h3>
-
-<!--should be replaced with the latest profile.html content-->
-
-
-
-<h1>Edit Profile</h1>
+<h2>Edit Profile</h2>
 
 {% if is_user == 1 %}
 
@@ -35,3 +60,4 @@
 <p><strong>You can only edit your own profile.</strong></p>
 {% endif %}
 {% endblock %}
+</body>

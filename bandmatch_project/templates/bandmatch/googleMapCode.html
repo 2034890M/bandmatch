@@ -1,24 +1,12 @@
 <!DOCTYPE html>
-{% extends 'bandmatch/base.html' %}
-{% load staticfiles %}
-
 <html>
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-    <title>{% block title %}- Home {% endblock %}</title>
-		{% block body_block %}
-		
-	<h1 style="text-align: center"> Bandmatch </h1>
-	<h2 style="text-align: center">Notifications:</h2>
-	
-	
-	<h2 style="text-align: center"> Bands near you: </h2>
+    <title>Geocoding service</title>
     <style>
-        #map-canvas {
-		margin-left: auto;
-		margin-right: auto;
-	    width : 1000px;
+      html, body, #map-canvas {
+	    width : 500px;
         height: 400px;
         
       }
@@ -190,6 +178,5 @@ window.onload = start;
     
     <div id="map-canvas"></div>
 	<div id="outputDiv"></div>
-	{% endblock%}
   </body>
 </html>
