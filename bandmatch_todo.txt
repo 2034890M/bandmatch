@@ -6,3 +6,4 @@ Default pictures
 
 Message search for recipients
 
+Redirect from edit band to the new band site (if name was changed)
