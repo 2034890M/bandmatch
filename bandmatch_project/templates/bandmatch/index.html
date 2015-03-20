@@ -3,7 +3,193 @@
 {% load staticfiles %}
 
 <html>
-<body>
-Welcome to Bandmatch!
-</body>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>{% block title %}- Home {% endblock %}</title>
+		{% block body_block %}
+		
+	<h1 style="text-align: center"> Bandmatch </h1>
+	<h2 style="text-align: center">Notifications:</h2>
+	
+	
+	<h2 style="text-align: center"> Bands near you: </h2>
+    <style>
+        #map-canvas {
+		margin-left: auto;
+		margin-right: auto;
+	    width : 1000px;
+        height: 400px;
+        
+      }
+      
+    </style>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&v=3&libraries=geometry"></script>
+	
+    <script>
+//Variables that need to be taken from the database:
+//	
+//	the users address
+//  the users name/band name
+//  player or band
+//  	
+
+var geocoder;
+var map;
+var markersArray = [];
+var origin = "37 Cranworth street, Glasgow";	//change to make it users address
+
+	
+function initialize() {	//setting up the map 
+	geocoder = new google.maps.Geocoder();
+	var mapOptions = {
+		zoom: 12,
+		center: new google.maps.LatLng(55.864237,-4.251806)
+	} 
+
+	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+}
+ 
+ 
+function showLocation() {
+	var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+		var marker = new google.maps.Marker({
+		position: new google.maps.LatLng(55.875667,-4.291163),
+		map: map,
+		icon: iconBase + 'schools_maps.png'
+		});
+		google.maps.event.addListener(marker, 'click', function() {
+		infowindow.setContent("Your House!");
+		infowindow.open(map,marker);
+	  });
+}
+
+<!-- this will be used to get all the places from the database and put them in data -->
+var data = ["University of Glasgow","17 Vinicombe Street Glasgow","101 Craiglea Drive, Edinburgh"];
+//data about the bands, should maybe add this into the data one and update them
+var bands = [["The Killers","band","rock","<a href='http://www.reddit.com/'>Reddit</a>"],["Iron Maiden","band","heavy metal","link to their profile"],["Freddie Mercury","player","rock","link to profile"]];
+//DATA ABOUT THE DISTANCE THE USER WANTS TO GO, CURRENTLY 3000 IS A PLACEHOLDER
+var userDistance = 30000;
+
+function calculateDistances() {		//calculate the distances between home and the other addresses
+ 
+  var service = new google.maps.DistanceMatrixService();
+  service.getDistanceMatrix(
+    {
+      origins: [origin],
+      destinations: data,
+      travelMode: google.maps.TravelMode.DRIVING,
+      unitSystem: google.maps.UnitSystem.METRIC,
+      avoidHighways: false,
+      avoidTolls: false
+    }, callback);
+}
+
+function callback(response, status) {	//take the distances and if they are in a certain distance to home display the pins
+	//var userDistance = 500;
+  if (status != google.maps.DistanceMatrixStatus.OK) {
+	alert('Error was: ' + status);
+  } else {
+    var origins = response.originAddresses;
+    var destinations = response.destinationAddresses;
+    var outputDiv = document.getElementById('outputDiv');
+    outputDiv.innerHTML = '';
+    deleteOverlays();
+	
+	for (var i = 0; i < origins.length; i++) {
+		var results = response.rows[i].elements;
+     	for (var j = 0; j < results.length; j++) {
+			var k = parseInt(results[j].distance.value);
+			var add = (k < userDistance);							//THIS IS THE DISTANCE FROM HOME IN METRES, CHANGE TO A VARIABLE SO IT CAN COME FROM THE USER
+			if (add == true){
+				addMarker(destinations[j],j,k);
+			}		
+
+		}
+	}
+	}
+}
+		
+var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';		//WHERE TO GET THE ICONS FROM
+		
+var icons = [							//THE DIFFERENT COLOURED PINS ARE ACTUALLY DIFFERENT PICTURES
+      iconURLPrefix + 'red-dot.png',
+      iconURLPrefix + 'green-dot.png',
+      iconURLPrefix + 'blue-dot.png',
+      iconURLPrefix + 'orange-dot.png',
+      iconURLPrefix + 'purple-dot.png',
+      iconURLPrefix + 'pink-dot.png',      
+      iconURLPrefix + 'yellow-dot.png'
+    ]
+var iconsLength = icons.length;
+
+var iconCounter = 0;
+ 
+var infowindow = new google.maps.InfoWindow({	//THE GUIDELINES FOR MAKING THE PIN INFO PANE
+    maxWidth: 160
+});
+	
+function addMarker(location,i,distanceTo){			//USED FOR ADDING IN THE MARKERS ON THE ADDRESSES
+	
+	geocoder.geocode( { 'address': location}, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+     
+      var marker = new google.maps.Marker({		//CREATES THE MARKER
+          map: map,
+          position: results[0].geometry.location,
+		  icon: icons[iconCounter]		//TAKES THE ICON FROM THE ICON LIST OF THE DIFFERENT COLOURED PINS
+      });
+	  markersArray.push(marker);
+
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {	//WHEN THE PIN IS CLICKED THIS SHOWS UP TO THE USER
+        return function() {
+			var contentString = "band name: "+bands[i][0]+"<br>"+"type: "+bands[i][1]+				
+								"<br>" + "genre: "+bands[i][2]+"<br>"+"Distance from you: "+distanceTo+"m"+"<br>"+bands[i][3];
+																			//MAY NEED TO CHECK THESE FIELDS BEFORE PUTTING THEM IN HERE SO NO ERRORS OCCUR FROM THERE NOT BEING ANY DATA
+          infowindow.setContent(contentString);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+      
+      iconCounter++;
+      // We only have a limited number of possible icon colors, so we may have to restart the counter
+      if(iconCounter >= iconsLength) {
+      	iconCounter = 0;
+      }
+    } else {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
+	
+}
+	
+
+
+
+
+function deleteOverlays() {	//NOT SO SURE WHAT THIS DOES BUT IT WORKS, WHATEVER IT IS
+  for (var i = 0; i < markersArray.length; i++) {
+    markersArray[i].setMap(null);
+  }
+  markersArray = [];
+}
+
+function start() {		//USED TO CALL THE PROCEDURES WHEN THE PAGE IS OPENED
+  showLocation();  
+  calculateDistances();
+}
+
+
+google.maps.event.addDomListener(window, 'load', initialize);
+window.onload = start;
+    </script>
+  </head>
+  <body>
+    
+    <div id="map-canvas"></div>
+	<div id="outputDiv"></div>
+	{% endblock%}
+  </body>
 </html>
