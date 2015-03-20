@@ -755,6 +755,8 @@ def display_messages(request):
 	sent_messages = Message.objects.filter(sender = player)
 	context_dict['sent_messages'] = sent_messages
 
+	context_dict['recieved_messages'] = player.message_set.all()
+
 
 	return render(request, "bandmatch/messages.html", context_dict)
 
