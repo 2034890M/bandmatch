@@ -5,6 +5,7 @@ urlpatterns = patterns('',
     url(r'^$', views.index, name='index'),
     url(r'^about/$', views.about, name='about'),
     url(r'^your_bands/$', views.your_bands, name='your_bands'), # NEW MAPPING!
+    url(r'^send_message/$', views.send_message, name='send_message'),
     url(r'^band/(?P<band_name_slug>[\w\-]+)/post_advert/$', views.post_advert, name='post_advert'),
     url(r'^band/(?P<band_name_slug>[\w\-]+)/display_advert/(?P<advert>\d+)/$', views.display_advert, name='display_advert'),    
     url(r'^band/(?P<band_name_slug>[\w\-]+)/$', views.band, name='band'),

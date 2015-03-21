@@ -2,13 +2,13 @@
 
 
 {% block body_block %}
-
+Sent messages:
 {% for message in sent_messages %}
 
 	<p>{{message}}</p>
 	
 {% endfor %}
-
+Recieved messages:
 {% for message in recieved_messages %}
  <p>{{message}} </p>
 {% endfor %}

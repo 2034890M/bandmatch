@@ -7,11 +7,13 @@ from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
+from django.contrib import messages
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 from bandmatch.models import Band, Player, Message, Advert, User, Reply
-from bandmatch.forms import UserForm, PlayerForm, BandForm, AdvertForm, ReplyForm
+from bandmatch.forms import UserForm, PlayerForm, BandForm, AdvertForm, ReplyForm, MessageForm
 
 
 # Create your views here.
@@ -775,3 +777,65 @@ def display_messages(request):
 
 	return render(request, "bandmatch/messages.html", context_dict)
 
+
+"""
+Messages still has some inconsistancies:
+
+1) If you fill all the fields and click "add player", the message is sent.
+2) After sending a message and clicking back the previous information is saved.
+3) Needs a way to remove recipiants.
+
+1) Could be fixed by changing the order of request.POST.__contains__ and message_form.is_valid
+
+"""
+
+#A view to send a message for one or many users
+@login_required
+def send_message(request, reciever_list=[]):
+	context_dict = {}
+	if request.method == 'POST':
+		#Either send the message or do other stuff
+
+		message_form = MessageForm(request.POST)
+
+		if request.POST.__contains__('suggestion'):
+			#Add the added reciever to list
+			new_recipiant = request.POST['suggestion']
+			if new_recipiant not in reciever_list: #Not adding dublicates
+				reciever_list.append(new_recipiant)
+			#Pass the list to the view, which will pass it back if a new reciever is added
+			context_dict['reciever_list'] = reciever_list
+		#Chech if the title and content have been added
+		if message_form.is_valid():
+			#Check if the're recievers for the message
+			if (len(reciever_list) > 0):
+				message = message_form.save(commit = False)
+				user = request.user
+				message.sender = Player.objects.get(user = user)
+				message.save()
+
+			#add recievers to the message recievers
+				for reciever in reciever_list:
+					try:
+						recipiant = Player.objects.get(user__username = reciever)
+						message.recipients.add(recipiant)
+					except:
+						pass
+
+				message.save()
+				#Return a different view so the reciever_list gets wiped.
+				return(HttpResponseRedirect(reverse('display_messages')))
+			else:
+				#No recipiants. Don't send the message. Tell the user to add recipiants.
+				messages.add_message(request, messages.INFO, 'Please add a recipiant to send a message.')
+		else:
+			#The form wasn't valid.
+			messages.add_message(request, messages.INFO, 'Please add a title and content to send a message.')
+
+
+
+
+	message_draft = MessageForm()
+
+	context_dict['message_draft'] = message_draft
+	return render(request, "bandmatch/send_message.html", context_dict)

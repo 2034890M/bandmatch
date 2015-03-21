@@ -41,7 +41,6 @@ class BandForm(forms.ModelForm):
 		model = Band
 		exclude = ('slug', 'members')
 
-"""
 #Work in progress
 class MessageForm(forms.ModelForm):
 
@@ -50,7 +49,9 @@ class MessageForm(forms.ModelForm):
 	content = forms.CharField(widget = forms.Textarea)
 	#How to add recipients?
 	#A message for a player vs a message for an advert??
-"""
+	class Meta:
+		model = Message
+		fields = ('title', 'content',)
 
 class AdvertForm(forms.ModelForm):
 
