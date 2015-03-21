@@ -11,6 +11,7 @@
 				margin-right: 300px;
 			}
 		</style>
+		<input type="hidden" name="band_slug" value="{{slug}}" id="band_slug" /> <!--needed for the jquery-->
 		<img style="align:right; float:right;" src="{{pic}}" height="200" alt="A picture of {{name}}.">
 		<h1><a href="{% url 'band' slug %}"> {{name}} </a></h1>
 		<p>  {% if is_member == 1 %}

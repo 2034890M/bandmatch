@@ -154,6 +154,8 @@ def edit_band(request, band_name_slug):
 
 	context_dict = get_bandDetails(band_name_slug)
 
+	members_list = band.members.all()
+
 	context_dict['is_member']= 0
 
 	if request.user.is_authenticated():
@@ -172,13 +174,25 @@ def edit_band(request, band_name_slug):
 
 		if request.POST.__contains__('suggestion'):
 			new_member = request.POST['suggestion']
-			band.members.add(Player.objects.get(user__username = new_member))#try/except?
+			new_member_profile = Player.objects.get(user__username = new_member)#try/except?
+			band.members.add(new_member_profile)
 			band.save()
+			notify_new = Message.objects.create(title = "You have been added to a band",
+				content = "You have been added to " + band.name ,
+				sender = Player.objects.get(user__username__exact = "Admin"))
+			notify_new.recipients.add(new_member_profile)
+			notify_new.save()
 
 		if request.POST.__contains__('suggest_mem'):
 			removed_member = request.POST['suggest_mem']
-			band.members.remove(Player.objects.get(user__username = removed_member))
+			removed_member_profile = Player.objects.get(user__username = removed_member)
+			band.members.remove(removed_member_profile)
 			band.save()
+			notify_removed = Message.objects.create(title = "You have been removed from a band", 
+				content = "You have been removed from " + band.name,
+				 sender = Player.objects.get(user__username__exact = "Admin"))
+			notify_removed.recipients.add(removed_member_profile)
+			notify_removed.save()
 
 		members_list = band.members.all()
 		context_dict['members'] = members_list
