@@ -54,10 +54,12 @@ def your_bands(request):
 
 	return render(request, 'bandmatch/your_bands.html', context_dict)
 
-#View to display the band page.
-def band(request, band_name_slug):
+def get_bandDetails(band_name_slug):
 	context_dict = {}
+
 	band = Band.objects.get(slug = band_name_slug)
+
+	context_dict['slug'] = band_name_slug
 
 	context_dict['name'] = band.name
 
@@ -78,6 +80,38 @@ def band(request, band_name_slug):
 	else:
 		context_dict['demo']= ''
 
+	return context_dict
+
+#View to display the band page.
+def band(request, band_name_slug):
+	context_dict = {}
+	band = Band.objects.get(slug = band_name_slug)
+
+	# context_dict['slug'] = band_name_slug
+
+	# context_dict['name'] = band.name
+
+	# members_list = band.members.all()
+	# context_dict['members'] = members_list # a for loop in the html should be able to get the members
+
+	# context_dict['location'] = band.location
+
+	# context_dict['description'] = band.description
+
+	# if band.image:
+	# 	context_dict['pic'] = band.image.url 
+	# else:
+	# 	context_dict['pic']= ''
+
+	# if band.demo:
+	# 	context_dict['demo'] = band.demo.url #not sure if this is how you get a file url
+	# else:
+	# 	context_dict['demo']= ''
+
+	members_list = band.members.all()
+
+	context_dict = get_bandDetails(band_name_slug)
+
 	context_dict['is_member']= 0
 
 	context_dict['slug'] = band.slug
@@ -95,28 +129,30 @@ def edit_band(request, band_name_slug):
 
 	context_dict = {}
 
-	context_dict['slug'] = band_name_slug
-
 	band = Band.objects.get(slug = band_name_slug)
 
-	context_dict['name'] = band.name
+	# context_dict['slug'] = band_name_slug
 
-	members_list = band.members.all()
-	context_dict['members'] = members_list # a for loop in the html should be able to get the members
+	# context_dict['name'] = band.name
 
-	context_dict['location'] = band.location
+	# members_list = band.members.all()
+	# context_dict['members'] = members_list # a for loop in the html should be able to get the members
 
-	context_dict['description'] = band.description
+	# context_dict['location'] = band.location
 
-	if band.demo:
-		context_dict['pic'] = band.image.url 
-	else:
-		context_dict['pic']= ''
+	# context_dict['description'] = band.description
 
-	if band.demo:
-		context_dict['demo'] = band.demo.url #not sure if this is how you get a file url
-	else:
-		context_dict['demo']= ''
+	# if band.demo:
+	# 	context_dict['pic'] = band.image.url 
+	# else:
+	# 	context_dict['pic']= ''
+
+	# if band.demo:
+	# 	context_dict['demo'] = band.demo.url #not sure if this is how you get a file url
+	# else:
+	# 	context_dict['demo']= ''
+
+	context_dict = get_bandDetails(band_name_slug)
 
 	context_dict['is_member']= 0
 
@@ -125,7 +161,6 @@ def edit_band(request, band_name_slug):
 		if player in members_list:
 			context_dict['is_member']= 1
 
-	context_dict['slug'] = band.slug
 	advert_list = Advert.objects.filter(band__exact = band)
 	context_dict['adverts'] = advert_list.order_by('-date')
 
@@ -158,6 +193,28 @@ def edit_band(request, band_name_slug):
 				band.demo = request.FILES['demo']
 
 			band.save()
+
+			band_name_slug = band.slug
+
+			# context_dict['slug'] = band_name_slug
+
+			# context_dict['name'] = band.name
+
+			# context_dict['location'] = band.location
+
+			# context_dict['description'] = band.description
+
+			# if band.demo:
+			# 	context_dict['pic'] = band.image.url 
+			# else:
+			# 	context_dict['pic']= ''
+
+			# if band.demo:
+			# 	context_dict['demo'] = band.demo.url #not sure if this is how you get a file url
+			# else:
+			# 	context_dict['demo']= ''
+
+			context_dict.update(get_bandDetails(band_name_slug))
 
 	return render(request, 'bandmatch/edit_band.html', context_dict)
 
@@ -238,8 +295,7 @@ def add_band(request):
 	return render(request, 'bandmatch/make_a_band.html', context_dict)
 
 
-#Displayes the user profile, and allows modification if its the user's own page
-def profile(request, username): #could possibly use user_id here
+def get_profileDetails(request, username):
 	context_dict = {}
 
 	user = User.objects.get(username = username)
@@ -281,6 +337,57 @@ def profile(request, username): #could possibly use user_id here
 	else:
 		context_dict['pic'] = ''
 
+	return context_dict
+
+#Displayes the user profile, and allows modification if its the user's own page
+def profile(request, username): #could possibly use user_id here
+	context_dict = {}
+
+	# user = User.objects.get(username = username)
+
+	# player = Player.objects.get(user = user)
+
+	# context_dict['username'] = username
+
+	# context_dict['first_name'] = user.first_name
+
+	# context_dict['last_name'] = user.last_name
+
+	# context_dict['description'] = player.description
+
+	# context_dict['instruments'] = player.instruments #should probably be checked how it works when instruments are a list
+
+	# user_bands = player.band_set.all()
+
+	# context_dict['bands'] = user_bands
+
+	# #we could do this or pass privacy to the html with the context_dict
+	# #and choose what to display there
+	# if player.privacy == 1 and request.user != user: # if 1 is on and 0 is off
+	# 	context_dict['email'] = user.email #only displayed for registered users and if user allows it
+	# 	context_dict['contact_info'] = player.contact_info 
+	# 	context_dict['location'] = player.location
+	# else:
+	# 	context_dict['email'] = ''
+	# 	context_dict['contact_info'] =  ''
+	# 	context_dict['location'] = ''
+
+	# if player.demo:
+	# 	context_dict['demo'] = player.demo.url #not sure if this is how you get a file url
+	# else:
+	# 	context_dict['demo']= ''
+
+	# if player.image:
+	# 	context_dict['pic'] = player.image.url
+	# else:
+	# 	context_dict['pic'] = ''
+
+	context_dict = get_profileDetails(request, username)
+
+	user = User.objects.get(username = username)
+
+	player = Player.objects.get(user = user)
+
 	#can use this in html to display link to edit profile
 	if request.user == user:
 		context_dict['is_user'] = 1
@@ -293,42 +400,48 @@ def profile(request, username): #could possibly use user_id here
 def edit_profile(request, username):
 	context_dict = {}
 
+	# user = User.objects.get(username = username)
+
+	# player = Player.objects.get(user = user)
+
+	# context_dict['username'] = username
+
+	# context_dict['first_name'] = user.first_name
+
+	# context_dict['last_name'] = user.last_name
+
+	# context_dict['description'] = player.description
+
+	# context_dict['instruments'] = player.instruments 
+
+	# user_bands = player.band_set.all()
+
+	# context_dict['bands'] = user_bands
+
+	# if player.privacy == 1 and request.user != user: # more security ftw!
+	# 	context_dict['email'] = user.email 
+	# 	context_dict['contact_info'] = player.contact_info 
+	# 	context_dict['location'] = player.location
+	# else:
+	# 	context_dict['email'] = ''
+	# 	context_dict['contact_info'] =  ''
+	# 	context_dict['location'] = ''
+
+	# if player.demo:
+	# 	context_dict['demo'] = player.demo.url #not sure if this is how you get a file url
+	# else:
+	# 	context_dict['demo']= ''
+
+	# if player.image:
+	# 	context_dict['pic'] = player.image.url
+	# else:
+	# 	context_dict['pic'] = ''
+
+	context_dict = get_profileDetails(request, username)
+
 	user = User.objects.get(username = username)
 
 	player = Player.objects.get(user = user)
-
-	context_dict['username'] = username
-
-	context_dict['first_name'] = user.first_name
-
-	context_dict['last_name'] = user.last_name
-
-	context_dict['description'] = player.description
-
-	context_dict['instruments'] = player.instruments 
-
-	user_bands = player.band_set.all()
-
-	context_dict['bands'] = user_bands
-
-	if player.privacy == 1 and request.user != user: # more security ftw!
-		context_dict['email'] = user.email 
-		context_dict['contact_info'] = player.contact_info 
-		context_dict['location'] = player.location
-	else:
-		context_dict['email'] = ''
-		context_dict['contact_info'] =  ''
-		context_dict['location'] = ''
-
-	if player.demo:
-		context_dict['demo'] = player.demo.url #not sure if this is how you get a file url
-	else:
-		context_dict['demo']= ''
-
-	if player.image:
-		context_dict['pic'] = player.image.url
-	else:
-		context_dict['pic'] = ''
 
 	if request.user == user:
 		context_dict['is_user'] = 1
@@ -368,6 +481,8 @@ def edit_profile(request, username):
 				profile.demo = request.FILES['demo']
 
 			player.save()
+
+			context_dict.update(get_profileDetails(request, username))
 
 		else:
 			print user_form.errors, player_form.errors
