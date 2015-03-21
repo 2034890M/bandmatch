@@ -20,12 +20,12 @@
 			<div class="row" id="user_list" >		    	        
 	   		</div>
 		    <button class="btn btn-primary" type="submit" name="submit">Add Player</button>
-		    </form>	
-</div>
+            <button class="btn btn-primary" type="submit" name="submit">Remove Player</button>
+		    
 
 <p>Sending message to:</p>
-{% for recipiant in reciever_list %}
-<p>{{recipiant}}</p>
+{% for recipient in reciever_list %}
+<p>{{recipient}}
 {% endfor %}
 
 
@@ -37,10 +37,15 @@
             <!-- Display each form. The as_p method wraps each element in a paragraph
                  (<p>) element. This ensures each element appears on a new line,
                  making everything look neater. -->
-            {{ message_draft.as_p }}
+            <p><label for="id_title">Title:</label> 
+            <input id="id_title" maxlength="128" name="title" type="text" value="{{title}}"/></p>
+            <p><label for="id_content">Content:</label> 
+            <textarea cols="40" id="id_content" name="content" value="{{content}}" rows="10">{{content}}</textarea>
+            </p>
 
             <!-- Provide a button to click to submit the form. -->
             <input type="submit" name="submit" value="Send" />
-        </form>
-
+            </form>
+        </form> 
+</div>
 {% endblock %}

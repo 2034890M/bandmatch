@@ -87,27 +87,6 @@ def band(request, band_name_slug):
 	context_dict = {}
 	band = Band.objects.get(slug = band_name_slug)
 
-	# context_dict['slug'] = band_name_slug
-
-	# context_dict['name'] = band.name
-
-	# members_list = band.members.all()
-	# context_dict['members'] = members_list # a for loop in the html should be able to get the members
-
-	# context_dict['location'] = band.location
-
-	# context_dict['description'] = band.description
-
-	# if band.image:
-	# 	context_dict['pic'] = band.image.url 
-	# else:
-	# 	context_dict['pic']= ''
-
-	# if band.demo:
-	# 	context_dict['demo'] = band.demo.url #not sure if this is how you get a file url
-	# else:
-	# 	context_dict['demo']= ''
-
 	members_list = band.members.all()
 
 	context_dict = get_bandDetails(band_name_slug)
@@ -131,27 +110,6 @@ def edit_band(request, band_name_slug):
 
 	band = Band.objects.get(slug = band_name_slug)
 
-	# context_dict['slug'] = band_name_slug
-
-	# context_dict['name'] = band.name
-
-	# members_list = band.members.all()
-	# context_dict['members'] = members_list # a for loop in the html should be able to get the members
-
-	# context_dict['location'] = band.location
-
-	# context_dict['description'] = band.description
-
-	# if band.demo:
-	# 	context_dict['pic'] = band.image.url 
-	# else:
-	# 	context_dict['pic']= ''
-
-	# if band.demo:
-	# 	context_dict['demo'] = band.demo.url #not sure if this is how you get a file url
-	# else:
-	# 	context_dict['demo']= ''
-
 	context_dict = get_bandDetails(band_name_slug)
 
 	members_list = band.members.all()
@@ -169,7 +127,6 @@ def edit_band(request, band_name_slug):
 	context_dict['band_form'] = BandForm(instance = band)
 
 	if request.method == 'POST':
-		#Create the band and take the user to the created bands site
 		band_form = BandForm(request.POST, request.FILES, instance= band)
 
 		if request.POST.__contains__('suggestion'):
@@ -210,58 +167,10 @@ def edit_band(request, band_name_slug):
 
 			band_name_slug = band.slug
 
-			# context_dict['slug'] = band_name_slug
-
-			# context_dict['name'] = band.name
-
-			# context_dict['location'] = band.location
-
-			# context_dict['description'] = band.description
-
-			# if band.demo:
-			# 	context_dict['pic'] = band.image.url 
-			# else:
-			# 	context_dict['pic']= ''
-
-			# if band.demo:
-			# 	context_dict['demo'] = band.demo.url #not sure if this is how you get a file url
-			# else:
-			# 	context_dict['demo']= ''
 
 			context_dict.update(get_bandDetails(band_name_slug))
 
 	return render(request, 'bandmatch/edit_band.html', context_dict)
-
-# def add_player(request, band_name_slug, player_username):
-
-# 	band = Band.objects.get(slug = band_name_slug)
-
-# 	try:
-# 		player = Player.objects.get(user = player_username)
-# 	except Exception, e:
-# 		return HttpResponse('This user does not exist')
-	
-
-# 	band.members.add(player)
-# 	band.save()
-
-# 	return HttpResponseRedirect('/bandmatch/band/band_name_slug/edit')
-
-# def remove_player(request, band_name_slug, player_username):
-
-# 	band = Band.objects.get(slug = band_name_slug)
-
-# 	try:
-# 		player = Player.objects.get(user = player_username)
-# 	except Exception, e:
-# 		return HttpResponse('This user does not exist')
-	
-
-# 	band.members.remove(player)
-# 	band.save()
-
-# 	return HttpResponseRedirect('/bandmatch/band/band_name_slug/edit')
-
 
 #A view to create a band. Used with make_a_band.html and BandForm
 @login_required
@@ -357,45 +266,6 @@ def get_profileDetails(request, username):
 def profile(request, username): #could possibly use user_id here
 	context_dict = {}
 
-	# user = User.objects.get(username = username)
-
-	# player = Player.objects.get(user = user)
-
-	# context_dict['username'] = username
-
-	# context_dict['first_name'] = user.first_name
-
-	# context_dict['last_name'] = user.last_name
-
-	# context_dict['description'] = player.description
-
-	# context_dict['instruments'] = player.instruments #should probably be checked how it works when instruments are a list
-
-	# user_bands = player.band_set.all()
-
-	# context_dict['bands'] = user_bands
-
-	# #we could do this or pass privacy to the html with the context_dict
-	# #and choose what to display there
-	# if player.privacy == 1 and request.user != user: # if 1 is on and 0 is off
-	# 	context_dict['email'] = user.email #only displayed for registered users and if user allows it
-	# 	context_dict['contact_info'] = player.contact_info 
-	# 	context_dict['location'] = player.location
-	# else:
-	# 	context_dict['email'] = ''
-	# 	context_dict['contact_info'] =  ''
-	# 	context_dict['location'] = ''
-
-	# if player.demo:
-	# 	context_dict['demo'] = player.demo.url #not sure if this is how you get a file url
-	# else:
-	# 	context_dict['demo']= ''
-
-	# if player.image:
-	# 	context_dict['pic'] = player.image.url
-	# else:
-	# 	context_dict['pic'] = ''
-
 	context_dict = get_profileDetails(request, username)
 
 	user = User.objects.get(username = username)
@@ -413,43 +283,6 @@ def profile(request, username): #could possibly use user_id here
 #Might not be necessary.
 def edit_profile(request, username):
 	context_dict = {}
-
-	# user = User.objects.get(username = username)
-
-	# player = Player.objects.get(user = user)
-
-	# context_dict['username'] = username
-
-	# context_dict['first_name'] = user.first_name
-
-	# context_dict['last_name'] = user.last_name
-
-	# context_dict['description'] = player.description
-
-	# context_dict['instruments'] = player.instruments 
-
-	# user_bands = player.band_set.all()
-
-	# context_dict['bands'] = user_bands
-
-	# if player.privacy == 1 and request.user != user: # more security ftw!
-	# 	context_dict['email'] = user.email 
-	# 	context_dict['contact_info'] = player.contact_info 
-	# 	context_dict['location'] = player.location
-	# else:
-	# 	context_dict['email'] = ''
-	# 	context_dict['contact_info'] =  ''
-	# 	context_dict['location'] = ''
-
-	# if player.demo:
-	# 	context_dict['demo'] = player.demo.url #not sure if this is how you get a file url
-	# else:
-	# 	context_dict['demo']= ''
-
-	# if player.image:
-	# 	context_dict['pic'] = player.image.url
-	# else:
-	# 	context_dict['pic'] = ''
 
 	context_dict = get_profileDetails(request, username)
 
@@ -922,47 +755,54 @@ Messages still has some inconsistancies:
 @login_required
 def send_message(request, reciever_list=[]):
 	context_dict = {}
+	context_dict['title'] = ""
+	context_dict['content'] = ""
 	if request.method == 'POST':
+
 		#Either send the message or do other stuff
 
-		message_form = MessageForm(request.POST)
+		message_form = MessageForm(data=request.POST)
+
+		context_dict['title'] = message_form.data['title']
+
+		context_dict['content'] = message_form.data['content']
 
 		if request.POST.__contains__('suggestion'):
 			#Add the added reciever to list
-			new_recipiant = request.POST['suggestion']
-			if new_recipiant not in reciever_list: #Not adding dublicates
-				reciever_list.append(new_recipiant)
+			new_recipient = request.POST['suggestion']
+			if new_recipient not in reciever_list: #Not adding dublicates
+				reciever_list.append(new_recipient)
+			else:
+				reciever_list.remove(new_recipient)
 			#Pass the list to the view, which will pass it back if a new reciever is added
 			context_dict['reciever_list'] = reciever_list
 		#Chech if the title and content have been added
-		if message_form.is_valid():
-			#Check if the're recievers for the message
-			if (len(reciever_list) > 0):
-				message = message_form.save(commit = False)
-				user = request.user
-				message.sender = Player.objects.get(user = user)
-				message.save()
-
-			#add recievers to the message recievers
-				for reciever in reciever_list:
-					try:
-						recipiant = Player.objects.get(user__username = reciever)
-						message.recipients.add(recipiant)
-					except:
-						pass
-
-				message.save()
-				#Return a different view so the reciever_list gets wiped.
-				return(HttpResponseRedirect(reverse('display_messages')))
-			else:
-				#No recipiants. Don't send the message. Tell the user to add recipiants.
-				messages.add_message(request, messages.INFO, 'Please add a recipiant to send a message.')
 		else:
-			#The form wasn't valid.
-			messages.add_message(request, messages.INFO, 'Please add a title and content to send a message.')
+			if message_form.is_valid():
+				#Check if the're recievers for the message
+				if (len(reciever_list) > 0):
+					message = message_form.save(commit = False)
+					user = request.user
+					message.sender = Player.objects.get(user = user)
+					message.save()
 
+				#add recievers to the message recievers
+					for reciever in reciever_list:
+						try:
+							recipient = Player.objects.get(user__username = reciever)
+							message.recipients.add(recipient)
+						except:
+							pass
 
-
+					message.save()
+					#Return a different view so the reciever_list gets wiped.
+					return(HttpResponseRedirect(reverse('display_messages')))
+				else:
+					#No recipiants. Don't send the message. Tell the user to add recipiants.
+					messages.add_message(request, messages.INFO, 'Please add a recipient to send a message.')
+			else:
+				#The form wasn't valid.
+				messages.add_message(request, messages.INFO, 'Please add a title and content to send a message.')
 
 	message_draft = MessageForm()
 
