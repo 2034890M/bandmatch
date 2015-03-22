@@ -9,8 +9,8 @@
 {% if results %}
 	{% for band in results %}
 	<tr>
-		<td><a href="{% url 'band'  band.slug %}">{{ band.name }}</a></td>
-		<td> Location: {{ band.location }}</td>
+		<td><a href="{% url 'band'  band.slug %}">{{ band.name }} </a>|&nbsp;</td>
+		<td> Location: {{ band.location }} |&nbsp;</td>
 		<td> Looking for: {% for ad in band|get_ads_looking_for %}{{ad}}{% endfor %}</td>
 	</tr>
 	{% endfor %}

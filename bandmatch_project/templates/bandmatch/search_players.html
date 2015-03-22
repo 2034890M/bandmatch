@@ -8,12 +8,12 @@
 {% if results %}
 	{% for player in results %}
 	<tr>
-		<td><a href="{% url 'profile'  player.user.username %}">{{ player.user.username }}</a></td>
+		<td><a href="{% url 'profile'  player.user.username %}">{{ player.user.username }} </a>-&nbsp;</td>
 		<td> Plays: {% for instr in player.instruments %}{{instr}}{% endfor %}</td>
 	</tr>
 	{% endfor %}
 {% else %}
-<p> There are no bands matching this query. <p>
+<p> There are no players matching this query. <p>
 {% endif %}
 
 {% endblock %}

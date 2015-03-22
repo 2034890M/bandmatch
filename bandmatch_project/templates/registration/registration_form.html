@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Rango</title>
+        <title>Register with Bandmatch</title>
     </head>
 	{% extends 'bandmatch/base.html' %}
+	{% load bootstrap %}
     <body>
 	{% block body_block %}
+		{% load bootstrap %}
         <h1>Register with Bandmatch</h1>
 
         {% if registered %}
@@ -22,8 +24,8 @@
             <!-- Display each form. The as_p method wraps each element in a paragraph
                  (<p>) element. This ensures each element appears on a new line,
                  making everything look neater. -->
-            {{ user_form.as_p }}
-            {{ player_form.as_p }}
+            {{ user_form|bootstrap }}
+            {{ player_form|bootstrap}}
 
             <!-- Provide a button to click to submit the form. -->
             <input type="submit" name="submit" value="Register" />

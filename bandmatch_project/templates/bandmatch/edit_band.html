@@ -2,6 +2,8 @@
 {% load staticfiles %}
 	{% block title %}- {{name}}{% endblock %}
 		
+<<<<<<< HEAD
+=======
 	<body>
 		{% load staticfiles %}
 		{% block body_block %}
@@ -27,17 +29,12 @@
 		    {% else %}
 			{{name}} does not have any members.
 		    {% endif %}
+>>>>>>> cad0de4238c9a5412c54cbc40927aa55b2c99556
 
-		</p>
-{% if adverts %}
-<b>Adverts:</b>
-{% for advert in adverts %}
-	<p><a href="{% url 'display_advert' slug advert.id %}">{{advert}}</a></p>
-{% endfor %}
-{% else %}
-<p> {{name}} does not currently have any adverts. </p>
-{% endif %}
 
+	<body>
+		{% load bootstrap %}
+		{% block body_block %}
 {% if is_member == 1%}
 
 <!-- add members !!!-->
@@ -74,17 +71,7 @@
 <form role="form"  id="edit_band_form" method="post" action="{% url 'edit_band' slug %}">
 
         {% csrf_token %}
-        {% for hidden in band_form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-
-        {% for field in band_form.visible_fields %}
-            {{ field.errors }}
-            {{ field.help_text }}<br/>
-            {{ field }}<br/>
-        {% endfor %}
-
-        <br/>
+		{{band_form|bootstrap}}
     <button class="btn btn-primary" type="submit" name="submit">Save Changes</button>
 </form>
 </div>
@@ -93,5 +80,5 @@
 <p> Only members of this band can edit. </p>
 {% endif %}
 
-
 {% endblock %}
+</body>

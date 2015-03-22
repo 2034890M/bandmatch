@@ -1,6 +1,7 @@
 <html>
 {% extends 'bandmatch/base.html' %}
 {% load staticfiles %}
+{% load bootstrap %}
 	<body>
 	   {% block body_block %}
 		<div class="page-header">
@@ -9,17 +10,7 @@
 	   
                 <form role="form"  id="make_band_form" method="post" action="{% url 'make_a_band' %}">
             <h2 class="form-signin-heading">Make a Band </h2>
-                    {% csrf_token %}
-                    {% for hidden in band_form.hidden_fields %}
-                        {{ hidden }}
-                    {% endfor %}
-
-                    {% for field in band_form.visible_fields %}
-                        {{ field.errors }}
-                        {{ field.help_text }}<br/>
-                        {{ field }}<br/>
-                    {% endfor %}
-
+				{{band_form|bootstrap}}
                 <br/>
             <button class="btn btn-primary" type="submit" name="submit">Make Band</button>
                 </form>
