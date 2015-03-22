@@ -178,6 +178,7 @@ def add_band(request):
 
 	context_dict = {}
 	context_dict['created'] = False
+	context_dict['messages'] = ""
 
 	if request.method == 'POST':
 		#Create the band and take the user to the created bands site
@@ -208,6 +209,10 @@ def add_band(request):
 			url = '/bandmatch/band/' #Hardcoded! Bad :((
 			url = url + newband.slug
 			return HttpResponseRedirect(url)
+		else:
+			print band_form.errors
+			context_dict['messages'] = "Please include name and description"
+			context_dict['band_form'] = BandForm()
 
 
 	else:
@@ -545,17 +550,22 @@ def advanced_search(request):
 
 			if band_name_query != "":
 				bands_list = bands_list.filter(name__contains = band_name_query)
+				print bands_list
 			if band_location_query != "":
 				bands_list = bands_list.filter(location__contains = band_location_query)
-				for b in bands_list:
-					result_list.append(b)
+				print bands_list
+			for b in bands_list:
+				result_list.append(b)
+			print result_list
 
 			if band_looking_for_query != "":
 				result_list_ad = []
 				adverts_list = Advert.objects.filter(looking_for__contains = band_looking_for_query)
+				print bands_list
 				for ad in adverts_list:
 					if ad.band in result_list:
 						result_list_ad.append(ad.band)
+				print result_list
 
 				result_list = result_list_ad
 
@@ -756,7 +766,16 @@ Messages still has some inconsistancies:
 def send_message(request, reciever_list=[]):
 	context_dict = {}
 
-	if request.method == 'POST':
+	if request.method == 'GET':
+		reciever_list=[]
+		context_dict['reciever_list'] = reciever_list
+		message_draft = MessageForm()
+		context_dict['message_draft'] = message_draft
+		context_dict['title'] = ""
+		context_dict['content'] = ""
+
+	else:
+
 
 		#Either send the message or do other stuff
 
@@ -764,9 +783,10 @@ def send_message(request, reciever_list=[]):
 
 
 
-		if request.POST.__contains__('suggestion'):
+		if request.POST.__contains__('suggestion') and request.POST['suggestion'] != "":
 			#Add the added reciever to list
-			new_recipient = request.POST['suggestion']
+			new_recipient_name = request.POST['suggestion']
+			new_recipient = Player.objects.get(user__username = new_recipient_name)
 			if new_recipient not in reciever_list: #Not adding dublicates
 				reciever_list.append(new_recipient)
 			else:
@@ -786,6 +806,7 @@ def send_message(request, reciever_list=[]):
 				message.save()
 
 				#add recievers to the message recievers
+
 				for reciever in reciever_list:
 					try:
 						recipient = Player.objects.get(user__username = reciever)
@@ -795,6 +816,7 @@ def send_message(request, reciever_list=[]):
 
 				message.save()
 				del reciever_list[:]
+
 					#Return a different view so the reciever_list gets wiped.
 				return(HttpResponseRedirect(reverse('display_messages')))
 			else:
@@ -802,9 +824,6 @@ def send_message(request, reciever_list=[]):
 				messages.add_message(request, messages.INFO, 'Please add a recipient to send a message.')
 		else:
 				#The form wasn't valid.
-			messages.add_message(request, messages.INFO, 'Please add a title and content to send a message.')
 
-	message_draft = MessageForm()
-
-	context_dict['message_draft'] = message_draft
+				messages.add_message(request, messages.INFO, 'Please add a title and content to send a message.')
 	return render(request, "bandmatch/send_message.html", context_dict)
