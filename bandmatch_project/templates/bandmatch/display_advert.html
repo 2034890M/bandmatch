@@ -5,27 +5,72 @@
 
 {% block body_block %}
 
-<p>{{content}}</p>
 
+<!-- Display the advert -->
+
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading"><h2><p class="text-center">{{this_advert.title}}</p></h2></div>
+  <div class="panel-body">
+    <p>{{this_advert.content}}</p>
+  </div>
+
+  <!-- List group -->
+  <ul class="list-group">
+    <li class="list-group-item">Looking for: {{this_advert.looking_for}}</li>
+  </ul>
+</div>
+
+
+
+<!-- Display the advert -->
 <!-- make a form for submitting -->
         <form id="reply_form" method="post" action="{% url 'display_advert' band_name_slug advert %}"
                 enctype="multipart/form-data">
 
             {% csrf_token %}
 
+
+
             <!-- Display each form. The as_p method wraps each element in a paragraph
                  (<p>) element. This ensures each element appears on a new line,
                  making everything look neater. -->
-            {{ reply_form.as_p }}
+                <div class="input-group">
+              <span class="input-group-addon" id="sizing-addon2">Content</span>
+              <textarea type="text" class="form-control" id="id_content" name="content" value="{{content}}" rows="10" aria-describedby="sizing-addon2"></textarea>
+            </div>
 
             <!-- Provide a button to click to submit the form. -->
-            <input type="submit" name="submit" value="Reply" />
+        <div class="text-center">
+            <button class="btn btn-primary" type="submit" name="submit">Reply</button>
+        </div>
         </form>
 
-        {% for reply in reply_list %}
-        <p>{{reply.replier}} : {{reply.content}}</p>
-        {% endfor %}
 
+        <!-- display replies -->
+
+
+<div class="media">
+    {% for reply in reply_list %}
+    <div class="panel default-panel">
+        <div class="panel-body">
+  <div class="media-left media-middle">
+    <a href="#">
+      <img class="media-object" src="{{reply.replier.image.url}}" alt="{{reply.replier}}" style="width:64px;height:64px">
+    </a>
+  </div>
+  <div class="media-body">
+    <h4 class="media-heading"><a href="{% url 'profile' reply.replier %}">{{reply.replier}}</a> at {{reply.date}}</h4>
+    {{reply.content}}
+  </div>
+</div>
+</div>
+  {% endfor %}
+</div>
+
+
+
+        <!-- display replies -->
 
 
 

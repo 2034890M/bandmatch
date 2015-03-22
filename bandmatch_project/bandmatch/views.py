@@ -736,6 +736,7 @@ def display_advert(request, band_name_slug, advert):
 	context_dict['content'] = advertobject.content
 	context_dict['band_name_slug'] = band_name_slug
 	context_dict['advert'] = advert
+	context_dict['this_advert'] = advertobject
 
 	if request.method == 'POST':
 		#A reply was posted - create it
