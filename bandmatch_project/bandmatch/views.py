@@ -12,6 +12,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
+from django.shortcuts import redirect
+
 from bandmatch.models import Band, Player, Message, Advert, User, Reply
 from bandmatch.forms import UserForm, PlayerForm, BandForm, AdvertForm, ReplyForm, MessageForm
 
@@ -197,8 +199,9 @@ def edit_band(request, band_name_slug):
 
 			band_name_slug = band.slug
 
-
 			context_dict.update(get_bandDetails(band_name_slug))
+
+			return redirect('/bandmatch/band/'+band_name_slug+'/edit/' )
 
 	return render(request, 'bandmatch/edit_band.html', context_dict)
 
