@@ -800,7 +800,7 @@ def send_message(request, reciever_list=[]):
 	context_dict = {}
 
 	if request.method == 'GET':
-		reciever_list=[]
+		del reciever_list[:]
 		context_dict['reciever_list'] = reciever_list
 		message_draft = MessageForm()
 		context_dict['message_draft'] = message_draft
