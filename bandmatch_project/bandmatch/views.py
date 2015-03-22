@@ -732,7 +732,7 @@ def display_messages(request):
 
 	player = Player.objects.get(user = user)
 	sent_messages = Message.objects.filter(sender = player)
-	context_dict['sent_messages'] = sent_messages
+	context_dict['sent_messages'] = sent_messages.order_by('-date')
 
 	context_dict['recieved_messages'] = player.message_set.all()
 
@@ -755,17 +755,14 @@ Messages still has some inconsistancies:
 @login_required
 def send_message(request, reciever_list=[]):
 	context_dict = {}
-	context_dict['title'] = ""
-	context_dict['content'] = ""
+
 	if request.method == 'POST':
 
 		#Either send the message or do other stuff
 
 		message_form = MessageForm(data=request.POST)
 
-		context_dict['title'] = message_form.data['title']
 
-		context_dict['content'] = message_form.data['content']
 
 		if request.POST.__contains__('suggestion'):
 			#Add the added reciever to list
@@ -776,33 +773,36 @@ def send_message(request, reciever_list=[]):
 				reciever_list.remove(new_recipient)
 			#Pass the list to the view, which will pass it back if a new reciever is added
 			context_dict['reciever_list'] = reciever_list
+			print reciever_list
+
 		#Chech if the title and content have been added
-		else:
-			if message_form.is_valid():
+
+		if message_form.is_valid():
 				#Check if the're recievers for the message
-				if (len(reciever_list) > 0):
-					message = message_form.save(commit = False)
-					user = request.user
-					message.sender = Player.objects.get(user = user)
-					message.save()
+			if (len(reciever_list) > 0):
+				message = message_form.save(commit = False)
+				user = request.user
+				message.sender = Player.objects.get(user = user)
+				message.save()
 
 				#add recievers to the message recievers
-					for reciever in reciever_list:
-						try:
-							recipient = Player.objects.get(user__username = reciever)
-							message.recipients.add(recipient)
-						except:
-							pass
+				for reciever in reciever_list:
+					try:
+						recipient = Player.objects.get(user__username = reciever)
+						message.recipients.add(recipient)
+					except:
+						pass
 
-					message.save()
+				message.save()
+				del reciever_list[:]
 					#Return a different view so the reciever_list gets wiped.
-					return(HttpResponseRedirect(reverse('display_messages')))
-				else:
-					#No recipiants. Don't send the message. Tell the user to add recipiants.
-					messages.add_message(request, messages.INFO, 'Please add a recipient to send a message.')
+				return(HttpResponseRedirect(reverse('display_messages')))
 			else:
+					#No recipiants. Don't send the message. Tell the user to add recipiants.
+				messages.add_message(request, messages.INFO, 'Please add a recipient to send a message.')
+		else:
 				#The form wasn't valid.
-				messages.add_message(request, messages.INFO, 'Please add a title and content to send a message.')
+			messages.add_message(request, messages.INFO, 'Please add a title and content to send a message.')
 
 	message_draft = MessageForm()
 
