@@ -35,7 +35,10 @@ def populate():
 
 	write_message('whatever', '', 'Jaakko', ["Jaakko1","Reni"])
 
-
+	add_player('Admin', 'IM @admin', 'Bandmatch admin')
+	admin = User.objects.get_or_create(username = 'admin')[0]
+	admin.set_password('admin')
+	admin.save()
 
 
 
