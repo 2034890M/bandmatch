@@ -26,11 +26,41 @@ def index(request):
     if not user.is_authenticated():
     	return HttpResponseRedirect('/bandmatch/about/')
    	
-	player = Player.objects.get(user = user)
-	recent_messages = player.message_set.all().order_by('date')[:5]
-	context_dict['messages'] = recent_messages
+    player = Player.objects.get(user = user)
+    recent_messages = player.message_set.all().order_by('date')[:5]
+    context_dict['messages'] = recent_messages
 
-
+    player_address = player.location
+    players = []
+    players2 = []
+    #this should look through all the players and add their details to the dictionary
+    users = Player.objects.all()
+    for each in users:
+        if each.user == user:
+            continue        #emphasis on should
+        info = []
+        
+        info.append(each.user)
+        info.append(each.contact_info)
+        players.append(info)
+        players2.append((each.location))
+    bandAdds = []
+    bandData = []
+    bands = Band.objects.all()
+    for each in bands:
+        info = []
+        info.append(each.name)
+        info.append(each.description)     
+        #info.append(members)
+        bandAdds.append(each.location)
+        bandData.append(info)
+        
+    context_dict['address']=player_address
+    context_dict['addresses']=players2
+    context_dict['players']=players
+    context_dict['bandAdds']=bandAdds
+    context_dict['bandData']=bandData
+    
     response = render(request,'bandmatch/index.html', context_dict)
     return response
 
@@ -70,7 +100,7 @@ def get_bandDetails(band_name_slug):
 
 	context_dict['description'] = band.description
 
-	if band.image:
+	if band.demo:
 		context_dict['pic'] = band.image.url 
 	else:
 		context_dict['pic']= ''
@@ -253,7 +283,7 @@ def get_profileDetails(request, username):
 	else:
 		context_dict['email'] = ''
 		context_dict['contact_info'] =  ''
-		context_dict['location'] = ''
+		context_dict['location'] = player.location
 
 	if player.demo:
 		context_dict['demo'] = player.demo.url #not sure if this is how you get a file url
@@ -283,6 +313,8 @@ def profile(request, username): #could possibly use user_id here
 	else:
 		context_dict['is_user'] = 0
 
+        #JUST TO MAKE SURE MY LOCATION IS SHOWN
+        context_dict['location'] = player.location
 	return render(request, 'bandmatch/profile.html', context_dict)
 
 #Might not be necessary.
@@ -382,13 +414,12 @@ def register_profile(request):
 
 			if 'image' in request.FILES:
 				profile.image = request.FILES['image']
-			else:
-				if profile.gender == 'm':
-					profile.image = settings.STATIC_URL + 'images\m.jpg'
-				elif profile.gender == 'f':
-					profile.image = settings.STATIC_URL + 'images\pf.jpg'
-				elif profile.gender == 'unknown':
-					profile.image = settings.STATIC_URL + 'images\o.png'
+			elif profile.gender == 'm':
+				profile.image = settings.STATIC_URL + 'images\m.jpg'
+			elif profile.gender == 'f':
+				profile.image = settings.STATIC_URL + 'images\pf.jpg'
+			elif profile.gender == 'unknown':
+				profile.image = settings.STATIC_URL + 'images\o.png'
 
 			if 'demo' in request.FILES:
 				profile.demo = request.FILES['demo']
@@ -484,6 +515,7 @@ def search_players(request):
 	return render(request, 'bandmatch/search_players.html', context_dict)
 
 def advanced_search(request):
+
     context_dict = {}
 
     result_list = []
@@ -572,6 +604,7 @@ def advanced_search(request):
 			context_dict["results"] = result_list
 
     return render(request, 'bandmatch/advanced_search.html', context_dict)
+
 
 @login_required
 def user_logout(request):
@@ -714,6 +747,7 @@ def user_login(request):
         # blank dictionary object...
        return render(request, 'bandmatch/login.html', {})
 
+
 """
 #A view/function to send messages from request.user to recipients. 
 def send_message(request, recipients):
@@ -742,12 +776,13 @@ def display_messages(request):
 
 	player = Player.objects.get(user = user)
 	sent_messages = Message.objects.filter(sender = player)
-	context_dict['sent_messages'] = sent_messages
+	context_dict['sent_messages'] = sent_messages.order_by('-date')
 
 	context_dict['recieved_messages'] = player.message_set.all()
 
 
 	return render(request, "bandmatch/messages.html", context_dict)
+
 
 
 """
@@ -765,6 +800,7 @@ Messages still has some inconsistancies:
 @login_required
 def send_message(request, reciever_list=[]):
 	context_dict = {}
+
 	if request.method == 'GET':
 		reciever_list=[]
 		context_dict['reciever_list'] = reciever_list
@@ -775,13 +811,12 @@ def send_message(request, reciever_list=[]):
 
 	else:
 
+
 		#Either send the message or do other stuff
 
 		message_form = MessageForm(data=request.POST)
 
-		context_dict['title'] = message_form.data['title']
 
-		context_dict['content'] = message_form.data['content']
 
 		if request.POST.__contains__('suggestion') and request.POST['suggestion'] != "":
 			#Add the added reciever to list
@@ -793,31 +828,37 @@ def send_message(request, reciever_list=[]):
 				reciever_list.remove(new_recipient)
 			#Pass the list to the view, which will pass it back if a new reciever is added
 			context_dict['reciever_list'] = reciever_list
+			print reciever_list
+
 		#Chech if the title and content have been added
-		else:
-			if message_form.is_valid():
+
+		if message_form.is_valid():
 				#Check if the're recievers for the message
-				if (len(reciever_list) > 0):
-					message = message_form.save(commit = False)
-					user = request.user
-					message.sender = Player.objects.get(user = user)
-					message.save()
+			if (len(reciever_list) > 0):
+				message = message_form.save(commit = False)
+				user = request.user
+				message.sender = Player.objects.get(user = user)
+				message.save()
 
 				#add recievers to the message recievers
-					for recipient in reciever_list:
-						try:
-							# recipient = Player.objects.get(user__username = reciever)
-							message.recipients.add(recipient)
-						except:
-							pass
 
-					message.save()
+				for reciever in reciever_list:
+					try:
+						recipient = Player.objects.get(user__username = reciever)
+						message.recipients.add(recipient)
+					except:
+						pass
+
+				message.save()
+				del reciever_list[:]
+
 					#Return a different view so the reciever_list gets wiped.
-					return(HttpResponseRedirect(reverse('display_messages')))
-				else:
-					#No recipiants. Don't send the message. Tell the user to add recipiants.
-					messages.add_message(request, messages.INFO, 'Please add a recipient to send a message.')
+				return(HttpResponseRedirect(reverse('display_messages')))
 			else:
+					#No recipiants. Don't send the message. Tell the user to add recipiants.
+				messages.add_message(request, messages.INFO, 'Please add a recipient to send a message.')
+		else:
 				#The form wasn't valid.
+
 				messages.add_message(request, messages.INFO, 'Please add a title and content to send a message.')
 	return render(request, "bandmatch/send_message.html", context_dict)

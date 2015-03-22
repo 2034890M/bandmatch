@@ -2,16 +2,88 @@
 
 
 {% block body_block %}
-Sent messages:
-{% for message in sent_messages %}
 
-	<p>{{message}}</p>
+<!-- Tabs for recieved and sent messages -->
+<form class="form-inline" id="search_form" method="post" action="{% url 'display_messages' %}">
+	<p>Inbox</p>
+	<input type="button" name="choice" value="Sent messages" id="sent_button" />
+	<input type="button" name="choice" value="Recieved messages" id="recieved_button" />
+
+	<div id="recieved_message_list">
+	Sent messages:
+{% for message in sent_messages %}
+<!-- Sent messages here -->
+
+
+<div class="panel panel-default">
+	<div class="panel-body">
+		<div class="row">
+			<div class="col-sm-1">
+				<img src="{{message.sender.image.url}}" alt="Picture of {{message.sender}}" style="width:34px;height:56px">
+			</div>
+			<div class="col-sm-1">
+				From:  <a href="{% url 'profile' message.sender %}">{{message.sender}}</a>
+			</div>
+			<div class="col-sm-10">
+				<div class="row">
+					<div class="center-block">
+						<b>{{message.title}} </b>
+					</div>
+				</div>
+				<div class="row">
+					{{message.content}}
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+{% endfor %}
+</div>
+
+<!-- -->
+
+
+
+
+<div id="sent_message_list">
+	Recieved messages:
+	{% for message in recieved_messages %}
+	<div class="panel panel-default">
+		<div class="panel-body">
+
+			<div class="row">
+				<div class="col-sm-2">
+					{% for recipiant in message.recipients_set.all %}
+						{{recipiant}}
+					{% endfor %}
+				</div>
+				<div class="col-sm-10">
+					<div class="row">
+						<div class="center-block">
+							{{message.title}}
+						</div>
+					</div>
+				<div class="row">
+					{{message.content}}
+				</div>
+				</div>
+			</div>
+		</div>
+	</div>
+		{% endfor %}
+</div>
+
+
+
+</form>
+
+
+
+
 	
-{% endfor %}
-Recieved messages:
-{% for message in recieved_messages %}
- <p>{{message}} </p>
-{% endfor %}
+
 
 
 {% endblock %}
