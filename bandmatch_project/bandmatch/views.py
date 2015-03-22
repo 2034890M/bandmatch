@@ -611,12 +611,10 @@ def advanced_search(request):
     context_dict = {}
 
     result_list = []
-
-    context_dict["resultsp"] = result_list
-    context_dict["resultsb"] = result_list
     
     if request.method == 'POST':
 		if request.POST["submit"] == "Search Players":
+			context_dict["resultsp"] = result_list
 			player_username_query = request.POST["player_username_query"]
 			player_name_query = request.POST["player_name_query"]
 			player_instrument_query = request.POST["player_instrument_query"]
@@ -662,6 +660,7 @@ def advanced_search(request):
 			context_dict["resultsp"] = result_list
 
 		if request.POST["submit"] == "Search Bands":
+			context_dict["resultsb"] = result_list
 			band_name_query = request.POST["band_name_query"]
 			band_looking_for_query = request.POST["band_looking_for_query"]
 			band_location_query = request.POST["band_location_query"]
