@@ -168,22 +168,40 @@ def edit_band(request, band_name_slug):
 			new_member_profile = Player.objects.get(user__username = new_member)#try/except?
 			band.members.add(new_member_profile)
 			band.save()
+			#noify new member
 			notify_new = Message.objects.create(title = "You have been added to a band",
 				content = "You have been added to " + band.name ,
 				sender = Player.objects.get(user__username__exact = "Admin"))
 			notify_new.recipients.add(new_member_profile)
 			notify_new.save()
+			#notify all other members
+			notify_new = Message.objects.create(title = new_member+" has been added to your band",
+				content = new_member+" is now in " + band.name ,
+				sender = Player.objects.get(user__username__exact = "Admin"))
+			for member in band.members.all():
+				if member != new_member_profile:
+					notify_new.recipients.add(member)
+			notify_new.save()
+
 
 		if request.POST.__contains__('suggest_mem'):
 			removed_member = request.POST['suggest_mem']
 			removed_member_profile = Player.objects.get(user__username = removed_member)
 			band.members.remove(removed_member_profile)
 			band.save()
+			#notify removed member
 			notify_removed = Message.objects.create(title = "You have been removed from a band", 
 				content = "You have been removed from " + band.name,
-				 sender = Player.objects.get(user__username__exact = "Admin"))
+				sender = Player.objects.get(user__username__exact = "Admin"))
 			notify_removed.recipients.add(removed_member_profile)
 			notify_removed.save()
+			#notify all other members
+			notify_removed = Message.objects.create(title = removed_member+" has been removed from your band", 
+				content = removed_member+" is no longer in " + band.name,
+				sender = Player.objects.get(user__username__exact = "Admin"))
+			for member in band.members.all():
+				notify_removed.recipients.add(member)
+			notify_removed.save()	
 
 		members_list = band.members.all()
 		context_dict['members'] = members_list
