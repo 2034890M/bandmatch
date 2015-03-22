@@ -1,5 +1,8 @@
 {% extends 'bandmatch/base.html' %}
 {% load staticfiles %}
+
+{% block title%}Bandmatch: Advanced Search{% endblock %}
+
 {% block body_block%}
 
 <form class="form-inline" id="search_form" method="post" action="{% url 'advanced_search' %}">
@@ -46,7 +49,6 @@
 	{% csrf_token %}
 </form>
 
-<!--need better way to display results -->
 <div class="panel panel-default">
 	<div class="panel-heading">Results:</div>
 	<ul class="list-group">

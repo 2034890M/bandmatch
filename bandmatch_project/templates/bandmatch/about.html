@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html>
 {% extends 'bandmatch/base.html' %}
 {% load staticfiles %}
 
-<body>
+{% block title%}Bandmatch: About{% endblock %}
+
  {% block body_block %}
 
  <div class="jumbotron">
@@ -14,11 +13,11 @@
 	<p>Getting started is easy! You need only to register, and fill in your details (name, address, instruments etc.). Then you can start looking for bands in need of your skill set, or even form a band and start looking for your dream team.</p><br/>
 
 {% if not user.is_authenticated %}
-<p>If you are new feel free to jump right in: <a class="btn btn-primary btn-lg" href="{% url 'register_profile' %}" role="button">Register here</a></p>
-<p>or if you are comming back <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Login here</a></p>
+<p>If you are new feel free to jump right in:</p>
+<a class="btn btn-primary btn-lg" href="{% url 'register_profile' %}" role="button">Register here</a>
+<p>or if you are comming back</p>
+<a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Login here</a>
 {% endif %}
 </div>
 
  {% endblock %}
-</body>
-</html>

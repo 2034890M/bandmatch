@@ -555,13 +555,15 @@ def search_bands(request):
 	bands_list = Band.objects.filter(name__contains = query)
 
 	for band in bands_list:
-		result_list.append(band)
+		if band not in result_list:
+			result_list.append(band)
 
 	#search advert
 	adverts_list = Advert.objects.filter(looking_for__contains = query)
 
 	for ad in adverts_list:
-		result_list.append(ad.band)
+		if ad.band not in result_list:
+			result_list.append(ad.band)
 
 	#should we search description???
 
@@ -581,24 +583,28 @@ def search_players(request):
 	players_list = Player.objects.filter(user__username__contains = query)
 
 	for player in players_list:
-		result_list.append(player)
+		if player not in result_list:
+			result_list.append(player)
 
 	players_list = Player.objects.filter(user__first_name__contains = query)
 
 	for player in players_list:
-		result_list.append(player)
+		if player not in result_list:
+			result_list.append(player)
 
 	players_list = Player.objects.filter(user__last_name__contains = query)
 
 	for player in players_list:
-		result_list.append(player)
+		if player not in result_list:
+			result_list.append(player)
 
 	#search instruments
 	players_list_instr = Player.objects.all()
 
 	for player in players_list_instr:
-		if query in player.instruments:
-			result_list.append(player)
+		if player not in result_list:
+			if query in player.instruments:
+				result_list.append(player)
 
 	#description???
 
