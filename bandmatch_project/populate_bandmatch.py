@@ -17,19 +17,19 @@ def populate():
 
 
 
-<<<<<<< HEAD
-	add_player('Jaakko1', "J", "1", 'Call me xxx', "I'm handsome", "Glasgow", ["guitar", "drums"])
+# <<<<<<< HEAD
+	add_player('Jaakko1', "J", "1", 'Call me xxx', "I'm handsome", "Dumbarton Road, Glasgow", ["guitar", "drums"])
 
-	add_player('Jaakko', "J", "K", "Call me xoxo", "I'm in a band!!", ["vocals"])
+	add_player('Jaakko', "J", "K", "Call me xoxo", "I'm in a band!!", "11 Ruthven Lane, Glasgow", ["vocals"])
 
-	add_player('Reni', "R", "2", "Bulgaria", "I'm not in a band :((", "Sofia", ["piano", "bass"])
-=======
-	add_player('Jaakko1', 'Call me xxx', "I'm handsome","Dumbarton Road, Glasgow")
+	add_player('Reni', "R", "2", "Bulgaria", "I'm not in a band :((", "12 Ashton Lane, Glasgow", ["piano", "bass"])
+# =======
+# 	add_player('Jaakko1', 'Call me xxx', "I'm handsome","Dumbarton Road, Glasgow")
 
-	add_player('Jaakko', "Call me xoxo", "I'm in a band!!","11 Ruthven Lane, Glasgow")
+# 	add_player('Jaakko', "Call me xoxo", "I'm in a band!!","11 Ruthven Lane, Glasgow")
 
-	add_player('Reni', "Bulgaria", "I'm not in a band :((","12 Ashton Lane, Glasgow")
->>>>>>> 613afaac1bf7fd04c9eda9fdbbb46b626c986dad
+# 	add_player('Reni', "Bulgaria", "I'm not in a band :((","12 Ashton Lane, Glasgow")
+# >>>>>>> 613afaac1bf7fd04c9eda9fdbbb46b626c986dad
 
 	create_band('My chemical bromance', '7 Victoria Circus, Glasgow', 'AWESOME', 'Jaakko')
 
@@ -64,7 +64,7 @@ def populate():
 	create_band('Linkin Perk', 'US', 
 		'an American rock band from Agoura Hills, California', 'cbennington', ['mshinoda', 'bdelson'])
 
-<<<<<<< HEAD
+# <<<<<<< HEAD
 	add_player('nsanderson', 'Neil', 'Sanderson', '',
 	 'influenced by John Bonham, Danny Carey and Stewart Copeland', 'Canada', ['drums', 'vocals'])
 
@@ -88,9 +88,6 @@ def populate():
 
 
 def add_player(username, firstname, lastname, contact_info, description, location="Nowhere", instruments=[]):
-=======
-def add_player(username, contact_info, description, location):
->>>>>>> 613afaac1bf7fd04c9eda9fdbbb46b626c986dad
 	user = User.objects.get_or_create(username = username)[0]
 	user.first_name = firstname
 	user.last_name = lastname
@@ -99,13 +96,10 @@ def add_player(username, contact_info, description, location):
 	p = Player.objects.get_or_create(user = user)[0]
 	p.description = description
 	p.contact_info = contact_info
-<<<<<<< HEAD
 	for i in instruments:
-		p.instruments.append(i)
-	p.locaton = location
-=======
+		if i not in p.instruments:
+			p.instruments.append(i)
 	p.location = location
->>>>>>> 613afaac1bf7fd04c9eda9fdbbb46b626c986dad
 	p.save()
 
 
