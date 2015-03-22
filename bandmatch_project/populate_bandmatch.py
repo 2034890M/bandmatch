@@ -17,13 +17,17 @@ def populate():
 
 
 
-	add_player('Jaakko1', 'Call me xxx', "I'm handsome")
+	add_player('Jaakko1', 'Call me xxx', "I'm handsome","Dumbarton Road, Glasgow")
 
-	add_player('Jaakko', "Call me xoxo", "I'm in a band!!")
+	add_player('Jaakko', "Call me xoxo", "I'm in a band!!","11 Ruthven Lane, Glasgow")
 
-	add_player('Reni', "Bulgaria", "I'm not in a band :((")
+	add_player('Reni', "Bulgaria", "I'm not in a band :((","12 Ashton Lane, Glasgow")
 
-	create_band('My chemical bromance', 'Glasgow', 'AWESOME', 'Jaakko')
+	create_band('My chemical bromance', '7 Victoria Circus, Glasgow', 'AWESOME', 'Jaakko')
+
+	create_band('30 Seconds to venus', '12 University Gardens, Glasgow', 'AMAZING', 'Reni')
+
+	create_band('Blue Day', '23 Grosvenor Ln, Glasgow', 'ASTONISHING', 'Jaakko1')
 
 	make_advert('My chemical bromance', 'deaf drummer wanted', 'no headphones for you', 'drums')
 
@@ -38,13 +42,14 @@ def populate():
 
 
 
-def add_player(username, contact_info, description):
+def add_player(username, contact_info, description, location):
 	user = User.objects.get_or_create(username = username)[0]
 	user.set_password("123")
 	user.save()
 	p = Player.objects.get_or_create(user = user)[0]
 	p.description = description
 	p.contact_info = contact_info
+	p.location = location
 	p.save()
 
 
