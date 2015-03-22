@@ -355,7 +355,7 @@ def edit_profile(request, username):
 			player = player_form.save(commit=False)
 			player.user = user  #do we need that here
 
-
+			player.location = player_form.data['location']
 			#Demo? Picture?
 
 			if 'image' in request.FILES:
@@ -390,7 +390,6 @@ def register_profile(request):
 			instruments_list[i] = re.sub(r"[^a-z]+", '', instruments_list[i])
 		player_form.data['instruments'] = instruments_list
 
-
 		# If the two forms are valid...
 		if user_form.is_valid() and player_form.is_valid():
 			
@@ -409,7 +408,7 @@ def register_profile(request):
 			profile = player_form.save(commit=False)
 			profile.user = user
 
-
+			profile.location = player_form.data['location']
 			#Demo? Picture?
 
 			if 'image' in request.FILES:
@@ -426,7 +425,6 @@ def register_profile(request):
 
 			# Now we save the UserProfile model instance.
 			profile.save()
-
 			# Update our variable to tell the template registration was successful.
 			registered = True
 			username = request.POST['username']
