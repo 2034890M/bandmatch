@@ -1,0 +1,15 @@
+{% load staticfiles %}
+
+
+{% if user_bands %}    
+	<datalist id="options">
+    {% for b in user_bands %}
+        <option value="{{b}}"/>
+    {% endfor %}
+    </datalist>
+
+{% else %}
+    <span> <strong >There are no matching bands. </strong></span>
+
+
+{% endif %}

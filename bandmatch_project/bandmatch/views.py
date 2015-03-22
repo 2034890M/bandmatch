@@ -258,6 +258,39 @@ def add_band(request):
 	return render(request, 'bandmatch/make_a_band.html', context_dict)
 
 
+def add_player(request, username):
+
+	print request.POST['suggest_band']
+	band_name = request.POST['suggest_band']
+
+	band = Band.objects.get(name = band_name)
+
+	try:
+		player = Player.objects.get(user__username = username)
+	except Exception, e:
+		return HttpResponse('This user does not exist')
+	
+	band.members.add(player)
+	band.save()
+
+	return redirect('/bandmatch/profile/'+username+'/')
+
+def suggest_band(request):
+	starts_with = ""
+	user_bands = []
+
+	starts_with = request.GET['suggest_band']
+
+	user = request.user
+
+	player = Player.objects.get(user = user)
+
+	if starts_with != "":
+		user_bands = player.band_set.all().filter(name__istartswith = starts_with)[:10]
+
+	return render(request, 'bandmatch/your_bands_list.html', {'user_bands': user_bands })
+
+
 def get_profileDetails(request, username):
 	context_dict = {}
 
@@ -297,8 +330,11 @@ def get_profileDetails(request, username):
 
 	if player.image:
 		context_dict['pic'] = player.image.url
+		print player.image.url
 	else:
 		context_dict['pic'] = ''
+
+	print context_dict['pic']
 
 	return context_dict
 
