@@ -14,6 +14,8 @@ from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import redirect
 
+from django.contrib.auth.handlers.modwsgi import check_password
+
 from bandmatch.models import Band, Player, Message, Advert, User, Reply
 from bandmatch.forms import UserForm, PlayerForm, BandForm, AdvertForm, ReplyForm, MessageForm
 
@@ -350,11 +352,11 @@ def edit_profile(request, username):
 			instruments_list[i] = re.sub(r"[^a-z]+", '', instruments_list[i])
 		player_form.data['instruments'] = instruments_list
 
-		if user_form.is_valid() and player_form.is_valid() and user_form.data['password']==user.password:
+		if user.check_password(user_form.data['password']) and user_form.is_valid() and player_form.is_valid():
 			
 			user = user_form.save()
 
-			#user.set_password(user.password)
+			user.set_password(user.password)
 			user.save()
 
 			player = player_form.save(commit=False)
@@ -381,7 +383,7 @@ def edit_profile(request, username):
 
 		else:
 			print user_form.errors, player_form.errors
-			context_dict['message'] = "Please enter password to save changes"
+			context_dict['message'] = "Please enter correct password to save changes"
 
 	return render(request, 'bandmatch/edit_profile.html', context_dict)
 
