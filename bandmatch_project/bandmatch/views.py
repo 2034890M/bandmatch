@@ -804,41 +804,43 @@ def suggest_member(request, band_name_slug):
 
 def user_login(request):
 
-    # If the request is a HTTP POST, try to pull out the relevant information.
-   if request.method == 'POST':
-        # Gather the username and password provided by the user.
-        # This information is obtained from the login form.
-       username = request.POST['username']
-       password = request.POST['password']
+	context_dict={}
 
-        # Use Django's machinery to attempt to see if the username/password
-        # combination is valid - a User object is returned if it is.
-       user = authenticate(username=username, password=password)
+	context_dict['messages'] = []
 
-        # If we have a User object, the details are correct.
-        # If None (Python's way of representing the absence of a value), no user
-        # with matching credentials was found.
-       if user:
-            # Is the account active? It could have been disabled.
-           if user.is_active:
-                # If the account is valid and active, we can log the user in.
-                # We'll send the user back to the homepage.
-               login(request, user)
-               return HttpResponseRedirect('/bandmatch/')
-           else:
-                # An inactive account was used - no logging in!
-               return HttpResponse("Your bandmatch account is disabled.")
-       else:
-            # Bad login details were provided. So we can't log the user in.
-           print "Invalid login details: {0}, {1}".format(username, password)
-           return HttpResponse("Wrong username/password combination.")
+	# If the request is a HTTP POST, try to pull out the relevant information.
+	if request.method == 'POST':
+		# Gather the username and password provided by the user.
+		# This information is obtained from the login form.
+		username = request.POST['username']
+		password = request.POST['password']
 
-    # The request is not a HTTP POST, so display the login form.
-    # This scenario would most likely be a HTTP GET.
-   else:
-        # No context variables to pass to the template system, hence the
-        # blank dictionary object...
-       return render(request, 'bandmatch/login.html', {})
+		# Use Django's machinery to attempt to see if the username/password
+		# combination is valid - a User object is returned if it is.
+		user = authenticate(username=username, password=password)
+
+		# If we have a User object, the details are correct.
+		# If None (Python's way of representing the absence of a value), no user
+		# with matching credentials was found.
+		if user:
+			# Is the account active? It could have been disabled.
+			if user.is_active:
+				# If the account is valid and active, we can log the user in.
+				# We'll send the user back to the homepage.
+				login(request, user)
+				return HttpResponseRedirect('/bandmatch/')
+			else:
+				# An inactive account was used - no logging in!
+				context_dict['messages'].append("Your bandmatch account is disabled.")
+				return render(request, 'bandmatch/login.html', context_dict)
+		else:
+			# Bad login details were provided. So we can't log the user in.
+			print "Invalid login details: {0}, {1}".format(username, password)
+			context_dict['messages'].append("Wrong username/password combination.")
+			return render(request, 'bandmatch/login.html', context_dict)
+		# The request is not a HTTP POST, so display the login form.
+		# This scenario would most likely be a HTTP GET.
+	return render(request, 'bandmatch/login.html', context_dict)
 
 
 """
@@ -877,18 +879,6 @@ def display_messages(request):
 	return render(request, "bandmatch/messages.html", context_dict)
 
 
-
-"""
-Messages still has some inconsistancies:
-
-1) If you fill all the fields and click "add player", the message is sent.
-2) After sending a message and clicking back the previous information is saved.
-3) Needs a way to remove recipiants.
-
-1) Could be fixed by changing the order of request.POST.__contains__ and message_form.is_valid
-
-"""
-
 #A view to send a message for one or many users
 @login_required
 def send_message(request, reciever_list=[]):
@@ -903,14 +893,8 @@ def send_message(request, reciever_list=[]):
 		context_dict['content'] = ""
 
 	else:
-
-
 		#Either send the message or do other stuff
-
 		message_form = MessageForm(data=request.POST)
-
-
-
 		if request.POST.__contains__('suggestion') and request.POST['suggestion'] != "":
 			#Add the added reciever to list
 			new_recipient_name = request.POST['suggestion']
@@ -923,8 +907,7 @@ def send_message(request, reciever_list=[]):
 			context_dict['reciever_list'] = reciever_list
 			print reciever_list
 
-		#Chech if the title and content have been added
-
+		#Check if the title and content have been added
 		if message_form.is_valid():
 				#Check if the're recievers for the message
 			if (len(reciever_list) > 0):
@@ -934,7 +917,6 @@ def send_message(request, reciever_list=[]):
 				message.save()
 
 				#add recievers to the message recievers
-
 				for reciever in reciever_list:
 					try:
 						recipient = Player.objects.get(user__username = reciever)

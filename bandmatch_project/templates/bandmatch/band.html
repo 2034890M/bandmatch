@@ -29,17 +29,16 @@
 		    {% endif %}
 
 		</p>
-{% if adverts %}
-<b>Adverts:</b>
-{% for advert in adverts %}
-	<p><a href="{% url 'display_advert' slug advert.id %}">{{advert}}</a></p>
-{% endfor %}
-{% else %}
-<p> {{name}} does not currently have any adverts. </p>
-{% endif %}
+		{% if adverts %}
+			<b>Adverts:</b>
+			{% for advert in adverts %}
+				<p><a href="{% url 'display_advert' slug advert.id %}">{{advert}}</a></p>
+			{% endfor %}
+		{% else %}
+		<p> {{name}} does not currently have any adverts. </p>
+		{% endif %}
 
-<p><a href="{% url 'post_advert' slug %}">Post an advert</a>
-		{% endblock %}</p>
+		<p><a href="{% url 'post_advert' slug %}">Post an advert</a>{% endblock %}</p>
 </body>
 
 

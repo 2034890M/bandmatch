@@ -7,14 +7,24 @@
 {% block body_block %}
 <H1>Login to Bandmatch</H1>
 
+<ul>
+{% for m in messages %}
+<li>{{m}}</li>
+{% endfor %}
+</ul>
+
 <FORM ID="login_form" METHOD="post" ACTION="{% url 'login' %}">
 	{% csrf_token %}
-	Username: <INPUT TYPE="text" NAME="username" VALUE="" SIZE="50" />
-	<BR />
-	Password: <INPUT TYPE="password" NAME="password" VALUE="" SIZE="50" />
-	<BR />
+	<div class="input-group">
+		<span class="input-group-addon" id="sizing-addon2">Username</span>
+		<input type="text" class="form-control" id="username" maxlength="30" name="username" value="" aria-describedby="sizing-addon2">
+	</div>
+	<div class="input-group">
+		<span class="input-group-addon" id="sizing-addon2">Password</span>
+		<input type="password" class="form-control" id="password" name="password" value="" aria-describedby="sizing-addon2">
+	</div>
 
-	<INPUT TYPE="submit" VALUE="submit" />
+	<button class="btn btn-primary" type="submit" name="submit">Login</button>
 </FORM>
 
 {% endblock %}

@@ -9,9 +9,7 @@ $(document).ready(function() {
 		$('#band_search_form').show()
 		$('#player_search_form').hide();
 	});
-});
 
-$(document).ready(function() {
 	$('#sent_message_list').show()
 	$('#recieved_message_list').hide();
 	$('#sent_button').click(function(){

@@ -1,21 +1,21 @@
 {% extends 'bandmatch/base.html' %}
 
+{% block title %}Your Messages{% endblock %}
 
 {% block body_block %}
 
+<h1>Your Messages</h1>
+
 <!-- Tabs for recieved and sent messages -->
 <form class="form-inline" id="search_form" method="post" action="{% url 'display_messages' %}">
-	<p>Inbox</p>
-	<input type="button" name="choice" value="Sent messages" id="sent_button" />
-	<input type="button" name="choice" value="Recieved messages" id="recieved_button" />
-
+	<div class="btn-group" role="group" aria-label="...">
+		<button type="button" class="btn btn-default" name="choice" id="sent_button">Recieved messages</button>
+		<button type="button" class="btn btn-default" name="choice" id="recieved_button">Sent messages</button>
+	</div>
 	<div id="recieved_message_list">
-	Sent messages:
-{% for message in sent_messages %}
-<!-- Sent messages here -->
-
-
-<div class="panel panel-primary">
+	{% for message in sent_messages %}
+	<!-- Sent messages here -->
+		<div class="panel panel-primary">
 			<div class="panel-heading"> From <a href="{% url 'profile' message.sender">{{message.sender}}</a> at {{message.date}}</div>
 			<div class="panel-body" style="max-height: 100px; overflow-y: scroll;">
 			
@@ -28,55 +28,26 @@
 			</div>				
 
 			</div>
+		</div>
+		{% endfor %}
+	</div>
 
-
-
-
-</div>
-
-{% endfor %}
-</div>
-
-<!-- -->
-
-
-
-
-
-
-<div id="sent_message_list">
-	Recieved messages:
-	{% for message in recieved_messages %}
-<div class="panel panel-primary">
+	<div id="sent_message_list">
+		{% for message in recieved_messages %}
+		<div class="panel panel-primary">
 			<div class="panel-heading"> To:
 			{% for recipiant in message.recipients.all %}
 			 <a href="{% url 'profile' recipiant">{{recipiant}}</a>
-
 			{% endfor %}
-			 at {{message.date}}</div>
+			 at {{message.date}}
+			 </div>
 			<div class="panel-body" style="max-height: 100px; overflow-y: scroll;">
-			
 				<p><b>{{message.title}}</b></p>
 				{{message.content}}
-
 			</div>
-
-
-
-
-</div>
+		</div>
 		{% endfor %}
-</div>
-
-
-
+	</div>
 </form>
-
-
-
-
-	
-
-
 
 {% endblock %}
