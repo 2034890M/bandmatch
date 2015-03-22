@@ -69,7 +69,7 @@ class Message(models.Model):
 #	---> Use 'Player' rather than Player
 #	See https://docs.djangoproject.com/en/1.7/ref/models/fields/#lazy-relationships
 	recipients = models.ManyToManyField('Player') 
-	date = models.DateField(auto_now_add=True)
+	date = models.DateTimeField(auto_now_add=True) #Change to dateTimeField
 
 	def __unicode__(self):
 		return self.title + ': ' + self.content
