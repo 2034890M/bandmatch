@@ -49,10 +49,11 @@ if ("{{ address }}" == "Nowhere"){
 
 function initialize() {	//setting up the map 
 	geocoder = new google.maps.Geocoder();
-	var mapOptions = {
+	
+	  var mapOptions = {
 		zoom: 12,
 		center: new google.maps.LatLng(55.864237,-4.251806)
-	} 
+}
 
 	map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
@@ -126,11 +127,13 @@ bandDeets = bandDeets.replace(/&#39;/g,"");
 
 var bands = bandDeets.split(",");
 
-alert(bands);
+
 //data about the bands, should maybe add this into the data one and update them
 //var bands = [["The Killers","band","rock","<a href='http://www.reddit.com/'>Reddit</a>"],["Iron Maiden","band","heavy metal","link to their profile"],["Freddie Mercury","player","rock","link to profile"]];
+
+
 //DATA ABOUT THE DISTANCE THE USER WANTS TO GO, CURRENTLY 3000 IS A PLACEHOLDER
-var userDistance = 30000000;
+var userDistance = 3000;
 
 function calculateDistancesPlayers() {		//calculate the distances between home and the other addresses
  
