@@ -304,6 +304,8 @@ def get_profileDetails(request, username):
 def profile(request, username): #could possibly use user_id here
 	context_dict = {}
 
+	context_dict['message'] = ""
+
 	context_dict = get_profileDetails(request, username)
 
 	user = User.objects.get(username = username)
@@ -348,11 +350,11 @@ def edit_profile(request, username):
 			instruments_list[i] = re.sub(r"[^a-z]+", '', instruments_list[i])
 		player_form.data['instruments'] = instruments_list
 
-		if user_form.is_valid() and player_form.is_valid():
+		if user_form.is_valid() and player_form.is_valid() and user_form.data['password']==user.password:
 			
 			user = user_form.save()
 
-			user.set_password(user.password)
+			#user.set_password(user.password)
 			user.save()
 
 			player = player_form.save(commit=False)
@@ -379,6 +381,7 @@ def edit_profile(request, username):
 
 		else:
 			print user_form.errors, player_form.errors
+			context_dict['message'] = "Please enter password to save changes"
 
 	return render(request, 'bandmatch/edit_profile.html', context_dict)
 
