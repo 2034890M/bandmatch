@@ -13,17 +13,6 @@
 				margin-right: 300px;
 			}
 		</style>
-		<div class="container-fluid">
-			<div class="row">
-			    <form method="post" action="{% url 'add_player' username %}">
-			    {% csrf_token %}
-			    <input  class="search-query span10" type="text" name="suggest_band" value="" id="suggest_band" list="options"/>
-			</div>
-			<div class="row" id="your_bands_list" >		    	        
-			</div>
-			    <button class="btn btn-primary" type="submit" name="submit">Add to Band</button>
-			    </form>	
-		</div><br/>
 
 		<img style="align:right; float:right;" src="{{pic}}" height="200" alt="A picture of {{first_name}}.">
 		<h1> {{username}} </h1>
@@ -49,7 +38,19 @@
 		    {% else %}
 			{{first_name}} is not a member of any bands.
 		    {% endif %}
-		{% endblock %}
 		</p>
+		
+				<div class="container-fluid">
+			<div class="row">
+			    <form method="post" action="{% url 'add_player' username %}">
+			    {% csrf_token %}
+			    <input  class="search-query span10" type="text" name="suggest_band" value="" id="suggest_band" list="options"/>
+			</div>
+			<div class="row" id="your_bands_list" >		    	        
+			</div>
+			    <button class="btn btn-primary" type="submit" name="submit">Add to Band</button>
+			    </form>	
+		</div>
+				{% endblock %}
 	</body>
 </html>
