@@ -67,7 +67,7 @@
                     		infowindow.open(map,marker);
                     	});
                     } else {
-                      alert('Geocode was not successful for the following reason: ' + status);
+                      console.log('Geocode was not successful for the following reason: ' + status);
                     }
                 });
             }
@@ -138,7 +138,7 @@
             function callback(response, status) {	//take the distances and if they are in a certain distance to home display the pins
             	//var userDistance = 500;
                 if (status != google.maps.DistanceMatrixStatus.OK) {
-                    alert('Error was: ' + status);
+                    console.log('Error was: ' + status);
                 } else {
                     var origins = response.originAddresses;
                     var destinations = response.destinationAddresses;
@@ -152,7 +152,7 @@
                             var k = 0;
                             if (results[j].distance)
                       			k = parseInt(results[j].distance.value);
-                			// alert(k);
+                			// console.log(k);
                 			var add = (k < userDistance);							//THIS IS THE DISTANCE FROM HOME IN METRES, CHANGE TO A VARIABLE SO IT CAN COME FROM THE USER
                 			if (add){
                 				addMarkerPlayer(destinations[j],j,k);
@@ -179,7 +179,7 @@
             function callback1(response, status) {	//take the distances and if they are in a certain distance to home display the pins
             	//var userDistance = 500;
                 if (status != google.maps.DistanceMatrixStatus.OK) {
-                	alert('Error was: ' + status);
+                	console.log('Error was: ' + status);
                 } else {
                     var origins = response.originAddresses;
                     var destinations = response.destinationAddresses;
@@ -241,7 +241,7 @@
                             }
                         })(marker, i));
                     } else {
-                      alert('Geocode was not successful for the following reason: ' + status);
+                      console.log('Geocode was not successful for the following reason: ' + status);
                     }
                 });
             	
@@ -272,7 +272,7 @@
                             iconCounter = 0;
                         }
                     } else {
-                      alert('Geocode was not successful for the following reason: ' + status);
+                      console.log('Geocode was not successful for the following reason: ' + status);
                     }
                 });
             }
