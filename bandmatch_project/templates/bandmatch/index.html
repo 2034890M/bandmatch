@@ -42,7 +42,7 @@ var markersArray = [];
 if ("{{ address }}" == "Nowhere"){
 	var origin = "37 Cranworth street, glasgow"
 }else{
-	var origin = {{ address }};
+	var origin = "{{ address }}";
 }
 	
 	
@@ -163,8 +163,9 @@ function callback(response, status) {	//take the distances and if they are in a 
 	for (var i = 0; i < origins.length; i++) {
 		var results = response.rows[i].elements;
      	for (var j = 0; j < results.length; j++) {
+		
 			var k = parseInt(results[j].distance.value);
-			
+			alert(k);
 			var add = (k < userDistance);							//THIS IS THE DISTANCE FROM HOME IN METRES, CHANGE TO A VARIABLE SO IT CAN COME FROM THE USER
 			if (add == true){
 				addMarkerPlayer(destinations[j],j,k);
