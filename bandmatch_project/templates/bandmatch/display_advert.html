@@ -6,6 +6,9 @@
 {% block body_block %}
 
 
+
+
+
 <!-- Display the advert -->
 
 <div class="panel panel-default">
@@ -35,16 +38,20 @@
             <!-- Display each form. The as_p method wraps each element in a paragraph
                  (<p>) element. This ensures each element appears on a new line,
                  making everything look neater. -->
+
+            <div class="panel panel-default">
+            <div class="panel-heading">Reply to This Advert:</div>
                 <div class="input-group">
-              <span class="input-group-addon" id="sizing-addon2">Content</span>
-              <textarea type="text" class="form-control" id="id_content" name="content" value="{{content}}" rows="10" aria-describedby="sizing-addon2"></textarea>
+                    <span class="input-group-addon" id="sizing-addon2">Content</span>
+                    <textarea class="form-control" id="id_content" name="content" rows="10" aria-describedby="sizing-addon2"></textarea>
+                </div>
             </div>
 
             <!-- Provide a button to click to submit the form. -->
-        <div class="text-center">
+            <div class="text-center">
             <button class="btn btn-primary" type="submit" name="submit">Reply</button>
         </div>
-        </form>
+        </form> <br/>
 
 
         <!-- display replies -->

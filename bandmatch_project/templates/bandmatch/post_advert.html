@@ -3,9 +3,7 @@
     {% block body_block %}
         <h1>Post an advert</h1>
 
-
-
-        <form id="user_form" method="post" action="{% url 'post_advert' band_name_slug %}"
+        <form id="advert_form" method="post" action="{% url 'post_advert' band_name_slug %}"
                 enctype="multipart/form-data">
 
             {% csrf_token %}
@@ -13,10 +11,22 @@
             <!-- Display each form. The as_p method wraps each element in a paragraph
                  (<p>) element. This ensures each element appears on a new line,
                  making everything look neater. -->
-            {{ advert_form.as_p }}
+
+            <div class="input-group">
+                <span class="input-group-addon" id="sizing-addon2">Title</span>
+                <input class="form-control" id="id_title" maxlength="128" name="title" type="text" aria-describedby="sizing-addon2">
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon" id="sizing-addon2">Content</span>
+                <textarea class="form-control" id="id_content" name="content" rows="10" aria-describedby="sizing-addon2"></textarea>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon" id="sizing-addon2">Looking for someone who plays</span>
+                <input class="form-control"id="id_looking_for" maxlength="256" name="looking_for" type="text" aria-describedby="sizing-addon2">
+            </div>
 
             <!-- Provide a button to click to submit the form. -->
-            <input type="submit" name="submit" value="Register" />
+            <button class="btn btn-primary" type="submit" name="submit">Post</button>
         </form>
 
 		{% endblock %}
