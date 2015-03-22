@@ -387,6 +387,30 @@ def edit_profile(request, username):
 
 	return render(request, 'bandmatch/edit_profile.html', context_dict)
 
+def change_password(request, username):
+	context_dict = {}
+	context_dict['username'] = username
+	context_dict['messages'] = []
+
+	user = User.objects.get(username = username)
+
+	if request.method == "POST":
+		if user.check_password(request.POST['password']):
+			if request.POST['new_password'] == request.POST['new_password2']:
+				user.set_password(request.POST['new_password'])
+				user.save()
+				password = request.POST['new_password']
+				user = authenticate(username=username, password=password)
+				login(request, user)
+
+				return redirect('/bandmatch/profile/'+username+'/')
+			else:
+				context_dict['messages'].append("The two new password fields should be the same")
+		else:
+			context_dict['messages'].append("Your current password is not correct")
+	return render(request, 'bandmatch/password_change.html', context_dict)
+
+
 
 def register_profile(request):
     # A boolean value for telling the template whether the registration was successful.

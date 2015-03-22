@@ -43,6 +43,8 @@
 
 {% if is_user == 1 %}
 
+<a href="{% url 'change_password' username %}">Change Password</a>
+
         <form id="user_form" method="post" action="{% url 'edit_profile' username %}"
                 enctype="multipart/form-data">
 

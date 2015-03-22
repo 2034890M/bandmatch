@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^profile/add_band/$', views.add_band, name='make_a_band'),
     #url(r'^profile/$', views.profile, name='your_profile'), using the same url for your and other profiles
     url(r'^profile/(?P<username>[\w\-]+)/edit/$', views.edit_profile, name='edit_profile'),
+    url(r'^profile/(?P<username>[\w\-]+)/change_password/$', views.change_password, name='change_password'),
     url(r'^profile/(?P<username>[\w\-]+)', views.profile, name='profile'),
     url(r'^register/$', views.register_profile, name='register_profile'),
     url(r'^search_bands/', views.search_bands, name='search_bands'),
