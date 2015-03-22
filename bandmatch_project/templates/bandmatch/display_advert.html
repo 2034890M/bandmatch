@@ -5,7 +5,11 @@
 
 {% block body_block %}
 
-<p>{{content}}</p>
+<div class="panel panel-default">
+            <div class="panel-heading">{{title}}</div>
+            <div class="panel-body" style="max-height: 100px; overflow-y: scroll;">{{content}}</div>
+</div>
+
 
 <!-- make a form for submitting -->
         <form id="reply_form" method="post" action="{% url 'display_advert' band_name_slug advert %}"
@@ -16,15 +20,27 @@
             <!-- Display each form. The as_p method wraps each element in a paragraph
                  (<p>) element. This ensures each element appears on a new line,
                  making everything look neater. -->
-            {{ reply_form.as_p }}
+            <div class="panel panel-default">
+            <div class="panel-heading">Reply to This Advert:</div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="sizing-addon2">Content</span>
+                    <textarea class="form-control" id="id_content" name="content" rows="10" aria-describedby="sizing-addon2"></textarea>
+                </div>
+            </div>
 
             <!-- Provide a button to click to submit the form. -->
-            <input type="submit" name="submit" value="Reply" />
-        </form>
+            <button class="btn btn-primary" type="submit" name="submit">Reply</button>
+        </form> <br/>
 
+<div class="panel panel-info">
+            <div class="panel-heading">Replies:</div>
         {% for reply in reply_list %}
-        <p>{{reply.replier}} : {{reply.content}}</p>
+        <div class="panel panel-default">
+            <div class="panel-heading"><a href="{% url 'profile' reply.replier.user.username %}">{{reply.replier}}</a></div>
+            <div class="panel-body" style="max-height: 100px; overflow-y: scroll;">{{reply.content}}</div>
+        </div>
         {% endfor %}
+</div>
 
 
 

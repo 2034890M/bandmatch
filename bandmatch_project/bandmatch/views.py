@@ -104,6 +104,8 @@ def get_bandDetails(band_name_slug):
 
 	context_dict['description'] = band.description
 
+	context_dict['adverts'] = band.advert_set.all()
+
 	if band.demo:
 		context_dict['pic'] = band.image.url 
 	else:
@@ -733,6 +735,7 @@ def display_advert(request, band_name_slug, advert):
 	context_dict = {}
 
 	advertobject = Advert.objects.get(id = advert)
+	context_dict['title'] = advertobject.title
 	context_dict['content'] = advertobject.content
 	context_dict['band_name_slug'] = band_name_slug
 	context_dict['advert'] = advert
