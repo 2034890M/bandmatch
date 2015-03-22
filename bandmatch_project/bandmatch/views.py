@@ -26,11 +26,41 @@ def index(request):
     if not user.is_authenticated():
     	return HttpResponseRedirect('/bandmatch/about/')
    	
-	player = Player.objects.get(user = user)
-	recent_messages = player.message_set.all().order_by('date')[:5]
-	context_dict['messages'] = recent_messages
+    player = Player.objects.get(user = user)
+    recent_messages = player.message_set.all().order_by('date')[:5]
+    context_dict['messages'] = recent_messages
 
-
+    player_address = player.location
+    players = []
+    players2 = []
+    #this should look through all the players and add their details to the dictionary
+    users = Player.objects.all()
+    for each in users:
+        if each.user == user:
+            continue        #emphasis on should
+        info = []
+        
+        info.append(each.user)
+        info.append(each.contact_info)
+        players.append(info)
+        players2.append((each.location))
+    bandAdds = []
+    bandData = []
+    bands = Band.objects.all()
+    for each in bands:
+        info = []
+        info.append(each.name)
+        info.append(each.description)     
+        #info.append(members)
+        bandAdds.append(each.location)
+        bandData.append(info)
+        
+    context_dict['address']=player_address
+    context_dict['addresses']=players2
+    context_dict['players']=players
+    context_dict['bandAdds']=bandAdds
+    context_dict['bandData']=bandData
+    
     response = render(request,'bandmatch/index.html', context_dict)
     return response
 
@@ -70,7 +100,7 @@ def get_bandDetails(band_name_slug):
 
 	context_dict['description'] = band.description
 
-	if band.image:
+	if band.demo:
 		context_dict['pic'] = band.image.url 
 	else:
 		context_dict['pic']= ''
@@ -253,7 +283,7 @@ def get_profileDetails(request, username):
 	else:
 		context_dict['email'] = ''
 		context_dict['contact_info'] =  ''
-		context_dict['location'] = ''
+		context_dict['location'] = player.location
 
 	if player.demo:
 		context_dict['demo'] = player.demo.url #not sure if this is how you get a file url
@@ -283,6 +313,8 @@ def profile(request, username): #could possibly use user_id here
 	else:
 		context_dict['is_user'] = 0
 
+        #JUST TO MAKE SURE MY LOCATION IS SHOWN
+        context_dict['location'] = player.location
 	return render(request, 'bandmatch/profile.html', context_dict)
 
 #Might not be necessary.
@@ -382,13 +414,12 @@ def register_profile(request):
 
 			if 'image' in request.FILES:
 				profile.image = request.FILES['image']
-			else:
-				if profile.gender == 'm':
-					profile.image = settings.STATIC_URL + 'images\m.jpg'
-				elif profile.gender == 'f':
-					profile.image = settings.STATIC_URL + 'images\pf.jpg'
-				elif profile.gender == 'unknown':
-					profile.image = settings.STATIC_URL + 'images\o.png'
+			elif profile.gender == 'm':
+				profile.image = settings.STATIC_URL + 'images\m.jpg'
+			elif profile.gender == 'f':
+				profile.image = settings.STATIC_URL + 'images\pf.jpg'
+			elif profile.gender == 'unknown':
+				profile.image = settings.STATIC_URL + 'images\o.png'
 
 			if 'demo' in request.FILES:
 				profile.demo = request.FILES['demo']
@@ -484,6 +515,7 @@ def search_players(request):
 	return render(request, 'bandmatch/search_players.html', context_dict)
 
 def advanced_search(request):
+
     context_dict = {}
 
     result_list = []
@@ -572,6 +604,7 @@ def advanced_search(request):
 			context_dict["results"] = result_list
 
     return render(request, 'bandmatch/advanced_search.html', context_dict)
+
 
 @login_required
 def user_logout(request):
@@ -714,6 +747,7 @@ def user_login(request):
         # blank dictionary object...
        return render(request, 'bandmatch/login.html', {})
 
+
 """
 #A view/function to send messages from request.user to recipients. 
 def send_message(request, recipients):
@@ -748,6 +782,7 @@ def display_messages(request):
 
 
 	return render(request, "bandmatch/messages.html", context_dict)
+
 
 
 """

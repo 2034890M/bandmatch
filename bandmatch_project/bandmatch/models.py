@@ -41,7 +41,8 @@ class Player(models.Model):
 	contact_info = models.TextField()
 	description = models.TextField()
 	#Preferences can be included in your own description?
-	privacy = models.IntegerField(default=1)
+	PRIVACY_CHOICES = [('1', 'on'),('0', 'off')]
+	privacy = models.IntegerField(default=1, choices = PRIVACY_CHOICES)
 	demo = models.FileField(upload_to = 'player_demos', blank = True) #How to have multiple (from 0 to n) demos? 
 	instruments = ListField()
 	#instrument = models.CharField(max_length = 128, default = 'None') #Need to have this as a list of strings

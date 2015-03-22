@@ -18,7 +18,7 @@
         #map-canvas {
 		margin-left: auto;
 		margin-right: auto;
-	    width : 1000px;
+	    width : 500px;
         height: 400px;
         
       }
@@ -37,9 +37,16 @@
 var geocoder;
 var map;
 var markersArray = [];
-var origin = "37 Cranworth street, Glasgow";	//change to make it users address
+//var origin = {{ address }};	//change to make it users address
 
+if ("{{ address }}" == "Nowhere"){
+	var origin = "37 Cranworth street, glasgow"
+}else{
+	var origin = {{ address }};
+}
 	
+	
+
 function initialize() {	//setting up the map 
 	geocoder = new google.maps.Geocoder();
 	var mapOptions = {
@@ -53,26 +60,79 @@ function initialize() {	//setting up the map
  
  
 function showLocation() {
-	var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+	geocoder.geocode( { 'address': origin}, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+     	var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
 		var marker = new google.maps.Marker({
-		position: new google.maps.LatLng(55.875667,-4.291163),
+		position: results[0].geometry.location,
 		map: map,
 		icon: iconBase + 'schools_maps.png'
 		});
+		
 		google.maps.event.addListener(marker, 'click', function() {
 		infowindow.setContent("Your House!");
 		infowindow.open(map,marker);
 	  });
+      
+	  
+      
+    } else {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
+
 }
 
-<!-- this will be used to get all the places from the database and put them in data -->
-var data = ["University of Glasgow","17 Vinicombe Street Glasgow","101 Craiglea Drive, Edinburgh"];
-//data about the bands, should maybe add this into the data one and update them
-var bands = [["The Killers","band","rock","<a href='http://www.reddit.com/'>Reddit</a>"],["Iron Maiden","band","heavy metal","link to their profile"],["Freddie Mercury","player","rock","link to profile"]];
-//DATA ABOUT THE DISTANCE THE USER WANTS TO GO, CURRENTLY 3000 IS A PLACEHOLDER
-var userDistance = 30000;
+//The addresses and information for the players to be shown on the map
 
-function calculateDistances() {		//calculate the distances between home and the other addresses
+var playersList = "{{ addresses }}";
+var n = playersList.length;
+playersList = playersList.substring(0,n-6);
+playersList=playersList.replace(/u&#39;/g,'');
+playersList=playersList.replace('[','');
+playersList=playersList.replace(']','');
+var data = playersList.split("&#39;,");
+
+
+var playerData = "{{ players }}";
+
+playerData = playerData.replace(/;/g,"");
+playerData = playerData.replace(/u&#39/g,"");
+playerData = playerData.replace(/&#39/g,"");
+playerData = playerData.replace(/\[/g,"");
+playerData = playerData.replace(/\]/g,"");
+playerData = playerData.replace(/&gt/g,"");
+playerData = playerData.replace(/&lt/g,"");
+
+var playerInfo = playerData.split(",");
+
+var bandADDs = "{{ bandAdds }}";
+
+bandADDs = bandADDs.replace(/u&#39;/g,"");
+bandADDs = bandADDs.replace(/\[/g,"");
+bandADDs = bandADDs.replace(/\]/g,"");
+bandADDs = bandADDs.replace(/,/g,"");
+//bandADDs = bandADDs.replace(/&#39;/g,"");
+
+var bandInfo = bandADDs.split("&#39;");
+bandInfo.slice(-1,1);
+
+
+var bandDeets = "{{ bandData }}";
+bandDeets = bandDeets.replace(/\[/g,"");
+bandDeets = bandDeets.replace(/\]/g,"");
+bandDeets = bandDeets.replace(/u&#39;/g,"");
+bandDeets = bandDeets.replace(/&#39;/g,"");
+
+var bands = bandDeets.split(",");
+
+alert(bands);
+//data about the bands, should maybe add this into the data one and update them
+//var bands = [["The Killers","band","rock","<a href='http://www.reddit.com/'>Reddit</a>"],["Iron Maiden","band","heavy metal","link to their profile"],["Freddie Mercury","player","rock","link to profile"]];
+//DATA ABOUT THE DISTANCE THE USER WANTS TO GO, CURRENTLY 3000 IS A PLACEHOLDER
+var userDistance = 30000000;
+
+function calculateDistancesPlayers() {		//calculate the distances between home and the other addresses
  
   var service = new google.maps.DistanceMatrixService();
   service.getDistanceMatrix(
@@ -85,7 +145,7 @@ function calculateDistances() {		//calculate the distances between home and the 
       avoidTolls: false
     }, callback);
 }
-
+//Callback for players
 function callback(response, status) {	//take the distances and if they are in a certain distance to home display the pins
 	//var userDistance = 500;
   if (status != google.maps.DistanceMatrixStatus.OK) {
@@ -101,16 +161,56 @@ function callback(response, status) {	//take the distances and if they are in a 
 		var results = response.rows[i].elements;
      	for (var j = 0; j < results.length; j++) {
 			var k = parseInt(results[j].distance.value);
+			
 			var add = (k < userDistance);							//THIS IS THE DISTANCE FROM HOME IN METRES, CHANGE TO A VARIABLE SO IT CAN COME FROM THE USER
 			if (add == true){
-				addMarker(destinations[j],j,k);
-			}		
+				addMarkerPlayer(destinations[j],j,k);
+			}
+	}
+	}
+}
+}
 
+
+function calculateDistancesBands() {		//calculate the distances between home and the other addresses
+
+  var service = new google.maps.DistanceMatrixService();
+  service.getDistanceMatrix(
+    {
+      origins: [origin],
+      destinations: bandInfo,
+      travelMode: google.maps.TravelMode.DRIVING,
+      unitSystem: google.maps.UnitSystem.METRIC,
+      avoidHighways: false,
+      avoidTolls: false
+    }, callback1);
+}
+//Callback for players
+function callback1(response, status) {	//take the distances and if they are in a certain distance to home display the pins
+	//var userDistance = 500;
+  if (status != google.maps.DistanceMatrixStatus.OK) {
+	alert('Error was: ' + status);
+  } else {
+    var origins = response.originAddresses;
+    var destinations = response.destinationAddresses;
+    var outputDiv = document.getElementById('outputDiv');
+    outputDiv.innerHTML = '';
+    deleteOverlays();
+	
+	for (var i = 0; i < origins.length; i++) {
+		var results = response.rows[i].elements;
+     	for (var j = 0; j < results.length; j++) {
+			var k = parseInt(results[j].distance.value);
+			
+			var add = (k < userDistance);							//THIS IS THE DISTANCE FROM HOME IN METRES, CHANGE TO A VARIABLE SO IT CAN COME FROM THE USER
+			if (add == true){
+				addMarkerBand(destinations[j],j,k);
+			
 		}
 	}
 	}
 }
-		
+}		
 var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';		//WHERE TO GET THE ICONS FROM
 		
 var icons = [							//THE DIFFERENT COLOURED PINS ARE ACTUALLY DIFFERENT PICTURES
@@ -130,7 +230,7 @@ var infowindow = new google.maps.InfoWindow({	//THE GUIDELINES FOR MAKING THE PI
     maxWidth: 160
 });
 	
-function addMarker(location,i,distanceTo){			//USED FOR ADDING IN THE MARKERS ON THE ADDRESSES
+function addMarkerBand(location,i,distanceTo){			//USED FOR ADDING IN THE MARKERS ON THE ADDRESSES
 	
 	geocoder.geocode( { 'address': location}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
@@ -138,15 +238,45 @@ function addMarker(location,i,distanceTo){			//USED FOR ADDING IN THE MARKERS ON
       var marker = new google.maps.Marker({		//CREATES THE MARKER
           map: map,
           position: results[0].geometry.location,
-		  icon: icons[iconCounter]		//TAKES THE ICON FROM THE ICON LIST OF THE DIFFERENT COLOURED PINS
+		  icon: icons[5]		//TAKES THE ICON FROM THE ICON LIST OF THE DIFFERENT COLOURED PINS
       });
 	  markersArray.push(marker);
 
 
       google.maps.event.addListener(marker, 'click', (function(marker, i) {	//WHEN THE PIN IS CLICKED THIS SHOWS UP TO THE USER
         return function() {
-			var contentString = "band name: "+bands[i][0]+"<br>"+"type: "+bands[i][1]+				
-								"<br>" + "genre: "+bands[i][2]+"<br>"+"Distance from you: "+distanceTo+"m"+"<br>"+bands[i][3];
+			var contentString = "band name: "+bands[i*2]+"<br>"+"description: " +bands[i*2+1] +			
+								"<br>" + "Distance from you: "+distanceTo+"m"
+																			//MAY NEED TO CHECK THESE FIELDS BEFORE PUTTING THEM IN HERE SO NO ERRORS OCCUR FROM THERE NOT BEING ANY DATA
+          infowindow.setContent(contentString);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+      
+      
+    } else {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
+	
+}
+	
+function addMarkerPlayer(location,i,distanceTo){			//USED FOR ADDING IN THE MARKERS ON THE ADDRESSES
+	
+	geocoder.geocode( { 'address': location}, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+     
+      var marker = new google.maps.Marker({		//CREATES THE MARKER
+          map: map,
+          position: results[0].geometry.location,
+		  icon: icons[1]		//TAKES THE ICON FROM THE ICON LIST OF THE DIFFERENT COLOURED PINS
+      });
+	  markersArray.push(marker);
+
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {	//WHEN THE PIN IS CLICKED THIS SHOWS UP TO THE USER
+        return function() {
+			var contentString = playerInfo[(i*2)] + "<br>" + "contact details: "+playerInfo[(i*2+1)];
 																			//MAY NEED TO CHECK THESE FIELDS BEFORE PUTTING THEM IN HERE SO NO ERRORS OCCUR FROM THERE NOT BEING ANY DATA
           infowindow.setContent(contentString);
           infowindow.open(map, marker);
@@ -164,8 +294,6 @@ function addMarker(location,i,distanceTo){			//USED FOR ADDING IN THE MARKERS ON
   });
 	
 }
-	
-
 
 
 
@@ -178,7 +306,8 @@ function deleteOverlays() {	//NOT SO SURE WHAT THIS DOES BUT IT WORKS, WHATEVER 
 
 function start() {		//USED TO CALL THE PROCEDURES WHEN THE PAGE IS OPENED
   showLocation();  
-  calculateDistances();
+  calculateDistancesPlayers();
+  calculateDistancesBands();
 }
 
 
