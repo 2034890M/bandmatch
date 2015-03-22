@@ -46,7 +46,7 @@
                         <li><a href="{% url 'make_a_band' %}">Make a Band</a></li>
                         <li><a href="{% url 'your_bands' %}">Your bands</a></li>
                         <li><a href="{% url 'logout' %}?next=/about/">Logout</a></li>
-                       
+                        <li><a href="{% url 'display_messages' %}">Inbox</a></li>
                         <li><a href="{% url 'send_message' %}">Send message</a></li>
                     {% else %}
                         <li><a href="http://127.0.0.1:8000/bandmatch/register/">Register Here</a></li> <!--fix this url later -->
