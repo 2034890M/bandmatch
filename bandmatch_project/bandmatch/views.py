@@ -368,8 +368,14 @@ def edit_profile(request, username):
 				profile.demo = request.FILES['demo']
 
 			player.save()
+			username = request.POST['username']
+			password = request.POST['password']
+			user = authenticate(username=username, password=password)
+			login(request, user)
 
 			context_dict.update(get_profileDetails(request, username))
+			context_dict['user_form'] = UserForm(instance = user)
+			context_dict['player_form'] = PlayerForm(instance = player)
 
 		else:
 			print user_form.errors, player_form.errors

@@ -1,8 +1,5 @@
 FIXES
-Editing profile logs the user out
-Changing band's name when editing band should redirect to the new bands site
 Map still doesn't display
-When sending messages, the reciever_list needs to be handled correctly
 
 TO ADD
 Reply to a message
@@ -23,4 +20,3 @@ Edit band
 
 Message search for recipients
 
-Redirect from edit band to the new band site (if name was changed)
