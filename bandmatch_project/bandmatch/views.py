@@ -744,7 +744,7 @@ def display_messages(request):
 	sent_messages = Message.objects.filter(sender = player)
 	context_dict['sent_messages'] = sent_messages.order_by('-date')
 
-	context_dict['recieved_messages'] = player.message_set.all()
+	context_dict['recieved_messages'] = player.message_set.all().order_by('-date')
 
 
 	return render(request, "bandmatch/messages.html", context_dict)
