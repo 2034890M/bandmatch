@@ -63,7 +63,9 @@
         <div class="panel-body">
   <div class="media-left media-middle">
     <a href="#">
+    {% if reply.replier.image %}
       <img class="media-object" src="{{reply.replier.image.url}}" alt="{{reply.replier}}" style="width:64px;height:64px">
+    {%endif%}
     </a>
   </div>
   <div class="media-body">
