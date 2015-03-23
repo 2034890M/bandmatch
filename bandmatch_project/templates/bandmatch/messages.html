@@ -24,8 +24,11 @@
 	<!-- Sent messages here -->
 		<div class="panel panel-primary">
 			<div class="panel-heading"> From <a style="color:white;" href="{% url 'profile' message.sender %}">{{message.sender}}</a> at {{message.date}}<div class="text-right">
+				{% if message.sender.user.username != "Admin" %}
 					<a class="btn btn-primary" href="{% url 'reply_message' message.sender message.title %}">Reply</a>
+				{%endif%}
 					</div></div>
+				
 			<div class="panel-body" style="max-height: 100px; overflow-y: scroll;">
 			
 			<div class="col-sm-2">

@@ -13,9 +13,9 @@
               {% if bands %}
                     <ul class="list-group">
                         {% for band in bands %}
-                         <li class="list-group-item"><a href="{% url 'band'  band.slug %}">{{ band.name }}</a></li class="list-group-item">
+                         <li class="list-group-item"><a href="{% url 'band'  band.slug %}">{{ band.name }}</a></li>
                         {% endfor %}
-                    </ul class="list-group">
+                    </ul>
                 {% else %}
                     <strong>You aren't a part of any bands yet. <a href ="{% url 'make_a_band' %}">Start a Band!</a></strong>
                 {% endif %}

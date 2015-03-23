@@ -121,7 +121,7 @@ body {
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a  class="navbar-brand" href="/bandmatch/"> <img  src="/media/transparent.png" height="120px" alt="Bandmatch Logo"/></a>
+          <a  class="navbar-brand" href="/bandmatch/"> <img  src="/media/transparent.png" height="120" alt="Bandmatch Logo"/></a>
 		  
         </div>
         <div class="navbar-collapse collapse" style="margin-top: 45px">
@@ -147,40 +147,37 @@ body {
         <div class="col-sm-3 col-md-2 sidebar">
                 {% block side_block %}
 					{% if user.is_authenticated %}
-	<form class="form-inline" id="search_player_form" method="post" action="{% url 'search_players' %}"><!--this id and action should be changed-->
-	     {% csrf_token %}
-	     <!-- Display the search form elements here -->
-	     <input class="form-control" type="text" size="17" name="playersquery" value="{{playersquery}}" id="playersquery" />
-		 <br>
-	     <input class="btn btn-primary" type="submit" name="submit" value="Search for Players" />
-		 <br>
-		 <br>
-	</form>
+        	<form class="form-inline" id="search_player_form" method="post" action="{% url 'search_players' %}"><!--this id and action should be changed-->
+        	     {% csrf_token %}
+        	     <!-- Display the search form elements here -->
+        	     <input class="form-control" type="text" size="17" name="playersquery" value="{{playersquery}}" id="playersquery" />
+        		 <br>
+        	     <input class="btn btn-primary" type="submit" name="submit" value="Search for Players" />
+        		 <br>
+        		 <br>
+        	</form>
 
-  <form class="form-inline" id="search_band_form" method="post" action="{% url 'search_bands' %}"><!--this id and action should be changed-->
-       {% csrf_token %}
-       <!-- Display the search form elements here -->
-       <input class="form-control" type="text" size="17" name="bandsquery" value="{{bandsquery}}" id="bandsquery" />
-	   <br>
-       <input class="btn btn-primary" type="submit" name="submit" value="Search for Bands" />
-	   <br>
-  </form>
+          <form class="form-inline" id="search_band_form" method="post" action="{% url 'search_bands' %}"><!--this id and action should be changed-->
+               {% csrf_token %}
+               <!-- Display the search form elements here -->
+               <input class="form-control" type="text" size="17" name="bandsquery" value="{{bandsquery}}" id="bandsquery" />
+        	   <br>
+               <input class="btn btn-primary" type="submit" name="submit" value="Search for Bands" />
+        	   <br>
+          </form>
 
-	&nbsp;<a style="color: white;" href="{% url 'advanced_search' %}">Advanced Search</a>
-	</div>
-	            </div>
-	 </div>
+        	&nbsp;<a style="color: white;" href="{% url 'advanced_search' %}">Advanced Search</a>
+      </div>
+    </div>
+  </div>
 	{% endif %}
 				{% endblock %}
 
-        </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
            <div>
                 {% block body_block %}{% endblock %}
                 </div>
         </div>
-      </div>
-    </div>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
