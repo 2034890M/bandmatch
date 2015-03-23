@@ -1,44 +1,53 @@
 {% extends 'bandmatch/base.html' %}
 {% load staticfiles %}
-	{% block title %}- {{name}}{% endblock %}
-		
-	<body>
-		{% load staticfiles %}
-		{% block body_block %}
-		<style>
-			body {
-				margin-left: 200px;
-				margin-right: 300px;
-			}
-		</style>
-		<img style="align:right; float:right;" src="{{pic}}" height="200" alt="A picture of {{name}}.">
-		<h1> {{name}} </h1>
-		<p>  {% if is_member == 1 %}
-		<a href="{% url 'edit_band' slug %}">Add players or Edit Band Details</a>
-		{% endif %}</p>
-		<p>
-		   <b>Description:</b> {{description}} <br>
-		   <b>Location:</b> {{location}}<br>
-			 <b>Members:</b>
-		   {% if members %}
-			<ul>{% for member in members %}
-				<li><a href="{% url 'profile' user.username %}">{{member.user.first_name}} {{member.user.last_name}} ({{member.user.username}})</a></li><p>
+{% block title %}Bandmatch: Band:- {{name}}{% endblock %}
+
+{% load staticfiles %}
+{% block body_block %}
+<div class="panel panel-default">
+	<div class="panel-heading">
+	<img style="align:right; float:right;" src="{{pic}}" height="200" alt="A picture of {{name}}.">
+	<h1> {{name}} </h1>
+	</div>
+	<div class="panel-body">
+		  {% if is_member == 1 %}
+		<a href="{% url 'edit_band' slug %}">Add/Remove players or Edit Band Details</a>
+		{% endif %}
+		<div class="panel panel-info">
+			<div class="panel-heading">Description</div>
+			<div class="panel-body">{{description}}</div>
+		</div>
+		<div class="panel panel-info">
+			<div class="panel-heading">Location</div>
+			<div class="panel-body">{{location}}</div>
+		</div>
+		<div class="panel panel-info">
+			<div class="panel-heading">Members</div>
+		  		{% if members %}
+				<ul class="list-group">
+				{% for member in members %}
+				<li class="list-group-item"><a class="list-group-item"href="{% url 'profile' user.username %}">{{member.user.first_name}} {{member.user.last_name}} ({{member.user.username}})</a></li>
 			    {% endfor %} </ul>
 		    {% else %}
 			{{name}} does not have any members.
 		    {% endif %}
+		</div>
 
-		</p>
-		{% if adverts %}
-			<b>Adverts:</b>
+		<div class="panel panel-info">
+			<div class="panel-heading">Adverts</div>
+			{% if adverts %}
+			<ul class="list-group">
 			{% for advert in adverts %}
-				<p><a href="{% url 'display_advert' slug advert.id %}">{{advert}}</a></p>
+				<li class="list-group-item"><a href="{% url 'display_advert' slug advert.id %}">{{advert}}</a></li>
 			{% endfor %}
+			</ul>
 		{% else %}
-		<p> {{name}} does not currently have any adverts. </p>
+		{{name}} does not currently have any adverts.
 		{% endif %}
+		</div>
+	</div>
+</div>
 
-		<p><a href="{% url 'post_advert' slug %}">Post an advert</a>{% endblock %}</p>
-</body>
-
+<a href="{% url 'post_advert' slug %}">Post an advert</a>
+{% endblock %}
 

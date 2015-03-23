@@ -4,6 +4,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bandmatch_project.settings')
 import django
 django.setup()
 
+from datetime import datetime
+
 from bandmatch.models import Player, Band, Advert, Message
 from django.contrib.auth.models import User
 
@@ -122,6 +124,7 @@ def write_message(title, content, sender, recipients):
 	for r in recipients:
 		user_recipient = Player.objects.get(user__username__exact = r)
 		m.recipients.add(user_recipient)
+	m.date = datetime.now()
 	m.save()
 
 def make_advert(band, title, content, looking_for):
