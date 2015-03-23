@@ -3,9 +3,11 @@
 {% load bootstrap %}
 	<title>
 		{% block title %}Edit Profile {% endblock %}
+		
 	</title>
 	<head>
 	{% block head_block %}
+	
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
@@ -15,6 +17,7 @@
 	</head>
 	<body>
 {% block body_block %}
+<p>{{message}}</p>
 {% if is_user == 1 %}
 
 <a href="{% url 'change_password' username %}">Change Password</a>

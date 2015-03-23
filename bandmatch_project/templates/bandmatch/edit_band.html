@@ -2,35 +2,6 @@
 {% load staticfiles %}
 	{% block title %}- {{name}}{% endblock %}
 		
-<<<<<<< HEAD
-=======
-	<body>
-		{% load staticfiles %}
-		{% block body_block %}
-		<style>
-			body {
-				margin-left: 200px;
-				margin-right: 300px;
-			}
-		</style>
-		<input type="hidden" name="band_slug" value="{{slug}}" id="band_slug" /> <!--needed for the jquery-->
-		<img style="align:right; float:right;" src="{{pic}}" height="200" alt="A picture of {{name}}.">
-		<h1><a href="{% url 'band' slug %}"> {{name}} </a></h1>
-		<p>  {% if is_member == 1 %}
-		{% endif %}</p>
-		<p>
-		   <b>Description:</b> {{description}} <br>
-		   <b>Location:</b> {{location}}<br>
-			 <b>Members:</b>
-		   {% if members %}
-			<ul>{% for member in members %}
-				<li><a href="{% url 'profile' user.username %}">{{member.user.first_name}} {{member.user.last_name}} ({{member.user.username}})</a></li><p>
-			    {% endfor %} </ul>
-		    {% else %}
-			{{name}} does not have any members.
-		    {% endif %}
->>>>>>> cad0de4238c9a5412c54cbc40927aa55b2c99556
-
 
 	<body>
 		{% load bootstrap %}

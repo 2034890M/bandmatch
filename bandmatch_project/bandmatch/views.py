@@ -233,40 +233,45 @@ def add_band(request):
 
 	context_dict = {}
 	context_dict['created'] = False
-	context_dict['messages'] = ""
+	context_dict['messages'] = []
 
 	if request.method == 'POST':
 		#Create the band and take the user to the created bands site
 		band_form = BandForm(request.POST, request.FILES)
 		if band_form.is_valid():
-			newband = band_form.save(commit=False)
-			user = request.user
-			founder = Player.objects.get(user__exact = user)
-			
-			newband.save()
+                    name = band_form.data['name']
+                    if not Band.objects.filter(name=name).exists():
+                        newband = band_form.save(commit=False)
+                        user = request.user
+                        founder = Player.objects.get(user__exact = user)
 
-			newband.members.add(founder)
+                        newband.save()
 
-			if 'image' in request.FILES:
-				newband.image = request.FILES['image']
-			else:
-				newband.image = settings.MEDIA_URL + 'b.png'
+                        newband.members.add(founder)
 
-			if 'demo' in request.FILES:
-				newband.demo = request.FILES['demo']
+                        if 'image' in request.FILES:
+                                newband.image = request.FILES['image']
+                        else:
+                                newband.image = settings.MEDIA_URL + 'b.png'
 
-			newband.save()
+                        if 'demo' in request.FILES:
+                                newband.demo = request.FILES['demo']
+
+                        newband.save()
                                 
 
-			context_dict['created'] = True
-			#A redirection to the created band's site would be nice
-			#Is there a more elegant way?
-			url = '/bandmatch/band/' #Hardcoded! Bad :((
-			url = url + newband.slug
-			return HttpResponseRedirect(url)
+                        context_dict['created'] = True
+                        #A redirection to the created band's site would be nice
+                        #Is there a more elegant way?
+                        url = '/bandmatch/band/' #Hardcoded! Bad :((
+                        url = url + newband.slug
+                        return HttpResponseRedirect(url)
+		    else:
+                        context_dict['messages'].append("This band name is taken")
+                        context_dict['band_form'] = BandForm()
 		else:
 			print band_form.errors
-			context_dict['messages'] = "Please include name and description"
+			context_dict['messages'].append("Please include name and description")
 			context_dict['band_form'] = BandForm()
 
 	else:
@@ -377,6 +382,7 @@ def profile(request, username): #could possibly use user_id here
 #Might not be necessary.
 def edit_profile(request, username):
 	context_dict = {}
+	context_dict['message'] = ""
 
 	context_dict = get_profileDetails(request, username)
 
@@ -402,34 +408,39 @@ def edit_profile(request, username):
 			instruments_list[i] = re.sub(r"[^a-z]+", '', instruments_list[i])
 		player_form.data['instruments'] = instruments_list
 
-		if user.check_password(user_form.data['password']) and user_form.is_valid() and player_form.is_valid():
-			
-			user = user_form.save()
+		if user.check_password(user_form.data['password']):
+                    if  user_form.is_valid() and player_form.is_valid():
+                        username = user_form.data['username']
+                        if not User.objects.filter(username=username).exists() or username == request.user.username:
+                            
+                            user = user_form.save()
 
-			user.set_password(user.password)
-			user.save()
+                            user.set_password(user.password)
+                            user.save()
 
-			player = player_form.save(commit=False)
-			player.user = user  #do we need that here
+                            player = player_form.save(commit=False)
+                            player.user = user  #do we need that here
 
-			player.location = player_form.data['location']
-			#Demo? Picture?
+                            player.location = player_form.data['location']
+                            #Demo? Picture?
 
-			if 'image' in request.FILES:
-				profile.image = request.FILES['image']
+                            if 'image' in request.FILES:
+                                    profile.image = request.FILES['image']
 
-			if 'demo' in request.FILES:
-				profile.demo = request.FILES['demo']
+                            if 'demo' in request.FILES:
+                                    profile.demo = request.FILES['demo']
 
-			player.save()
-			username = request.POST['username']
-			password = request.POST['password']
-			user = authenticate(username=username, password=password)
-			login(request, user)
+                            player.save()
+                            username = request.POST['username']
+                            password = request.POST['password']
+                            user = authenticate(username=username, password=password)
+                            login(request, user)
 
-			context_dict.update(get_profileDetails(request, username))
-			context_dict['user_form'] = UserForm(instance = user)
-			context_dict['player_form'] = PlayerForm(instance = player)
+                            context_dict.update(get_profileDetails(request, username))
+                            context_dict['user_form'] = UserForm(instance = user)
+                            context_dict['player_form'] = PlayerForm(instance = player)
+                        else:
+                            context_dict['message'] = "Username is taken"
 
 		else:
 			print user_form.errors, player_form.errors
