@@ -17,19 +17,12 @@ def populate():
 
 
 
-# <<<<<<< HEAD
+
 	add_player('Jaakko1', "J", "1", 'Call me xxx', "I'm handsome", "Dumbarton Road, Glasgow", ["guitar", "drums"])
 
 	add_player('Jaakko', "J", "K", "Call me xoxo", "I'm in a band!!", "11 Ruthven Lane, Glasgow", ["vocals"])
 
 	add_player('Reni', "R", "2", "Bulgaria", "I'm not in a band :((", "12 Ashton Lane, Glasgow", ["piano", "bass"])
-# =======
-# 	add_player('Jaakko1', 'Call me xxx', "I'm handsome","Dumbarton Road, Glasgow")
-
-# 	add_player('Jaakko', "Call me xoxo", "I'm in a band!!","11 Ruthven Lane, Glasgow")
-
-# 	add_player('Reni', "Bulgaria", "I'm not in a band :((","12 Ashton Lane, Glasgow")
-# >>>>>>> 613afaac1bf7fd04c9eda9fdbbb46b626c986dad
 
 	create_band('My chemical bromance', '7 Victoria Circus, Glasgow', 'AWESOME', 'Jaakko')
 
@@ -50,35 +43,35 @@ def populate():
 
 	add_player('mshinoda', 'Mike', 'Shinoda', 'mikeshinoda.com',
 	 "an American musician, record producer, and artist. He co-founded Linkin Park in 1996 and bands rhythm guitarist, songwriter, keyboardist, and co-vocalist.", 
-	 'US', ['guitar', 'keyboard', 'vocals'])
+	 '83 Saint Vincent Street, Glasgow', ['guitar', 'keyboard', 'vocals'])
 
 	add_player('bdelson', 'Brad', 'Delson', 'https://twitter.com/delsononline', 
-		'a musician.', 'US', ['guitar', 'vocals'])
+		'a musician.', '60 North Hanover Street, Glasgow', ['guitar', 'vocals'])
 
 	add_player('jhahn', 'Joe', 'Hahn', 'https://twitter.com/joehahnlp', 
-		'a turntablist and director ', 'US', ['turntables', 'sampler', 'keyboards', 'synthesizer'])
+		'a turntablist and director ', '167 Renfrew St, Glasgow', ['turntables', 'sampler', 'keyboards', 'synthesizer'])
 
 	add_player('cbennington', 'Chester', 'Bennington', 'cbennington.com',
-	 'an American musician, singer, songwriter, and actor', 'US', ['vocals'])
+	 'an American musician, singer, songwriter, and actor', '16 Richmond Street, Glasgow', ['vocals'])
 
-	create_band('Linkin Perk', 'US', 
+	create_band('Linkin Perk', '84 Castle Street, Glasgow', 
 		'an American rock band from Agoura Hills, California', 'cbennington', ['mshinoda', 'bdelson'])
 
 # <<<<<<< HEAD
 	add_player('nsanderson', 'Neil', 'Sanderson', '',
-	 'influenced by John Bonham, Danny Carey and Stewart Copeland', 'Canada', ['drums', 'vocals'])
+	 'influenced by John Bonham, Danny Carey and Stewart Copeland', 'Castle Street, Glasgow', ['drums', 'vocals'])
 
 	add_player('bstock', 'Barry', 'Stock', 'https://www.facebook.com/pages/Barry-Stock-Official/327337807289391', 
 		'I use Schecter, Ibanez and PRS guitars, but prefer an Ibanez SZ320', 
-		'Canada', ['guitar'])
+		'12 Rose Street, Glasgow', ['guitar'])
 
-	create_band('4 days grace', 'Canada', 
-	 	'a Canadian rock band formed in Norwood, Ontario, Canada in 1992', 'nsanderson')
+	create_band('4 days grace', '7 Renfrew St, Glasgow', 
+	 	'a Canadian rock band formed in Norwood, Ontario, Canada in 1992, emigrated to glasgow the year after', 'nsanderson')
 
 	add_player('akiedis', 'Anthony', 'Kiedis', 'the yelow subarine', 'heavily influenced by bad choices', 
-		'LA, US', ['vocals'])
+		'490 Sauchiehall Street, Glasgow', ['vocals'])
 
-	add_player('csmith', 'Chad', 'Smith', '', 'musician',"Nowhere", 
+	add_player('csmith', 'Chad', 'Smith', '', 'musician',"500 Great Western Road, Glasgow", 
 		['drums', 'percussion', 'piano', 'guitar', 'bass'])
 
 
