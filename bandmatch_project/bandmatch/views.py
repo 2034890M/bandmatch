@@ -792,13 +792,13 @@ def display_advert(request, band_name_slug, advert):
                     newreply.replier = replier
                     newreply.save()
                     #Send a notification message to every band member about the reply
-                    #band = Band.objects.get(slug = band_name_slug)
-                    #notify_new = Message.objects.create(title = "A reply in your bands advert!" + band.name ,
-                    #	content = newreply.content,
-                    #	sender = Player.objects.get(user__username__exact = "Admin"))
-                    #for member in band.members.all():
-                    #		if member != replier:
-                    #			notify_new.recipients.add(member)
+                    band = Band.objects.get(slug = band_name_slug)
+                    notify_new = Message.objects.create(title = "A reply in your bands advert!" + band.name ,
+                    	content = newreply.content,
+                    	sender = Player.objects.get(user__username__exact = "Admin"))
+                    for member in band.members.all():
+                    		if member != replier:
+                    			notify_new.recipients.add(member)
                     #notify_new.save()
                     #CAUSES A CRASH IN RECIEVED MESSAGES
                 else:
