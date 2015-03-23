@@ -11,29 +11,37 @@
 <!-- add members !!!-->
 <p>Add Player</p>
 <div class="container-fluid">
-	<div class="row">
-		    <form method="post" action="{% url 'edit_band' slug %}">
-		    {% csrf_token %}
-		    <input  class="search-query span10" type="text" name="suggestion" value="" id="suggestion" list="options"/>
-		    </div>
-			<div class="row" id="user_list" >		    	        
-	   		</div>
-		    <button class="btn btn-primary" type="submit" name="submit">Add Player</button>
-		    </form>	
+	<form method="post" action="{% url 'edit_band' slug %}">
+	{% csrf_token %}
+		<div class="input-group">
+			<span class="input-group-addon">Choose a player to add to this band</span>
+		    <input class="form-control" type="text" name="suggestion" value="" id="suggestion" list="options"/>
+		    <!--datalist in user_list-->
+		    <span class="input-group-btn">
+		    	<button class="btn btn-primary" type="submit" name="submit">Add Player</button>
+		    </span>
+		</div>
+		<div class="row" id="user_list" >		    	        
+		</div> 
+	</form>	
 </div>
 
 <!-- remove players -->
 <p>Remove Player</p>
 <div class="container-fluid">
-	<div class="row">
-		    <form method="post" action="{% url 'edit_band' slug %}">
-		    {% csrf_token %}
-		    <input  class="search-query span10" type="text" name="suggest_mem" value="" id="suggest_mem" list="options"/>
-		    </div>
-			<div class="row" id="member_list" >		    	        
-	   		</div>
-		    <button class="btn btn-primary" type="submit" name="submit">Remove Player</button>
-		    </form>	
+	 <form method="post" action="{% url 'edit_band' slug %}">
+		{% csrf_token %}
+		<div class="input-group">
+		   <span class="input-group-addon">Choose a player to remove from this band</span>
+		    <input class="form-control" type="text" name="suggest_mem" value="" id="suggest_mem" list="options"/>
+		    <!--datalist in user_list-->
+		    <span class="input-group-btn">
+		    	 <button class="btn btn-primary" type="submit" name="submit">Remove Player</button>
+		    </span>
+		</div>
+		<div class="row" id="member_list" >		    	        
+		</div>
+	</form>	
 </div>
 
 

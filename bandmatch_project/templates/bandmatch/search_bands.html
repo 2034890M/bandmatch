@@ -12,9 +12,9 @@
 		{% if results %}
 		{% for band in results %}
 			<li class="list-group-item">
-				<td><a href="{% url 'band'  band.slug %}">{{ band.name }} </a>|&nbsp;
-				<td> Location: {{ band.location }} |&nbsp;
-				<td> Looking for: {% for ad in band|get_ads_looking_for %}{{ad}}{% endfor %}
+				<a href="{% url 'band'  band.slug %}">{{ band.name }} </a>|&nbsp;
+				Location: {{ band.location }} |&nbsp;
+				Looking for: {% for ad in band|get_ads_looking_for %}{{ad}}{% endfor %}
 			</li>
 		{% endfor %}
 		

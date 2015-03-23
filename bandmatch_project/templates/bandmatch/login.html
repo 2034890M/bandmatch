@@ -1,4 +1,3 @@
-<!DOCTYPE HTML>
 {% extends 'bandmatch/base.html' %}
 {% load staticfiles %}
 
@@ -16,8 +15,8 @@
 <FORM ID="login_form" METHOD="post" ACTION="{% url 'login' %}">
 	{% csrf_token %}
 	<div class="input-group">
-		<span class="input-group-addon" id="sizing-addon2">Username</span>
-		<input type="text" class="form-control" id="username" maxlength="30" name="username" value="" aria-describedby="sizing-addon2">
+		<span class="input-group-addon" id="sizing-addon1">Username</span>
+		<input type="text" class="form-control" id="username" maxlength="30" name="username" value="" aria-describedby="sizing-addon1">
 	</div>
 	<div class="input-group">
 		<span class="input-group-addon" id="sizing-addon2">Password</span>

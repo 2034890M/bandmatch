@@ -17,6 +17,7 @@
             <div class="input-group">
                 <span class="input-group-addon">Add/Remove Recipients</span>
                 <input  class="form-control" type="text" name="suggestion" value="" id="suggestion" list="options"/>
+                <!--options list in user_list-->
                 <span class="input-group-btn">
                 <button class="btn btn-primary" type="submit" name="submit">Add Recipient</button>
                 <button class="btn btn-primary" type="submit" name="submit">Remove Recipient</button>
@@ -36,17 +37,16 @@
                  (<p>) element. This ensures each element appears on a new line,
                  making everything look neater. -->
             <div class="input-group">
-              <span class="input-group-addon" id="sizing-addon2">Title</span>
-              <input type="text" class="form-control" id="id_title" maxlength="128" name="title" type="text" value="{{title}}" aria-describedby="sizing-addon2">
+              <span class="input-group-addon" id="sizing-addon1">Title</span>
+              <input class="form-control" id="id_title" maxlength="128" name="title" type="text" value="{{title}}" aria-describedby="sizing-addon1">
             </div>
             <div class="input-group">
               <span class="input-group-addon" id="sizing-addon2">Content</span>
-              <textarea type="text" class="form-control" id="id_content" name="content" value="{{content}}" rows="10" aria-describedby="sizing-addon2"></textarea>
+              <textarea class="form-control" id="id_content" name="content" rows="10">{{content}}</textarea>
             </div>
 
             <!-- Provide a button to click to submit the form. -->
             <button class="btn btn-primary" type="submit" name="submit">Send</button>
-            </form>
-        </form> 
+            </form> 
 </div>
 {% endblock %}

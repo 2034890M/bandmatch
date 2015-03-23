@@ -5,72 +5,72 @@
 {% block body_block %}
 {% load staticfiles %}
 
-<div class="container-fluid">
-	<form method="post" action="{% url 'add_player' username %}">
-	{% csrf_token %}
-	{% if is_user == 0 %}
-	<div class="input-group">
-		<span class="input-group-addon">Add this player to a band</span>
-		<input  class="form-control" type="text" name="suggest_band" value="" id="suggest_band" list="options"/>
-		<span class="input-group-btn">
-			<button class="btn btn-primary" type="submit" name="submit">Add to Band</button>
-		</span>
+	<div class="container-fluid">
+		<form method="post" action="{% url 'add_player' username %}">
+		{% csrf_token %}
+		{% if is_user == 0 %}
+		<div class="input-group">
+			<span class="input-group-addon">Add this player to a band</span>
+			<input  class="form-control" type="text" name="suggest_band" value="" id="suggest_band" list="options"/>
+			<span class="input-group-btn">
+				<button class="btn btn-primary" type="submit" name="submit">Add to Band</button>
+			</span>
+		</div>
+		{% endif %}
+		<div class="row" id="your_bands_list" >		    	        
+		</div>
+		</form>	
 	</div>
-	{% endif %}
-	<div class="row" id="your_bands_list" >		    	        
-	</div>
-	</form>	
-</div>
-<div class="panel panel-default">
-	<div class="panel-heading"> 
-	<h1> {{username}} </h1>
-	<img style="align:right; float:right;" src="{{pic}}" height="200" alt="A picture of {{first_name}}.">
-	</div>
-	<div class="panel-body">
+	<div class="panel panel-default">
+		<div class="panel-heading"> 
+		<h1> {{username}} </h1>
+		<img style="align:right; float:right;" src="{{pic}}" height="200" alt="A picture of {{first_name}}.">
+		</div>
+		<div class="panel-body">
 
-{% if is_user == 1 %} <a href="{% url 'edit_profile' username %}">Edit Your Profile</a> {% endif %}
-<div class="panel panel-info">
-	<div class="panel-heading">Name</div>
-	<div class="panel-body">{{first_name}} {{last_name}}</div>
-</div>
-<div class="panel panel-info">
-	<div class="panel-heading">Description</div>
-	<div class="panel-body">{{description}}</div>
-</div>
-<div class="panel panel-info">
-	<div class="panel-heading">Email</div>
-	<div class="panel-body">{{email}}</div>
-</div>
-<div class="panel panel-info">
-	<div class="panel-heading">Contact information</div>
-	<div class="panel-body">{{contact_info}}</div>
-</div>
-<div class="panel panel-info">
-	<div class="panel-heading">Location</div>
-	<div class="panel-body">{{location}}</div>
-</div>
-<div class="panel panel-info">
-	<div class="panel-heading">Instruments</div>
-	{% if instruments %}
-		<ul class="list-group">
-		{% for instrument in instruments %}
-			<li class="list-group-item">{{instrument}}</li>
-		{% endfor %} 
-		</ul>
-	{% else %}
-	{{first_name}} does not play any instruments.<br>
-	{% endif %}
-</div>
-<div class="panel panel-info">
-	<div class="panel-heading">Bands</div>
-	{% if bands %}
-		<ul class="list-group">
-		{% for band in bands %}
-			<li class="list-group-item"><a href="{% url 'band' band.slug %}">{{band}}</a></li>
-		{% endfor %} 
-		</ul>
-	{% else %}
-	{{first_name}} is not a member of any bands.
-	{% endif %}
-</div>
+	{% if is_user == 1 %} <a href="{% url 'edit_profile' username %}">Edit Your Profile</a> {% endif %}
+	<div class="panel panel-info">
+		<div class="panel-heading">Name</div>
+		<div class="panel-body">{{first_name}} {{last_name}}</div>
+	</div>
+	<div class="panel panel-info">
+		<div class="panel-heading">Description</div>
+		<div class="panel-body">{{description}}</div>
+	</div>
+	<div class="panel panel-info">
+		<div class="panel-heading">Email</div>
+		<div class="panel-body">{{email}}</div>
+	</div>
+	<div class="panel panel-info">
+		<div class="panel-heading">Contact information</div>
+		<div class="panel-body">{{contact_info}}</div>
+	</div>
+	<div class="panel panel-info">
+		<div class="panel-heading">Location</div>
+		<div class="panel-body">{{location}}</div>
+	</div>
+	<div class="panel panel-info">
+		<div class="panel-heading">Instruments</div>
+		{% if instruments %}
+			<ul class="list-group">
+			{% for instrument in instruments %}
+				<li class="list-group-item">{{instrument}}</li>
+			{% endfor %} 
+			</ul>
+		{% else %}
+		{{first_name}} does not play any instruments.<br>
+		{% endif %}
+	</div>
+	<div class="panel panel-info">
+		<div class="panel-heading">Bands</div>
+		{% if bands %}
+			<ul class="list-group">
+			{% for band in bands %}
+				<li class="list-group-item"><a href="{% url 'band' band.slug %}">{{band}}</a></li>
+			{% endfor %} 
+			</ul>
+		{% else %}
+		{{first_name}} is not a member of any bands.
+		{% endif %}
+	</div>
 {% endblock %}

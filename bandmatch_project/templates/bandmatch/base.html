@@ -145,7 +145,7 @@ body {
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
-                {% block side_block %}
+          {% block side_block %}
 					{% if user.is_authenticated %}
         	<form class="form-inline" id="search_player_form" method="post" action="{% url 'search_players' %}"><!--this id and action should be changed-->
         	     {% csrf_token %}
@@ -167,17 +167,18 @@ body {
           </form>
 
         	&nbsp;<a style="color: white;" href="{% url 'advanced_search' %}">Advanced Search</a>
+          {% endif %}
       </div>
     </div>
   </div>
-	{% endif %}
+	
 				{% endblock %}
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-           <div>
-                {% block body_block %}{% endblock %}
-                </div>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+       <div>
+            {% block body_block %}{% endblock %}
         </div>
+    </div>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
