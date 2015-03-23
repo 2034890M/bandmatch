@@ -887,10 +887,22 @@ def display_messages(request):
 
 #A view to send a message for one or many users
 @login_required
-def send_message(request, reciever_list=[]):
+def send_message(request, reciever_list=[], is_reply = False, reciever=''):
 	context_dict = {}
 
-	if request.method == 'GET':
+	if is_reply:
+		try:
+			reciever = Player.objects.get(user__username = reciever)
+			reciever_list.append(reciever)
+			context_dict['reciever_list'] = reciever_list
+			message_draft = MessageForm()
+			context_dict['message_draft'] = message_draft
+			context_dict['title'] = ""
+			context_dict['content'] = ""
+		except:
+			return HttpResponseRedirect(reverse('send_message'))
+
+	if request.method == 'GET' and not is_reply:
 		del reciever_list[:]
 		context_dict['reciever_list'] = reciever_list
 		message_draft = MessageForm()
@@ -898,7 +910,9 @@ def send_message(request, reciever_list=[]):
 		context_dict['title'] = ""
 		context_dict['content'] = ""
 
-	else:
+
+
+	if request.method == 'POST':
 		#Either send the message or do other stuff
 		message_form = MessageForm(data=request.POST)
 		if request.POST.__contains__('suggestion') and request.POST['suggestion'] != "":
@@ -911,7 +925,6 @@ def send_message(request, reciever_list=[]):
 				reciever_list.remove(new_recipient)
 			#Pass the list to the view, which will pass it back if a new reciever is added
 			context_dict['reciever_list'] = reciever_list
-			print reciever_list
 
 		#Check if the title and content have been added
 		if message_form.is_valid():
@@ -942,4 +955,13 @@ def send_message(request, reciever_list=[]):
 				#The form wasn't valid.
 
 				messages.add_message(request, messages.INFO, 'Please add a title and content to send a message.')
+
+	print reciever_list
+	print context_dict['reciever_list']
 	return render(request, "bandmatch/send_message.html", context_dict)
+
+
+def reply_message(request, reciever):
+	reply_list = []
+	is_reply=True
+	return send_message(request, reply_list, is_reply, reciever)
