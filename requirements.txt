@@ -1,1 +1,4 @@
-Django==1.7
+Django==1.7.6
+django-bootstrap-form==3.2
+django-bootstrap-toolkit==2.15.0
+Pillow==2.7.0
