@@ -205,25 +205,13 @@ def edit_band(request, band_name_slug):
 				notify_removed.recipients.add(member)
 			notify_removed.save()	
 
-		members_list = band.members.all()
-		context_dict['members'] = members_list
+		band = band_form.save()
 
-		if band_form.is_valid():
-			band = band_form.save(commit=False)			
+		band_name_slug = band.slug
 
-			if 'image' in request.FILES:
-				band.image = request.FILES['image']
+		context_dict.update(get_bandDetails(band_name_slug))
 
-			if 'demo' in request.FILES:
-				band.demo = request.FILES['demo']
-
-			band.save()
-
-			band_name_slug = band.slug
-
-			context_dict.update(get_bandDetails(band_name_slug))
-
-			return redirect('/bandmatch/band/'+band_name_slug+'/edit/' )
+		return redirect('/bandmatch/band/'+band_name_slug+'/' )
 
 	return render(request, 'bandmatch/edit_band.html', context_dict)
 
