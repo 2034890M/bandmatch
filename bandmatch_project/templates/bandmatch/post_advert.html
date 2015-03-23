@@ -1,6 +1,7 @@
 {% extends 'bandmatch/base.html' %}
 
     {% block body_block %}
+	<p>{{messages}}</p>
         <h1>Post an advert</h1>
 
         <form id="advert_form" method="post" action="{% url 'post_advert' band_name_slug %}"

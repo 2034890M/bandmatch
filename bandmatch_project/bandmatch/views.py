@@ -704,22 +704,32 @@ def user_logout(request):
 #A view for posting an advert
 #Maybe take in the band-name-slug as an argument, and map this ad to that band using the slug.
 def post_advert(request, band_name_slug):
+    context_dict = {}
+    context_dict['band_name_slug'] = band_name_slug
+    context_dict['messages'] = ""
 
-	if request.method == 'POST':
-		#Make the advert, post it, and direct user somewhere
-		advert_form = AdvertForm(request.POST)
-		advert = advert_form.save(commit=False)
+    if request.method == 'POST':
+        advert_form = AdvertForm(request.POST)
+        context_dict['advert_form'] = advert_form
+        if advert_form.is_valid():
+            #Make the advert, post it, and direct user somewhere
+            
+            advert = advert_form.save(commit=False)
 
-		advert.band = Band.objects.get(slug = band_name_slug)
+            advert.band = Band.objects.get(slug = band_name_slug)
 
-		advert.save()
+            advert.save()
 
-		return HttpResponseRedirect(reverse('band', args=[band_name_slug])) #Return the user back to the bandpage.
+            return HttpResponseRedirect(reverse('band', args=[band_name_slug])) #Return the user back to the bandpage.
 
-	else:
-		advert_form = AdvertForm()
+        else:
+            advert_form = AdvertForm()
+            context_dict['messages'] = "Please fill in all fields to post an advert"            
+            return render(request, 'bandmatch/post_advert.html', context_dict)
 
-		return render(request, 'bandmatch/post_advert.html', {'advert_form' : advert_form, 'band_name_slug' : band_name_slug})
+    else:          
+        advert_form = AdvertForm()
+        return render(request, 'bandmatch/post_advert.html', context_dict)
 
 #A view to display an advert. Accessible from band site. Will display the adverts contents, and it's replies.
 def display_advert(request, band_name_slug, advert):
@@ -731,28 +741,32 @@ def display_advert(request, band_name_slug, advert):
 	context_dict['band_name_slug'] = band_name_slug
 	context_dict['advert'] = advert
 	context_dict['this_advert'] = advertobject
+	context_dict['messages'] = ""
 
 	if request.method == 'POST':
 		#A reply was posted - create it
 		reply_form = ReplyForm(request.POST)
-		newreply = reply_form.save(commit = False)
+		if reply_form.is_valid():
+                    newreply = reply_form.save(commit = False)
 
-		newreply.advert = advertobject
+                    newreply.advert = advertobject
 
-		user = request.user
-		replier = Player.objects.get(user = user)
-		newreply.replier = replier
-		newreply.save()
-		#Send a notification message to every band member about the reply
-		#band = Band.objects.get(slug = band_name_slug)
-		#notify_new = Message.objects.create(title = "A reply in your bands advert!" + str(band.name) ,
-		#	content = newreply.content,
-		#	sender = Player.objects.get(user__username__exact = "Admin"))
-		#for member in band.members.all():
-		#		if member != replier:
-		#			notify_new.recipients.add(member)
-		#notify_new.save()
-		#CAUSES A CRASH IN RECIEVED MESSAGES
+                    user = request.user
+                    replier = Player.objects.get(user = user)
+                    newreply.replier = replier
+                    newreply.save()
+                    #Send a notification message to every band member about the reply
+                    #band = Band.objects.get(slug = band_name_slug)
+                    #notify_new = Message.objects.create(title = "A reply in your bands advert!" + band.name ,
+                    #	content = newreply.content,
+                    #	sender = Player.objects.get(user__username__exact = "Admin"))
+                    #for member in band.members.all():
+                    #		if member != replier:
+                    #			notify_new.recipients.add(member)
+                    #notify_new.save()
+                    #CAUSES A CRASH IN RECIEVED MESSAGES
+                else:
+                    context_dict['messages'] = "Please fill in all fields to post a reply"
 
 	#Get the replyform
 	context_dict['reply_form'] = ReplyForm()
