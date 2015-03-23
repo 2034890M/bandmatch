@@ -555,13 +555,15 @@ def search_bands(request):
 	bands_list = Band.objects.filter(name__contains = query)
 
 	for band in bands_list:
-		result_list.append(band)
+		if band not in result_list:
+			result_list.append(band)
 
 	#search advert
 	adverts_list = Advert.objects.filter(looking_for__contains = query)
 
 	for ad in adverts_list:
-		result_list.append(ad.band)
+		if ad.band not in result_list:
+			result_list.append(ad.band)
 
 	#should we search description???
 
@@ -581,24 +583,28 @@ def search_players(request):
 	players_list = Player.objects.filter(user__username__contains = query)
 
 	for player in players_list:
-		result_list.append(player)
+		if player not in result_list:
+			result_list.append(player)
 
 	players_list = Player.objects.filter(user__first_name__contains = query)
 
 	for player in players_list:
-		result_list.append(player)
+		if player not in result_list:
+			result_list.append(player)
 
 	players_list = Player.objects.filter(user__last_name__contains = query)
 
 	for player in players_list:
-		result_list.append(player)
+		if player not in result_list:
+			result_list.append(player)
 
 	#search instruments
 	players_list_instr = Player.objects.all()
 
 	for player in players_list_instr:
-		if query in player.instruments:
-			result_list.append(player)
+		if player not in result_list:
+			if query in player.instruments:
+				result_list.append(player)
 
 	#description???
 
@@ -611,12 +617,10 @@ def advanced_search(request):
     context_dict = {}
 
     result_list = []
-
-    context_dict["resultsp"] = result_list
-    context_dict["resultsb"] = result_list
     
     if request.method == 'POST':
 		if request.POST["submit"] == "Search Players":
+			context_dict["resultsp"] = result_list
 			player_username_query = request.POST["player_username_query"]
 			player_name_query = request.POST["player_name_query"]
 			player_instrument_query = request.POST["player_instrument_query"]
@@ -662,6 +666,7 @@ def advanced_search(request):
 			context_dict["resultsp"] = result_list
 
 		if request.POST["submit"] == "Search Bands":
+			context_dict["resultsb"] = result_list
 			band_name_query = request.POST["band_name_query"]
 			band_looking_for_query = request.POST["band_looking_for_query"]
 			band_location_query = request.POST["band_location_query"]

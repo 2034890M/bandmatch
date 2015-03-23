@@ -1,5 +1,8 @@
 {% extends 'bandmatch/base.html' %}
 {% load staticfiles %}
+
+{% block title%}Bandmatch: Advanced Search{% endblock %}
+
 {% block body_block%}
 
 <form class="form-inline" id="search_form" method="post" action="{% url 'advanced_search' %}">
@@ -8,36 +11,58 @@
 	<input type="radio" name="choice" value="band" id="band_button" />	Band
 	<!-- Display the search form elements here -->
 	<div id="player_search_form">
-		<p>Username:
-		<input class="form-control" type="text" size="40" name="player_username_query" value="{{player_username_query}}" id="player_username_query" />
-		Name:
-		<input class="form-control" type="text" size="40" name="player_name_query" value="{{player_name_query}}" id="player_name_query" />
-		Instruments"
-		<input class="form-control" type="text" size="40" name="player_instrument_query" value="{{player_instrument_query}}" id="player_instrument_query" />
-		Location:</p>
-		<input class="form-control" type="text" size="40" name="player_location_query" value="{{player_location_query}}" id="player_location_query" />
+		<div class="input-group">
+			<span class="input-group-addon" id="sizing-addon2">Username</span>
+			<input class="form-control" type="text" name="player_username_query" value="{{player_username_query}}" id="player_username_query" aria-describedby="sizing-addon2">
+		</div>
+		<div class="input-group">
+			<span class="input-group-addon" id="sizing-addon2">Name</span>
+			<input class="form-control" type="text" name="player_name_query" value="{{player_name_query}}" id="player_name_query" aria-describedby="sizing-addon2">
+		</div>
+		<div class="input-group">
+			<span class="input-group-addon" id="sizing-addon2">Instruments</span>
+			<input class="form-control" type="text" name="player_instrument_query" value="{{player_instrument_query}}" id="player_instrument_query" aria-describedby="sizing-addon2">
+		</div>
+		<div class="input-group">
+			<span class="input-group-addon" id="sizing-addon2">Location</span>
+			<input class="form-control" type="text" name="player_location_query" value="{{player_location_query}}" id="player_location_query" aria-describedby="sizing-addon2">
+		</div>
 		<input class="btn btn-primary" type="submit" name="submit" value="Search Players" id="choice"/>
 	</div>
 
 	<div id="band_search_form">
-		<p>Name:
-		<input class="form-control" type="text" size="40" name="band_name_query" value="{{band_name_query}}" id="band_name_query" />
-		Looking for players who play:
-		<input class="form-control" type="text" size="40" name="band_looking_for_query" value="{{band_looking_for_query}}" id="band_looking_for_query" />
-		Location:</p>
-		<input class="form-control" type="text" size="40" name="band_location_query" value="{{band_location_query}}" id="band_location_query" />
+		<div class="input-group">
+			<span class="input-group-addon" id="sizing-addon2">Name</span>
+			<input class="form-control" type="text" name="band_name_query" value="{{band_name_query}}" id="band_name_query"  aria-describedby="sizing-addon2">
+		</div>
+		<div class="input-group">
+			<span class="input-group-addon" id="sizing-addon2">Looking for players who play</span>
+			<input class="form-control" type="text" size="40" name="band_looking_for_query" value="{{band_looking_for_query}}" id="band_looking_for_query" aria-describedby="sizing-addon2">
+		</div>
+		<div class="input-group">
+			<span class="input-group-addon" id="sizing-addon2">Location</span>
+			<input class="form-control" type="text" name="band_location_query" value="{{band_location_query}}" id="band_location_query" aria-describedby="sizing-addon2">
+		</div><br/>
 		<input class="btn btn-primary" type="submit" name="submit" value="Search Bands" id="submit"/>
 	</div>
 
 	{% csrf_token %}
 </form>
 
-<!--need better way to display results -->
-{% for r in resultsp %}
-<p>{{ r.user.username }}</p>
-{% endfor %}
+<div class="panel panel-default">
+	<div class="panel-heading">Results:</div>
+	<ul class="list-group">
+		{% if resultsp %}
+		{% for r in resultsp %}
+		<li class="list-group-item">{{ r.user.first_name }} {{ r.user.last_name }} (<a href="{% url 'profile' r.user.username %}">{{ r.user.username }}</a>)</li>
+		{% endfor %}
+		{% endif %}
 
-{% for r in resultsb %}
-<p>{{ r.name }}</p>
-{% endfor %}
+		{% if resultsb %}
+		{% for r in resultsb %}
+		<li class="list-group-item"><a href="{% url 'band' r.slug %}">{{ r.name }}</a></li>
+		{% endfor %}
+		{% endif %}
+	</ul>
+</div>
 {% endblock %}

@@ -9,7 +9,27 @@
         <title>{% block title %}- Home {% endblock %}</title>
             {% block body_block %}
         <h1 style="text-align: center"> Bandmatch </h1>
-        <h2 style="text-align: center">Notifications:</h2>
+        <h2 style="text-align: center">Recent Messages:</h2>
+        <div class="panel panel-default">
+        {% for message in messages %}
+            <div class="panel panel-info">
+                <div class="panel-heading"> From <a href="{% url 'profile' message.sender">{{message.sender}}</a> at {{message.date}}</div>
+                <div class="panel-body" style="max-height: 100px; overflow-y: scroll;">
+                
+                <div class="col-sm-2">
+                    {% if message.sender.image %}
+                    <img src="{{message.sender.image.url}}" alt="Picture of {{message.sender}}" style="width:54px;height:56px">
+                    {% endif %}
+                </div>
+                <div class="col-sm-10">
+                    <p><b>{{message.title}}</b></p>
+                    {{message.content}}
+                </div>              
+
+                </div>
+            </div>
+        {% endfor %}
+        </div>
         <h2 style="text-align: center"> Bands near you: </h2>
         <style>
             #map-canvas {
@@ -67,7 +87,7 @@
                     		infowindow.open(map,marker);
                     	});
                     } else {
-                      console.log('Geocode was not successful for the following reason: ' + status);
+                      alert('Geocode was not successful for the following reason: ' + status);
                     }
                 });
             }
@@ -138,7 +158,7 @@
             function callback(response, status) {	//take the distances and if they are in a certain distance to home display the pins
             	//var userDistance = 500;
                 if (status != google.maps.DistanceMatrixStatus.OK) {
-                    console.log('Error was: ' + status);
+                    alert('Error was: ' + status);
                 } else {
                     var origins = response.originAddresses;
                     var destinations = response.destinationAddresses;
@@ -152,7 +172,7 @@
                             var k = 0;
                             if (results[j].distance)
                       			k = parseInt(results[j].distance.value);
-                			// console.log(k);
+                			// alert(k);
                 			var add = (k < userDistance);							//THIS IS THE DISTANCE FROM HOME IN METRES, CHANGE TO A VARIABLE SO IT CAN COME FROM THE USER
                 			if (add){
                 				addMarkerPlayer(destinations[j],j,k);
@@ -179,7 +199,7 @@
             function callback1(response, status) {	//take the distances and if they are in a certain distance to home display the pins
             	//var userDistance = 500;
                 if (status != google.maps.DistanceMatrixStatus.OK) {
-                	console.log('Error was: ' + status);
+                	alert('Error was: ' + status);
                 } else {
                     var origins = response.originAddresses;
                     var destinations = response.destinationAddresses;
@@ -241,7 +261,7 @@
                             }
                         })(marker, i));
                     } else {
-                      console.log('Geocode was not successful for the following reason: ' + status);
+                      alert('Geocode was not successful for the following reason: ' + status);
                     }
                 });
             	
@@ -272,7 +292,7 @@
                             iconCounter = 0;
                         }
                     } else {
-                      console.log('Geocode was not successful for the following reason: ' + status);
+                      alert('Geocode was not successful for the following reason: ' + status);
                     }
                 });
             }

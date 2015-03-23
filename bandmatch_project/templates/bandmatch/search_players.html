@@ -4,16 +4,23 @@
 
 {% block body_block %}
 
-<table>
-{% if results %}
-	{% for player in results %}
-	<tr>
-		<td><a href="{% url 'profile'  player.user.username %}">{{ player.user.username }} </a>-&nbsp;</td>
-		<td> Plays: {% for instr in player.instruments %}{{instr}}{% endfor %}</td>
-	</tr>
-	{% endfor %}
-{% else %}
-<p> There are no players matching this query. <p>
-{% endif %}
+<div class="panel panel-default">
+	<div class="panel-heading">Results:</div>
+	<div class="panel-body">
+		<ul class="list-group">
+		{% if results %}
+			{% for player in results %}
+			<li class="list-group-item">
+				<a href="{% url 'profile'  player.user.username %}">{{ player.user.username }} </a>-&nbsp;
+				 Plays: {% for instr in player.instruments %}{{instr}}, {% endfor %}
+			</li>
+			{% endfor %}
+			
+		{% else %}
+			<li class="list-group-item"> There are no players matching this query. </li>
+		{% endif %}
+		</ul>
+	</div>
+</div>
 
 {% endblock %}
