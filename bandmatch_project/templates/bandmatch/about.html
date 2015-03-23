@@ -6,17 +6,16 @@
  {% block body_block %}
 
  <div class="jumbotron">
-	<h1>WHAT IS THIS ALL ABOUT</h1>
-	<p>Ever had trouble finding people to make music with? Ever wanted to dump the dumb bass player of your band and find a better one? Do you know good players, but they are too far away? Bandmatch is a tool for connecting performers in the same area with each other!</p><br/>
+	<h2>WHAT IS THIS ALL ABOUT</h2>
+	<p font-size="12pt">Ever had trouble finding people to make music with? Ever wanted to dump the dumb bass player of your band and find a better one? Do you know good players, but they are too far away? Bandmatch is a tool for connecting performers in the same area with each other!</p><br/>
 
-	<h1>GETTING STARTED</h1>
-	<p>Getting started is easy! You need only to register, and fill in your details (name, address, instruments etc.). Then you can start looking for bands in need of your skill set, or even form a band and start looking for your dream team.</p><br/>
+	<h2>GETTING STARTED</h2>
+	<p font-size="12pt">Getting started is easy! You need only to register, and fill in your details (name, address, instruments etc.). Then you can start looking for bands in need of your skill set, or even form a band and start looking for your dream team.</p><br/>
 
 {% if not user.is_authenticated %}
-<p>If you are new feel free to jump right in:</p>
-<a class="btn btn-primary btn-lg" href="{% url 'register_profile' %}" role="button">Register here</a>
-<p>or if you are comming back</p>
-<a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Login here</a>
+<p font-size="12pt">If you are new feel free to jump right in: <a class="btn btn-primary btn-lg" href="{% url 'register_profile' %}" role="button">Register here</a></p>
+<p font-size="12pt">or if you are coming back <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Login here</a></p>
+
 {% endif %}
 </div>
 

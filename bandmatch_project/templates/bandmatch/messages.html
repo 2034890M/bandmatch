@@ -9,18 +9,22 @@
 <!-- Tabs for recieved and sent messages -->
 <form class="form-inline" id="search_form" method="post" action="{% url 'display_messages' %}">
 	<div class="btn-group" role="group" aria-label="...">
-		<button type="button" class="btn btn-default" name="choice" id="sent_button">Recieved messages</button>
-		<button type="button" class="btn btn-default" name="choice" id="recieved_button">Sent messages</button>
+		<button type="button" class="btn btn-default" name="choice" id="sent_button">Sent messages</button>
+		<button type="button" class="btn btn-default" name="choice" id="recieved_button">Recieved messages</button>
 	</div>
 	<div id="recieved_message_list">
 	{% for message in sent_messages %}
 	<!-- Sent messages here -->
 		<div class="panel panel-primary">
-			<div class="panel-heading"> From <a href="{% url 'profile' message.sender">{{message.sender}}</a> at {{message.date}}</div>
+			<div class="panel-heading"> From <a style="color:white;" href="{% url 'profile' message.sender">{{message.sender}}</a> at {{message.date}}<div class="text-right">
+					<a class="btn btn-primary" href="{% url 'reply_message' message.sender %}">Reply</a>
+					</div></div>
 			<div class="panel-body" style="max-height: 100px; overflow-y: scroll;">
 			
 			<div class="col-sm-2">
+				{% if message.sender.image %}
 				<img src="{{message.sender.image.url}}" alt="Picture of {{message.sender}}" style="width:54px;height:56px">
+				{% endif %}
 			</div>
 			<div class="col-sm-10">
 				<p><b>{{message.title}}</b></p>
@@ -37,7 +41,7 @@
 		<div class="panel panel-primary">
 			<div class="panel-heading"> To:
 			{% for recipiant in message.recipients.all %}
-			 <a href="{% url 'profile' recipiant">{{recipiant}}</a>
+			 <a style="color:white;" href="{% url 'profile' recipiant">{{recipiant}}</a>
 			{% endfor %}
 			 at {{message.date}}
 			 </div>
