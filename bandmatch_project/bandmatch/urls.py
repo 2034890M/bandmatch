@@ -26,4 +26,6 @@ urlpatterns = patterns('',
     url(r'^suggest_member/(?P<band_name_slug>[\w\-]+)/$', views.suggest_member, name='suggest_member'),
     url(r'^suggest_band/$', views.suggest_band, name='suggest_band'),
     url(r'^login/$', views.user_login, name='login'),
+    url(r'^delete_band/(?P<band_name_slug>[\w\-]+)$', views.delete_band, name='delete_band'),
+    url(r'^delete_advert/(?P<advert_id>[\w\-]+)$', views.delete_advert, name='delete_advert'),
       )

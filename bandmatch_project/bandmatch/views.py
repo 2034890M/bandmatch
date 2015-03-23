@@ -282,6 +282,12 @@ def add_band(request):
 	return render(request, 'bandmatch/make_a_band.html', context_dict)
 
 
+def delete_band(request, band_name_slug):
+	band = Band.objects.get(slug = band_name_slug)
+	band.delete()
+	return redirect('/bandmatch/your_bands/')
+
+
 def add_player(request, username):
 	band_name = request.POST['suggest_band']
 
@@ -747,6 +753,14 @@ def post_advert(request, band_name_slug):
         advert_form = AdvertForm()
         return render(request, 'bandmatch/post_advert.html', context_dict)
 
+def delete_advert(request, advert_id):
+	ad = Advert.objects.get(id = advert_id)
+	band = ad.band
+	band_slug = band.slug
+	ad.delete()
+	return redirect('/bandmatch/band/'+band_slug+'/')
+
+
 #A view to display an advert. Accessible from band site. Will display the adverts contents, and it's replies.
 def display_advert(request, band_name_slug, advert):
 	context_dict = {}
@@ -758,6 +772,12 @@ def display_advert(request, band_name_slug, advert):
 	context_dict['advert'] = advert
 	context_dict['this_advert'] = advertobject
 	context_dict['messages'] = ""
+	context_dict['is_member'] = 0
+
+	if request.user.is_authenticated():
+		player = Player.objects.get(user = request.user)
+		if player in advertobject.band.members.all():
+			context_dict['is_member'] = 1
 
 	if request.method == 'POST':
 		#A reply was posted - create it

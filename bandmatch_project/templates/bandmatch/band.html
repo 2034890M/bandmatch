@@ -12,6 +12,7 @@
 	<div class="panel-body">
 		  {% if is_member == 1 %}
 		<a href="{% url 'edit_band' slug %}">Add/Remove players or Edit Band Details</a>
+		<a style="align:right; float:right;" href="{% url 'delete_band' slug %}">Delete This Band</a>
 		{% endif %}
 		<div class="panel panel-info">
 			<div class="panel-heading">Description</div>

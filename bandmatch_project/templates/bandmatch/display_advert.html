@@ -7,12 +7,10 @@
 
 <p>{{messages}}</p>
 
-
-
-
-
 <!-- Display the advert -->
-
+{% if is_member == 1 %}
+<a style="align:right; float:right;" href="{% url 'delete_advert' this_advert.id %}">Delete This Advert</a>
+{% endif %}
 <div class="panel panel-default">
   <!-- Default panel contents -->
   <div class="panel-heading"><h2 class="text-center">{{this_advert.title}}</h2></div>
@@ -25,17 +23,12 @@
     <li class="list-group-item">Looking for: {{this_advert.looking_for}}</li>
   </ul>
 </div>
-
-
-
-<!-- Display the advert -->
+<!-- /Display the advert -->
 <!-- make a form for submitting -->
         <form id="reply_form" method="post" action="{% url 'display_advert' band_name_slug advert %}"
                 enctype="multipart/form-data">
 
             {% csrf_token %}
-
-
 
             <!-- Display each form. The as_p method wraps each element in a paragraph
                  (<p>) element. This ensures each element appears on a new line,
@@ -55,10 +48,7 @@
         </div>
         </form> <br/>
 
-
         <!-- display replies -->
-
-
 
 <div class="panel default-panel">
 <div class="panel-heading">
@@ -87,10 +77,6 @@
 </div>
 </div>
 
-
-
-        <!-- display replies -->
-
-
+        <!-- /display replies -->
 
 {% endblock %}
