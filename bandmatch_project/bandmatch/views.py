@@ -875,6 +875,7 @@ def display_messages(request):
 def send_message(request, reciever_list=[], is_reply = False, reciever=''):
 	context_dict = {}
 
+#Do this with cookies -> if is reply set a cookie to reciever name, and when a mail is submitted empty the cookie.
 	if is_reply:
 		try:
 			reciever = Player.objects.get(user__username = reciever)
@@ -886,15 +887,6 @@ def send_message(request, reciever_list=[], is_reply = False, reciever=''):
 			context_dict['content'] = ""
 		except:
 			return HttpResponseRedirect(reverse('send_message'))
-
-	if request.method == 'GET' and not is_reply:
-		del reciever_list[:]
-		context_dict['reciever_list'] = reciever_list
-		message_draft = MessageForm()
-		context_dict['message_draft'] = message_draft
-		context_dict['title'] = ""
-		context_dict['content'] = ""
-
 
 
 	if request.method == 'POST':
@@ -940,6 +932,14 @@ def send_message(request, reciever_list=[], is_reply = False, reciever=''):
 				#The form wasn't valid.
 
 				messages.add_message(request, messages.INFO, 'Please add a title and content to send a message.')
+
+	if request.method == 'GET' and not is_reply:
+		del reciever_list[:]
+		context_dict['reciever_list'] = reciever_list
+		message_draft = MessageForm()
+		context_dict['message_draft'] = message_draft
+		context_dict['title'] = ""
+		context_dict['content'] = ""
 
 	return render(request, "bandmatch/send_message.html", context_dict)
 
