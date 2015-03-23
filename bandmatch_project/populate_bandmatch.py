@@ -4,20 +4,21 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bandmatch_project.settings')
 import django
 django.setup()
 
+from datetime import datetime
+
 from bandmatch.models import Player, Band, Advert, Message
 from django.contrib.auth.models import User
 
-
 #The population script
-
-
-
 
 def populate():
 
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> 69eddc336d023df1e773f91e5a35da32bf460592
 	add_player('Jaakko1', "J", "1", 'Call me xxx', "I'm handsome", "Dumbarton Road, Glasgow", ["guitar", "drums"])
 
 	add_player('Jaakko', "J", "K", "Call me xoxo", "I'm in a band!!", "11 Ruthven Lane, Glasgow", ["vocals"])
@@ -36,10 +37,15 @@ def populate():
 
 	write_message('whatever', '', 'Jaakko', ["Jaakko1","Reni"])
 
-	add_player('Admin', "Admin", "Admin", 'IM @admin', 'Bandmatch admin')
+	add_player('Admin', "Bandmatch", "Admin", 'IM @admin', 'Bandmatch admin')
 	admin = User.objects.get_or_create(username = 'admin')[0]
 	admin.set_password('admin')
 	admin.save()
+
+	add_player('test', "test", "test", '', 'test user')
+	test = User.objects.get_or_create(username = 'test')[0]
+	test.set_password('test')
+	test.save()
 
 	add_player('mshinoda', 'Mike', 'Shinoda', 'mikeshinoda.com',
 	 "an American musician, record producer, and artist. He co-founded Linkin Park in 1996 and bands rhythm guitarist, songwriter, keyboardist, and co-vocalist.", 
@@ -57,7 +63,6 @@ def populate():
 	create_band('Linkin Perk', '84 Castle Street, Glasgow', 
 		'an American rock band from Agoura Hills, California', 'cbennington', ['mshinoda', 'bdelson'])
 
-# <<<<<<< HEAD
 	add_player('nsanderson', 'Neil', 'Sanderson', '',
 	 'influenced by John Bonham, Danny Carey and Stewart Copeland', 'Castle Street, Glasgow', ['drums', 'vocals'])
 
@@ -73,11 +78,6 @@ def populate():
 
 	add_player('csmith', 'Chad', 'Smith', '', 'musician',"500 Great Western Road, Glasgow", 
 		['drums', 'percussion', 'piano', 'guitar', 'bass'])
-
-
-
-
-
 
 
 def add_player(username, firstname, lastname, contact_info, description, location="Nowhere", instruments=[]):
@@ -115,14 +115,13 @@ def write_message(title, content, sender, recipients):
 	for r in recipients:
 		user_recipient = Player.objects.get(user__username__exact = r)
 		m.recipients.add(user_recipient)
+	m.date = datetime.now()
 	m.save()
 
 def make_advert(band, title, content, looking_for):
 	ad = Advert.objects.get_or_create(title = title, content = content, looking_for = looking_for,
-	 band = Band.objects.get(name__exact = band))[0]
+		band = Band.objects.get(name__exact = band))[0]
 	ad.save()
-
-
 
 
 if __name__ == '__main__':

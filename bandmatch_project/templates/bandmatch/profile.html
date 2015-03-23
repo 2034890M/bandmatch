@@ -1,56 +1,74 @@
 {% extends 'bandmatch/base.html' %}
-<html>
-	<title>
-		{% block title %}Player - {{username}} {% endblock %}
-	</title>
-	<body>
-		
-		{% block body_block %}
-		{% load staticfiles %}
-		<style>
-			body {
-				margin-left: 200px;
-				margin-right: 300px;
-			}
-		</style>
 
-		<img style="align:right; float:right;" src="{{pic}}" height="200" alt="A picture of {{first_name}}.">
-		<h1> {{username}} </h1>
-	    <p> {% if is_user == 1 %} <a href="{% url 'edit_profile' username %}">Edit Your Profile</a> {% endif %}</p>
-		<p><b>Name:</b> {{first_name}} {{last_name}} <br>
-		   <b>Description:</b> {{description}} <br>
-		   <b>Email:</b> {{email}} <br> 
-		   <b>Contact:</b> {{contact_info}} <br> 
-		   <b>Location:</b>  {{location}} <br>
-		   <b>Instruments:</b>
-		   {% if instruments %}
-			<ul>{% for instrument in instruments %}
-				<li>{{instrument}}</li><p>
-			    {% endfor %} </ul>
-		    {% else %}
-			{{first_name}} does not play any instruments.<br>
-			{% endif %}
-			 <b>Bands:</b>
-		   {% if bands %}
-			<ul>{% for band in bands %}
-				<li><a href="{% url 'band' band.slug %}">{{band}}</a></li><p>
-			    {% endfor %} </ul>
-		    {% else %}
-			{{first_name}} is not a member of any bands.
-		    {% endif %}
-		</p>
-		
-				<div class="container-fluid">
-			<div class="row">
-			    <form method="post" action="{% url 'add_player' username %}">
-			    {% csrf_token %}
-			    <input  class="search-query span10" type="text" name="suggest_band" value="" id="suggest_band" list="options"/>
-			</div>
-			<div class="row" id="your_bands_list" >		    	        
-			</div>
-			    <button class="btn btn-primary" type="submit" name="submit">Add to Band</button>
-			    </form>	
-		</div>
-				{% endblock %}
-	</body>
-</html>
+{% block title %}Bandmatch: Player - {{username}} {% endblock %}
+
+{% block body_block %}
+{% load staticfiles %}
+
+<div class="container-fluid">
+	<form method="post" action="{% url 'add_player' username %}">
+	{% csrf_token %}
+	<div class="input-group">
+		<span class="input-group-addon">Add this player to a band</span>
+		<input  class="form-control" type="text" name="suggest_band" value="" id="suggest_band" list="options"/>
+		<span class="input-group-btn">
+			<button class="btn btn-primary" type="submit" name="submit">Add to Band</button>
+		</span>
+	</div>
+	<div class="row" id="your_bands_list" >		    	        
+	</div>
+	</form>	
+</div>
+<div class="panel panel-default">
+	<div class="panel-heading"> 
+	<h1> {{username}} </h1>
+	<img style="align:right; float:right;" src="{{pic}}" height="200" alt="A picture of {{first_name}}.">
+	</div>
+	<div class="panel-body">
+
+{% if is_user == 1 %} <a href="{% url 'edit_profile' username %}">Edit Your Profile</a> {% endif %}
+<div class="panel panel-info">
+	<div class="panel-heading">Name</div>
+	<div class="panel-body">{{first_name}} {{last_name}}</div>
+</div>
+<div class="panel panel-info">
+	<div class="panel-heading">Description</div>
+	<div class="panel-body">{{description}}</div>
+</div>
+<div class="panel panel-info">
+	<div class="panel-heading">Email</div>
+	<div class="panel-body">{{email}}</div>
+</div>
+<div class="panel panel-info">
+	<div class="panel-heading">Contact information</div>
+	<div class="panel-body">{{contact_info}}</div>
+</div>
+<div class="panel panel-info">
+	<div class="panel-heading">Location</div>
+	<div class="panel-body">{{location}}</div>
+</div>
+<div class="panel panel-info">
+	<div class="panel-heading">Instruments</div>
+	{% if instruments %}
+		<ul class="list-group">
+		{% for instrument in instruments %}
+			<li class="list-group-item">{{instrument}}</li>
+		{% endfor %} 
+		</ul>
+	{% else %}
+	{{first_name}} does not play any instruments.<br>
+	{% endif %}
+</div>
+<div class="panel panel-info">
+	<div class="panel-heading">Bands</div>
+	{% if bands %}
+		<ul class="list-group">
+		{% for band in bands %}
+			<li class="list-group-item"><a href="{% url 'band' band.slug %}">{{band}}</a></li>
+		{% endfor %} 
+		</ul>
+	{% else %}
+	{{first_name}} is not a member of any bands.
+	{% endif %}
+</div>
+{% endblock %}

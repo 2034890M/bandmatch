@@ -126,19 +126,16 @@ body {
         </div>
         <div class="navbar-collapse collapse" style="margin-top: 45px">
           <ul class="nav navbar-nav navbar-right" >
-                <li><a style="color: #1D1D1E;" href="{% url 'index' %}">Home</a></li>
                     {% if user.is_authenticated %}
-						<li><a style="color: #1D1D1E;" href="{% url 'profile' user.username %}">Profile</a></li>
-                        <li><a style="color: #1D1D1E;" href="{% url 'make_a_band' %}">Make a Band</a></li>
                         <li><a style="color: #1D1D1E;" href="{% url 'your_bands' %}">Your bands</a></li>
+                        <li><a style="color: #1D1D1E;" href="{% url 'display_messages' %}">Message inbox</a></li>
+                        <li><a style="color: #1D1D1E;" href="{% url 'about' %}">About</a></li>
+            <li><a style="color: #1D1D1E;" href="{% url 'profile' user.username %}">Profile</a></li>
                         <li><a style="color: #1D1D1E;" href="{% url 'logout' %}?next=/about/">Logout</a></li>
-                        <li><a style="color: #1D1D1E;" href="{% url 'display_messages' %}">Inbox</a></li>
-                        <li><a style="color: #1D1D1E;" href="{% url 'send_message' %}">Send message</a></li>
                     {% else %}
                         <li><a style="color: #1D1D1E;" href="{% url 'register_profile' %}">Register Here</a></li> 
                         <li><a style="color: #1D1D1E;" href="{% url 'login' %}">Log In</a></li>
                     {% endif %}
-                        <li><a style="color: #1D1D1E;" href="{% url 'about' %}">About</a></li>
 
               </ul>
         </div>
