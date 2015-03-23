@@ -8,6 +8,7 @@
 <div class="container-fluid">
 	<form method="post" action="{% url 'add_player' username %}">
 	{% csrf_token %}
+	{% if is_user == 0 %}
 	<div class="input-group">
 		<span class="input-group-addon">Add this player to a band</span>
 		<input  class="form-control" type="text" name="suggest_band" value="" id="suggest_band" list="options"/>
@@ -15,6 +16,7 @@
 			<button class="btn btn-primary" type="submit" name="submit">Add to Band</button>
 		</span>
 	</div>
+	{% endif %}
 	<div class="row" id="your_bands_list" >		    	        
 	</div>
 	</form>	
