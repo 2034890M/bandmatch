@@ -94,7 +94,8 @@
 				
      
             function showLocation() {
-				
+				//thisMArkerArray = [];
+				//thisMArkersArray[0].setMap(null);
             	geocoder.geocode( { 'address': origin}, function(results, status) {
                     if (status == google.maps.GeocoderStatus.OK) {
                      	var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
@@ -185,7 +186,7 @@
                     var destinations = response.destinationAddresses;
                     var outputDiv = document.getElementById('outputDiv');
                     outputDiv.innerHTML = '';
-                    deleteOverlays();
+                    //deleteOverlays();
                 	
                   	for (var i = 0; i < origins.length; i++) {
                   		var results = response.rows[i].elements;
@@ -226,7 +227,7 @@
                     var destinations = response.destinationAddresses;
                     var outputDiv = document.getElementById('outputDiv');
                     outputDiv.innerHTML = '';
-                    deleteOverlays();
+                    //deleteOverlays();
                 	
                 	for (var i = 0; i < origins.length; i++) {
                 		var results = response.rows[i].elements;
@@ -340,10 +341,11 @@
 						origin = "{{ address }}";
 					}
 					
-                showLocation();  
+                deleteOverlays();
                 calculateDistancesPlayers();
                 calculateDistancesBands();
-				//deleteOverlays();
+				showLocation();  
+				
             }
 
 
