@@ -300,6 +300,12 @@ def add_player(request, username):
 	
 	band.members.add(player)
 	band.save()
+	notify_new = Message.objects.create(title = username+" has been added to your band",
+		content = username+" is now in " + band.name ,
+		sender = Player.objects.get(user__username__exact = "Admin"))
+	for member in band.members.all():
+		notify_new.recipients.add(member)
+	notify_new.save()
 
 	return redirect('/bandmatch/profile/'+username+'/')
 
@@ -382,7 +388,8 @@ def profile(request, username): #could possibly use user_id here
 		context_dict['is_user'] = 0
 
         #JUST TO MAKE SURE MY LOCATION IS SHOWN
-        context_dict['location'] = player.location
+        context_dict['location'] = player.location		
+
 	return render(request, 'bandmatch/profile.html', context_dict)
 
 #Might not be necessary.

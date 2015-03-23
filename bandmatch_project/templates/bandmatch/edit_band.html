@@ -9,7 +9,6 @@
 {% if is_member == 1%}
 
 <!-- add members !!!-->
-<p>Add Player</p>
 <div class="container-fluid">
 	<form method="post" action="{% url 'edit_band' slug %}">
 	{% csrf_token %}
@@ -27,7 +26,7 @@
 </div>
 
 <!-- remove players -->
-<p>Remove Player</p>
+<input type="hidden" name="band_slug" value="{{slug}}" id="band_slug" /> <!--needed for the jquery-->
 <div class="container-fluid">
 	 <form method="post" action="{% url 'edit_band' slug %}">
 		{% csrf_token %}

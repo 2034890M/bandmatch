@@ -5,7 +5,10 @@
 {% block body_block %}
 {% load staticfiles %}
 
+<p>{{message}}</p>
+
 	<div class="container-fluid">
+	<p>{{message}}</p>
 		<form method="post" action="{% url 'add_player' username %}">
 		{% csrf_token %}
 		{% if is_user == 0 %}

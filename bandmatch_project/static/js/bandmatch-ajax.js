@@ -16,6 +16,7 @@ $(document).ready( function() {
             $('#member_list').html(data);
         });
 	});
+    
     $('#suggest_band').keyup(function(){
         var query
         query = $(this).val();
