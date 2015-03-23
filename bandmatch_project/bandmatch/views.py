@@ -269,7 +269,6 @@ def add_band(request):
 			context_dict['messages'] = "Please include name and description"
 			context_dict['band_form'] = BandForm()
 
-
 	else:
 		#Display bandform
 		context_dict['band_form'] = BandForm()
@@ -279,8 +278,6 @@ def add_band(request):
 
 
 def add_player(request, username):
-
-	print request.POST['suggest_band']
 	band_name = request.POST['suggest_band']
 
 	band = Band.objects.get(name = band_name)
@@ -350,11 +347,8 @@ def get_profileDetails(request, username):
 
 	if player.image:
 		context_dict['pic'] = player.image.url
-		print player.image.url
 	else:
 		context_dict['pic'] = ''
-
-	print context_dict['pic']
 
 	return context_dict
 
@@ -679,22 +673,17 @@ def advanced_search(request):
 
 			if band_name_query != "":
 				bands_list = bands_list.filter(name__contains = band_name_query)
-				print bands_list
 			if band_location_query != "":
 				bands_list = bands_list.filter(location__contains = band_location_query)
-				print bands_list
 			for b in bands_list:
 				result_list.append(b)
-			print result_list
 
 			if band_looking_for_query != "":
 				result_list_ad = []
 				adverts_list = Advert.objects.filter(looking_for__contains = band_looking_for_query)
-				print bands_list
 				for ad in adverts_list:
 					if ad.band in result_list:
 						result_list_ad.append(ad.band)
-				print result_list
 
 				result_list = result_list_ad
 
@@ -726,9 +715,6 @@ def post_advert(request, band_name_slug):
 		advert.save()
 
 		return HttpResponseRedirect(reverse('band', args=[band_name_slug])) #Return the user back to the bandpage.
-
-
-
 
 	else:
 		advert_form = AdvertForm()
@@ -764,7 +750,6 @@ def display_advert(request, band_name_slug, advert):
 	#Get all the replies of the advert
 	reply_list = Reply.objects.filter(advert = advertobject)
 	context_dict['reply_list'] = reply_list
-	print reply_list
 
 	return render(request, 'bandmatch/display_advert.html', context_dict)
 
@@ -956,8 +941,6 @@ def send_message(request, reciever_list=[], is_reply = False, reciever=''):
 
 				messages.add_message(request, messages.INFO, 'Please add a title and content to send a message.')
 
-	print reciever_list
-	print context_dict['reciever_list']
 	return render(request, "bandmatch/send_message.html", context_dict)
 
 

@@ -9,29 +9,15 @@ from datetime import datetime
 from bandmatch.models import Player, Band, Advert, Message
 from django.contrib.auth.models import User
 
-
 #The population script
-
-
-
 
 def populate():
 
-
-
-# <<<<<<< HEAD
 	add_player('Jaakko1', "J", "1", 'Call me xxx', "I'm handsome", "Dumbarton Road, Glasgow", ["guitar", "drums"])
 
 	add_player('Jaakko', "J", "K", "Call me xoxo", "I'm in a band!!", "11 Ruthven Lane, Glasgow", ["vocals"])
 
 	add_player('Reni', "R", "2", "Bulgaria", "I'm not in a band :((", "12 Ashton Lane, Glasgow", ["piano", "bass"])
-# =======
-# 	add_player('Jaakko1', 'Call me xxx', "I'm handsome","Dumbarton Road, Glasgow")
-
-# 	add_player('Jaakko', "Call me xoxo", "I'm in a band!!","11 Ruthven Lane, Glasgow")
-
-# 	add_player('Reni', "Bulgaria", "I'm not in a band :((","12 Ashton Lane, Glasgow")
-# >>>>>>> 613afaac1bf7fd04c9eda9fdbbb46b626c986dad
 
 	create_band('My chemical bromance', '7 Victoria Circus, Glasgow', 'AWESOME', 'Jaakko')
 
@@ -45,10 +31,15 @@ def populate():
 
 	write_message('whatever', '', 'Jaakko', ["Jaakko1","Reni"])
 
-	add_player('Admin', "Admin", "Admin", 'IM @admin', 'Bandmatch admin')
+	add_player('Admin', "Bandmatch", "Admin", 'IM @admin', 'Bandmatch admin')
 	admin = User.objects.get_or_create(username = 'admin')[0]
 	admin.set_password('admin')
 	admin.save()
+
+	add_player('test', "test", "test", '', 'test user')
+	test = User.objects.get_or_create(username = 'test')[0]
+	test.set_password('test')
+	test.save()
 
 	add_player('mshinoda', 'Mike', 'Shinoda', 'mikeshinoda.com',
 	 "an American musician, record producer, and artist. He co-founded Linkin Park in 1996 and bands rhythm guitarist, songwriter, keyboardist, and co-vocalist.", 
@@ -66,7 +57,6 @@ def populate():
 	create_band('Linkin Perk', 'US', 
 		'an American rock band from Agoura Hills, California', 'cbennington', ['mshinoda', 'bdelson'])
 
-# <<<<<<< HEAD
 	add_player('nsanderson', 'Neil', 'Sanderson', '',
 	 'influenced by John Bonham, Danny Carey and Stewart Copeland', 'Canada', ['drums', 'vocals'])
 
@@ -82,11 +72,6 @@ def populate():
 
 	add_player('csmith', 'Chad', 'Smith', '', 'musician',"Nowhere", 
 		['drums', 'percussion', 'piano', 'guitar', 'bass'])
-
-
-
-
-
 
 
 def add_player(username, firstname, lastname, contact_info, description, location="Nowhere", instruments=[]):
@@ -129,10 +114,8 @@ def write_message(title, content, sender, recipients):
 
 def make_advert(band, title, content, looking_for):
 	ad = Advert.objects.get_or_create(title = title, content = content, looking_for = looking_for,
-	 band = Band.objects.get(name__exact = band))[0]
+		band = Band.objects.get(name__exact = band))[0]
 	ad.save()
-
-
 
 
 if __name__ == '__main__':
