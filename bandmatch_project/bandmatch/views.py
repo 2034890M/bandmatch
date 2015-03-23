@@ -383,6 +383,7 @@ def profile(request, username): #could possibly use user_id here
 def edit_profile(request, username):
 	context_dict = {}
 	context_dict['message'] = ""
+	changed = False
 
 	context_dict = get_profileDetails(request, username)
 
@@ -439,12 +440,16 @@ def edit_profile(request, username):
                             context_dict.update(get_profileDetails(request, username))
                             context_dict['user_form'] = UserForm(instance = user)
                             context_dict['player_form'] = PlayerForm(instance = player)
+                            changed = True
                         else:
                             context_dict['message'] = "Username is taken"
 
 		else:
 			print user_form.errors, player_form.errors
 			context_dict['message'] = "Please enter correct password to save changes"
+
+	if changed:
+		return HttpResponseRedirect(reverse('profile', args=[username]))
 
 	return render(request, 'bandmatch/edit_profile.html', context_dict)
 
