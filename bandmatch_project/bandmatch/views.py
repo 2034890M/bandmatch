@@ -28,10 +28,10 @@ def index(request):
     user = request.user
 
     if not user.is_authenticated():
-    	return HttpResponseRedirect('/bandmatch/about/')
+    	return HttpResponseRedirect(reverse('about'))
    	
     player = Player.objects.get(user = user)
-    recent_messages = player.message_set.all().order_by('date')[:5]
+    recent_messages = player.message_set.all().order_by('-date')[:4]
     context_dict['messages'] = recent_messages
 
     player_address = player.location
@@ -743,6 +743,9 @@ def display_advert(request, band_name_slug, advert):
 		replier = Player.objects.get(user = user)
 		newreply.replier = replier
 		newreply.save()
+		#Send a notification message to every band member about the reply
+		
+		
 
 	#Get the replyform
 	context_dict['reply_form'] = ReplyForm()
@@ -872,21 +875,33 @@ def display_messages(request):
 
 #A view to send a message for one or many users
 @login_required
-def send_message(request, reciever_list=[], is_reply = False, reciever=''):
+def send_message(request, reciever_list=[]):
 	context_dict = {}
-
 #Do this with cookies -> if is reply set a cookie to reciever name, and when a mail is submitted empty the cookie.
-	if is_reply:
-		try:
-			reciever = Player.objects.get(user__username = reciever)
-			reciever_list.append(reciever)
-			context_dict['reciever_list'] = reciever_list
-			message_draft = MessageForm()
-			context_dict['message_draft'] = message_draft
-			context_dict['title'] = ""
-			context_dict['content'] = ""
-		except:
-			return HttpResponseRedirect(reverse('send_message'))
+
+	if request.method == 'GET':
+		del reciever_list[:]
+		context_dict['reciever_list'] = reciever_list
+		message_draft = MessageForm()
+		context_dict['message_draft'] = message_draft
+		context_dict['title'] = ""
+		context_dict['content'] = ""
+
+	if request.session.get('is_reply'):
+		if request.session['is_reply'] == True:
+			try:
+				reciever = request.session['reciever']
+				reciever = Player.objects.get(user__username = reciever)
+				if reciever not in reciever_list:
+					reciever_list.append(reciever)
+				context_dict['reciever_list'] = reciever_list
+				message_draft = MessageForm()
+				context_dict['message_draft'] = message_draft
+				context_dict['title'] = ""
+				context_dict['content'] = ""
+
+			except:
+				return HttpResponseRedirect(reverse('send_message'))
 
 
 	if request.method == 'POST':
@@ -895,13 +910,17 @@ def send_message(request, reciever_list=[], is_reply = False, reciever=''):
 		if request.POST.__contains__('suggestion') and request.POST['suggestion'] != "":
 			#Add the added reciever to list
 			new_recipient_name = request.POST['suggestion']
-			new_recipient = Player.objects.get(user__username = new_recipient_name)
-			if new_recipient not in reciever_list: #Not adding dublicates
-				reciever_list.append(new_recipient)
-			else:
-				reciever_list.remove(new_recipient)
+			try:
+				new_recipient = Player.objects.get(user__username = new_recipient_name)
+				if new_recipient not in reciever_list: #Not adding dublicates
+					reciever_list.append(new_recipient)
+				else:
+					reciever_list.remove(new_recipient)
 			#Pass the list to the view, which will pass it back if a new reciever is added
+			except:
+				pass #The user doesn't exist. Don't add.
 			context_dict['reciever_list'] = reciever_list
+
 
 		#Check if the title and content have been added
 		if message_form.is_valid():
@@ -922,8 +941,10 @@ def send_message(request, reciever_list=[], is_reply = False, reciever=''):
 
 				message.save()
 				del reciever_list[:]
-
+				if request.session.get('is_reply'):
+					request.session['is_reply'] = False
 					#Return a different view so the reciever_list gets wiped.
+				messages.add_message(request, messages.INFO, "Your message has been sent")
 				return(HttpResponseRedirect(reverse('display_messages')))
 			else:
 					#No recipiants. Don't send the message. Tell the user to add recipiants.
@@ -933,18 +954,13 @@ def send_message(request, reciever_list=[], is_reply = False, reciever=''):
 
 				messages.add_message(request, messages.INFO, 'Please add a title and content to send a message.')
 
-	if request.method == 'GET' and not is_reply:
-		del reciever_list[:]
-		context_dict['reciever_list'] = reciever_list
-		message_draft = MessageForm()
-		context_dict['message_draft'] = message_draft
-		context_dict['title'] = ""
-		context_dict['content'] = ""
+
 
 	return render(request, "bandmatch/send_message.html", context_dict)
 
 
-def reply_message(request, reciever):
-	reply_list = []
-	is_reply=True
-	return send_message(request, reply_list, is_reply, reciever)
+def reply_message(request, reciever, title):
+	request.session['title'] = title #How to pass this on to the message form?
+	request.session['is_reply'] = True
+	request.session['reciever'] = reciever
+	return HttpResponseRedirect(reverse('send_message'))

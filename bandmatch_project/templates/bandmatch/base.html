@@ -127,8 +127,8 @@ body {
         <div class="navbar-collapse collapse" style="margin-top: 45px">
           <ul class="nav navbar-nav navbar-right" >
                     {% if user.is_authenticated %}
-                        <li><a style="color: #1D1D1E;" href="{% url 'your_bands' %}">Your bands</a></li>
-                        <li><a style="color: #1D1D1E;" href="{% url 'display_messages' %}">Message inbox</a></li>
+                        <li><a style="color: #1D1D1E;" href="{% url 'your_bands' %}">Bands</a></li>
+                        <li><a style="color: #1D1D1E;" href="{% url 'display_messages' %}">Messages</a></li>
                         <li><a style="color: #1D1D1E;" href="{% url 'about' %}">About</a></li>
             <li><a style="color: #1D1D1E;" href="{% url 'profile' user.username %}">Profile</a></li>
                         <li><a style="color: #1D1D1E;" href="{% url 'logout' %}?next=/about/">Logout</a></li>
