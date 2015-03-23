@@ -4,7 +4,7 @@
 
 {% block body_block %}
 
-<h1>Your Messages</h1>
+<h1>Your Messages / <a href="{% url 'send_message' %}">Send a message</a></h1>
 
 <!-- Tabs for recieved and sent messages -->
 <form class="form-inline" id="search_form" method="post" action="{% url 'display_messages' %}">
