@@ -13,17 +13,14 @@ from django.contrib.auth.models import User
 
 def populate():
 
-<<<<<<< HEAD
 
-
-
-=======
->>>>>>> 69eddc336d023df1e773f91e5a35da32bf460592
 	add_player('Jaakko1', "J", "1", 'Call me xxx', "I'm handsome", "Dumbarton Road, Glasgow", ["guitar", "drums"])
 
 	add_player('Jaakko', "J", "K", "Call me xoxo", "I'm in a band!!", "11 Ruthven Lane, Glasgow", ["vocals"])
 
 	add_player('Reni', "R", "2", "Bulgaria", "I'm not in a band :((", "12 Ashton Lane, Glasgow", ["piano", "bass"])
+
+	add_player('Leif', 'Australian', 'Guy', "I wish I lived in Australia", "Men at work - Down Under ALL THE WAY!", "Glasgow :((", ["FUCKING NOTHING"])
 
 	create_band('My chemical bromance', '7 Victoria Circus, Glasgow', 'AWESOME', 'Jaakko')
 

@@ -10,6 +10,7 @@
 				{{band_form|bootstrap}}
                 <br/>
             <button class="btn btn-primary" type="submit" name="submit">Make Band</button>
+            {% csrf_token %}
                 </form>
 		{% endblock %}
 		</body>

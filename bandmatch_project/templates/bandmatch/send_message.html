@@ -9,7 +9,7 @@
     {% endfor %}
 </ul>
 {% endif %}
-<h1><a href="{% url 'send_message' %}">Your Messages</a>  / Send a message</h1>
+<h1><a href="{% url 'display_messages' %}">Your Messages</a>  / Send a message</h1>
 
 <div class="container-fluid">
 		    <form method="post" action="{% url 'send_message' %}">
