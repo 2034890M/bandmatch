@@ -150,7 +150,7 @@ body {
         	<form class="form-inline" id="search_player_form" method="post" action="{% url 'search_players' %}"><!--this id and action should be changed-->
         	     {% csrf_token %}
         	     <!-- Display the search form elements here -->
-        	     <input class="form-control" type="text" size="17" name="playersquery" value="{{playersquery}}" id="playersquery" />
+        	     <input class="form-control" type="text" size="25" name="playersquery" value="{{playersquery}}" id="playersquery" placeholder="username/name/instrument"/>
         		 <br>
         	     <input class="btn btn-primary" type="submit" name="submit" value="Search for Players" />
         		 <br>
@@ -160,7 +160,7 @@ body {
           <form class="form-inline" id="search_band_form" method="post" action="{% url 'search_bands' %}"><!--this id and action should be changed-->
                {% csrf_token %}
                <!-- Display the search form elements here -->
-               <input class="form-control" type="text" size="17" name="bandsquery" value="{{bandsquery}}" id="bandsquery" />
+               <input class="form-control" type="text" size="25" name="bandsquery" value="{{bandsquery}}" id="bandsquery" placeholder="name/location/looking for"/>
         	   <br>
                <input class="btn btn-primary" type="submit" name="submit" value="Search for Bands" />
         	   <br>

@@ -1,36 +1,9 @@
-<!DOCTYPE html>
 {% extends 'bandmatch/base.html' %}
 {% load staticfiles %}
-
-<html>
-    <head>
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
         <meta charset="utf-8">
         <title>{% block title %}- Home {% endblock %}</title>
             {% block body_block %}
-        <h1 style="text-align: center"> Bandmatch </h1>
-        <h2 style="text-align: center">Recent Messages:</h2>
-        <div class="panel panel-default">
-        {% for message in messages %}
-            <div class="panel panel-info">
-                <div class="panel-heading"> From <a href="{% url 'profile' message.sender %}">{{message.sender}}</a> at {{message.date}}</div>
-                <div class="panel-body" style="max-height: 100px; overflow-y: scroll;">
-                
-                <div class="col-sm-2">
-                    {% if message.sender.image %}
-                    <img src="{{message.sender.image.url}}" alt="Picture of {{message.sender}}" style="width:54px;height:56px">
-                    {% endif %}
-                </div>
-                <div class="col-sm-10">
-                    <p><b>{{message.title}}</b></p>
-                    {{message.content}}
-                </div>              
-
-                </div>
-            </div>
-        {% endfor %}
-        </div>
-        <h2 style="text-align: center"> Bands near you: </h2>
         <style>
             #map-canvas {
             margin-left: auto;
@@ -40,24 +13,12 @@
           }
 		  
 		#panel {
-        position: absolute;
-        bottom: 10px;
-        left: 35.3%;
-        margin-left: -180px;
-        z-index: 4;
-        background-color: #fff;
-        padding: 5px;
-        border: 1px solid #999;
+			margin-left: auto;
+			margin-right: auto;
       }
 	  #panel2 {
-        position: absolute;
-        bottom: -40px;
-        left: 50%;
-        margin-left: -180px;
-        z-index: 5;
-        background-color: #fff;
-        padding: 5px;
-        border: 1px solid #999;
+        margin-left: auto;
+		margin-right: auto;
       }
         </style>
         <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&v=3&libraries=geometry"></script>
@@ -353,20 +314,45 @@
 			
             window.onload = start;
         </script>
-    </head>
-    <body>
-	
-        <div id="map-canvas"></div>
 		
-	    <div id="outputDiv"></div>
-		<div id="panel">
-      <input id="distance" type="textbox" value="3000">
-      <input type="button" value="Change Distance" onclick="start()">
-    </div>
-	<div id="panel2">
-      <input id="address" type="textbox" value="Glasgow, UK">
-      <input type="button" value="Change address" onclick="start()">
-    </div>
+        <h1 style="text-align: center"> Bandmatch </h1>
+        <h2 style="text-align: center">Recent Messages:</h2>
+        <div class="panel panel-default">
+        {% for message in messages %}
+            <div class="panel panel-info">
+                <div class="panel-heading"> From <a href="{% url 'profile' message.sender %}">{{message.sender}}</a> at {{message.date}}</div>
+                <div class="panel-body" style="max-height: 100px; overflow-y: scroll;">
+                
+                <div class="col-sm-2">
+                    {% if message.sender.image %}
+                    <img src="{{message.sender.image.url}}" alt="Picture of {{message.sender}}" style="width:54px;height:56px">
+                    {% endif %}
+                </div>
+                <div class="col-sm-10">
+                    <p><b>{{message.title}}</b></p>
+                    {{message.content}}
+                </div>              
+
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+        <h2 style="text-align: center"> Bands near you: </h2>
+
+		<div id="map-canvas"></div>	
+		<div id="outputDiv"></div>
+		
+		<div id="settings">
+				<div class="input-group" id="panel" align="center">
+				  <input id="distance" type="textbox" value="3000">
+				  <input type="button" value="Change Distance" onclick="start()">
+				</div>
+				<div class="input-group" id="panel2">
+				  <input id="address" type="textbox" value="Glasgow, UK">
+				  <input type="button" value="Change Address" onclick="start()">
+				</div>
+			</div>
+
+		
 	{% endblock%}
-    </body>
-</html>
+ 
