@@ -504,10 +504,9 @@ def register_profile(request):
 			# Now sort out the UserProfile instance.
 			# Since we need to set the user attribute ourselves, we set commit=False.
 			# This delays saving the model until we're ready to avoid integrity problems.
-			profile = user_form.save(commit=False)
-			profile.user = user
+			player = Player.objects.get_or_create(user = user)[0]
 			# Now we save the UserProfile model instance.
-			profile.save()
+			player.save()
 			# Update our variable to tell the template registration was successful.
 			registered = True
 			username = request.POST['username']
