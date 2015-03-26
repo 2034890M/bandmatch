@@ -488,15 +488,9 @@ def register_profile(request):
     if request.method == 'POST':
         # Attempt to grab information from the raw form information.
 		user_form = UserForm(data=request.POST)
-		player_form = PlayerForm(data=request.POST)
-
-		instruments_list = player_form.data['instruments'].encode('ascii', 'ignore').lower().split(",")
-		for i in range(len(instruments_list)):
-			instruments_list[i] = re.sub(r"[^a-z]+", '', instruments_list[i])
-		player_form.data['instruments'] = instruments_list
 
 		# If the two forms are valid...
-		if user_form.is_valid() and player_form.is_valid():
+		if user_form.is_valid():
 			
 
 			# Save the user's form data to the database.
@@ -510,24 +504,8 @@ def register_profile(request):
 			# Now sort out the UserProfile instance.
 			# Since we need to set the user attribute ourselves, we set commit=False.
 			# This delays saving the model until we're ready to avoid integrity problems.
-			profile = player_form.save(commit=False)
+			profile = user_form.save(commit=False)
 			profile.user = user
-
-			profile.location = player_form.data['location']
-			#Demo? Picture?
-
-			if 'image' in request.FILES:
-				profile.image = request.FILES['image']
-			elif profile.gender == 'm':
-				profile.image = settings.STATIC_URL + 'images\m.jpg'
-			elif profile.gender == 'f':
-				profile.image = settings.STATIC_URL + 'images\pf.jpg'
-			elif profile.gender == 'unknown':
-				profile.image = settings.STATIC_URL + 'images\o.png'
-
-			if 'demo' in request.FILES:
-				profile.demo = request.FILES['demo']
-
 			# Now we save the UserProfile model instance.
 			profile.save()
 			# Update our variable to tell the template registration was successful.
@@ -536,24 +514,23 @@ def register_profile(request):
 			password = request.POST['password']
 			user = authenticate(username=username, password=password)
 			login(request, user)
-			return HttpResponseRedirect('/bandmatch/')
+			return HttpResponseRedirect('/bandmatch/profile/'+username+'/edit/')
 
 		# Invalid form or forms - mistakes or something else?
 		# Print problems to the terminal.
 		# They'll also be shown to the user.
 		else:
-			print user_form.errors, player_form.errors
+			print user_form.errors
 
     # Not a HTTP POST, so we render our form using two ModelForm instances.
     # These forms will be blank, ready for user input.
     else:
         user_form = UserForm()
-        player_form = PlayerForm()
 
     # Render the template depending on the context.
     return render(request,
             'registration/registration_form.html',
-            {'user_form': user_form, 'player_form': player_form, 'registered': registered} )
+            {'user_form': user_form, 'registered': registered} )
 
 def search_bands(request):
 	context_dict = {}
