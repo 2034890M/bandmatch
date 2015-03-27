@@ -169,45 +169,51 @@ def edit_band(request, band_name_slug):
 
 		if request.POST.__contains__('suggestion'):
 			new_member = request.POST['suggestion']
-			new_member_profile = Player.objects.get(user__username = new_member)#try/except?
-			band.members.add(new_member_profile)
-			band.save()
-			#noify new member
-			notify_new = Message.objects.create(title = "You have been added to a band",
-				content = "You have been added to " + band.name ,
-				sender = Player.objects.get(user__username__exact = "Admin"))
-			notify_new.recipients.add(new_member_profile)
-			notify_new.save()
-			#notify all other members
-			notify_new = Message.objects.create(title = new_member+" has been added to your band",
-				content = new_member+" is now in " + band.name ,
-				sender = Player.objects.get(user__username__exact = "Admin"))
-			for member in band.members.all():
-				if member != new_member_profile:
-					notify_new.recipients.add(member)
-			notify_new.save()
-			context_dict['messages'] = new_member+" has been added to this band"
+			try:
+				new_member_profile = Player.objects.get(user__username = new_member)#try/except?
+				band.members.add(new_member_profile)
+				band.save()
+				#noify new member
+				notify_new = Message.objects.create(title = "You have been added to a band",
+					content = "You have been added to " + band.name ,
+					sender = Player.objects.get(user__username__exact = "Admin"))
+				notify_new.recipients.add(new_member_profile)
+				notify_new.save()
+				#notify all other members
+				notify_new = Message.objects.create(title = new_member+" has been added to your band",
+					content = new_member+" is now in " + band.name ,
+					sender = Player.objects.get(user__username__exact = "Admin"))
+				for member in band.members.all():
+					if member != new_member_profile:
+						notify_new.recipients.add(member)
+				notify_new.save()
+				context_dict['messages'] = new_member+" has been added to this band"
+			except:
+				context_dict['messages'] = "A player with the given username doesn't exist!"
 
 
 		if request.POST.__contains__('suggest_mem'):
 			removed_member = request.POST['suggest_mem']
-			removed_member_profile = Player.objects.get(user__username = removed_member)
-			band.members.remove(removed_member_profile)
-			band.save()
-			#notify removed member
-			notify_removed = Message.objects.create(title = "You have been removed from a band", 
-				content = "You have been removed from " + band.name,
-				sender = Player.objects.get(user__username__exact = "Admin"))
-			notify_removed.recipients.add(removed_member_profile)
-			notify_removed.save()
-			#notify all other members
-			notify_removed = Message.objects.create(title = removed_member+" has been removed from your band", 
-				content = removed_member+" is no longer in " + band.name,
-				sender = Player.objects.get(user__username__exact = "Admin"))
-			for member in band.members.all():
-				notify_removed.recipients.add(member)
-			notify_removed.save()	
-			context_dict['messages'] = removed_member+" has been removed from this band"
+			try:
+				removed_member_profile = Player.objects.get(user__username = removed_member)
+				band.members.remove(removed_member_profile)
+				band.save()
+				#notify removed member
+				notify_removed = Message.objects.create(title = "You have been removed from a band", 
+					content = "You have been removed from " + band.name,
+					sender = Player.objects.get(user__username__exact = "Admin"))
+				notify_removed.recipients.add(removed_member_profile)
+				notify_removed.save()
+				#notify all other members
+				notify_removed = Message.objects.create(title = removed_member+" has been removed from your band", 
+					content = removed_member+" is no longer in " + band.name,
+					sender = Player.objects.get(user__username__exact = "Admin"))
+				for member in band.members.all():
+					notify_removed.recipients.add(member)
+				notify_removed.save()	
+				context_dict['messages'] = removed_member+" has been removed from this band"
+			except:
+				context_dict['messages'] = "The player with the given username doesn't exist"
 
 		if band_form.is_valid():
 
