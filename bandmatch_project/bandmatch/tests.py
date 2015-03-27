@@ -248,6 +248,3 @@ def create_reply(advert, replier, content):
 #Helper methods for the models ? Might be unecessary, as they'd most likely be "get" methods, which are 1 line of in themselves anyway.
 
 
-
-if __name__ =='__main__':
-	ModelTestCase()
