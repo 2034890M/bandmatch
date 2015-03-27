@@ -225,7 +225,7 @@ def edit_band(request, band_name_slug):
 
 			context_dict.update(get_bandDetails(band_name_slug))
 
-			return redirect('/bandmatch/band/'+band_name_slug+'/' )
+			return HttpResponseRedirect(reverse('band', args=[band_name_slug]))
 
 	return render(request, 'bandmatch/edit_band.html', context_dict)
 
