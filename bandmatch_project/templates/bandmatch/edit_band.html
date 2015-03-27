@@ -46,7 +46,7 @@
 
 
 <div>
-<form role="form"  id="edit_band_form" method="post" action="{% url 'edit_band' slug %}">
+<form role="form"  id="edit_band_form" method="post" action="{% url 'edit_band' slug %}" enctype="multipart/form-data">
 
         {% csrf_token %}
 		{{band_form|bootstrap}}

@@ -106,7 +106,7 @@ def get_bandDetails(band_name_slug):
 
 	context_dict['adverts'] = band.advert_set.all()
 
-	if band.demo:
+	if band.image:
 		context_dict['pic'] = band.image.url 
 	else:
 		context_dict['pic']= ''
@@ -205,13 +205,23 @@ def edit_band(request, band_name_slug):
 				notify_removed.recipients.add(member)
 			notify_removed.save()	
 
-		band = band_form.save()
+		if band_form.is_valid():
 
-		band_name_slug = band.slug
+			band = band_form.save(commit = False)
 
-		context_dict.update(get_bandDetails(band_name_slug))
+			if 'image' in request.FILES:
+				band.image = request.FILES['image']
 
-		return redirect('/bandmatch/band/'+band_name_slug+'/' )
+			if 'demo' in request.FILES:
+				band.demo = request.FILES['demo']
+
+			band.save()
+
+			band_name_slug = band.slug
+
+			context_dict.update(get_bandDetails(band_name_slug))
+
+			return redirect('/bandmatch/band/'+band_name_slug+'/' )
 
 	return render(request, 'bandmatch/edit_band.html', context_dict)
 
@@ -227,36 +237,35 @@ def add_band(request):
 		#Create the band and take the user to the created bands site
 		band_form = BandForm(request.POST, request.FILES)
 		if band_form.is_valid():
-                    name = band_form.data['name']
-                    if not Band.objects.filter(name=name).exists():
-                        newband = band_form.save(commit=False)
-                        user = request.user
-                        founder = Player.objects.get(user__exact = user)
+			name = band_form.data['name']
+			if not Band.objects.filter(name=name).exists():
+				newband = band_form.save(commit=False)
+				user = request.user
+				founder = Player.objects.get(user__exact = user)
 
-                        newband.save()
+				newband.save()
 
-                        newband.members.add(founder)
+				newband.members.add(founder)
 
-                        if 'image' in request.FILES:
-                                newband.image = request.FILES['image']
-                        else:
-                                newband.image = settings.MEDIA_URL + 'b.png'
+				if 'image' in request.FILES:
+					newband.image = request.FILES['image']
+				else:
+					newband.image = settings.MEDIA_URL + 'b.png'
 
-                        if 'demo' in request.FILES:
-                                newband.demo = request.FILES['demo']
+				if 'demo' in request.FILES:
+					newband.demo = request.FILES['demo']
 
-                        newband.save()
-                                
-
-                        context_dict['created'] = True
-                        #A redirection to the created band's site would be nice
-                        #Is there a more elegant way?
-                        url = '/bandmatch/band/' #Hardcoded! Bad :((
-                        url = url + newband.slug
-                        return HttpResponseRedirect(url)
-		    else:
-                        context_dict['messages'].append("This band name is taken")
-                        context_dict['band_form'] = BandForm()
+				newband.save()
+				        
+				context_dict['created'] = True
+				#A redirection to the created band's site would be nice
+				#Is there a more elegant way?
+				url = '/bandmatch/band/' #Hardcoded! Bad :((
+				url = url + newband.slug
+				return HttpResponseRedirect(url)
+			else:
+				context_dict['messages'].append("This band name is taken")
+				context_dict['band_form'] = BandForm()
 		else:
 			print band_form.errors
 			context_dict['messages'].append("Please include name and description")
@@ -411,46 +420,46 @@ def edit_profile(request, username):
 		player_form.data['instruments'] = instruments_list
 
 		if user.check_password(user_form.data['password']):
-                    if  user_form.is_valid() and player_form.is_valid():
-                        username = user_form.data['username']
-                        if not User.objects.filter(username=username).exists() or username == request.user.username:
-                            
-                            user = user_form.save()
+			if  user_form.is_valid() and player_form.is_valid():
+				username = user_form.data['username']
+				if not User.objects.filter(username=username).exists() or username == request.user.username:
+				    
+					user = user_form.save()
 
-                            user.set_password(user.password)
-                            user.save()
+					user.set_password(user.password)
+					user.save()
 
-                            player = player_form.save(commit=False)
-                            player.user = user  #do we need that here
+					player = player_form.save(commit=False)
+					player.user = user  #do we need that here
 
-                            player.location = player_form.data['location']
-                            #Demo? Picture?
+					player.location = player_form.data['location']
+					#Demo? Picture?
 
-                            if 'image' in request.FILES:
-                                    player.image = request.FILES['image']
-                            elif not player.image:
-								if player.gender == 'm':
-									player.image = settings.STATIC_URL + 'images\m.jpg'
-								elif player.gender == 'f':
-									player.image = settings.STATIC_URL + 'images\pf.jpg'
-								elif player.gender == 'unknown':
-									player.image = settings.STATIC_URL + 'images\o.png'
+					if 'image' in request.FILES:
+						player.image = request.FILES['image']
+					elif not player.image:
+						if player.gender == 'm':
+							player.image = settings.STATIC_URL + 'images\m.jpg'
+						elif player.gender == 'f':
+							player.image = settings.STATIC_URL + 'images\pf.jpg'
+						elif player.gender == 'unknown':
+							player.image = settings.STATIC_URL + 'images\o.png'
 
-                            if 'demo' in request.FILES:
-                                    profile.demo = request.FILES['demo']
+					if 'demo' in request.FILES:
+						profile.demo = request.FILES['demo']
 
-                            player.save()
-                            username = request.POST['username']
-                            password = request.POST['password']
-                            user = authenticate(username=username, password=password)
-                            login(request, user)
+					player.save()
+					username = request.POST['username']
+					password = request.POST['password']
+					user = authenticate(username=username, password=password)
+					login(request, user)
 
-                            context_dict.update(get_profileDetails(request, username))
-                            context_dict['user_form'] = UserForm(instance = user)
-                            context_dict['player_form'] = PlayerForm(instance = player)
-                            changed = True
-                        else:
-                            context_dict['message'] = "Username is taken"
+					context_dict.update(get_profileDetails(request, username))
+					context_dict['user_form'] = UserForm(instance = user)
+					context_dict['player_form'] = PlayerForm(instance = player)
+					changed = True
+				else:
+					context_dict['message'] = "Username is taken"
 
 		else:
 			print user_form.errors, player_form.errors
