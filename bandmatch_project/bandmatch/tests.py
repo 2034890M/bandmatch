@@ -50,8 +50,7 @@ class ModelTestCase(TestCase):
 		self.assertNotEqual(many_instruments.instruments, ["violin", "piano", "drums"])
 
 	#What else to test from the ListField?
-
-
+    
 	#tearDown not needed, way to go Django testcases!
 
 
@@ -77,9 +76,9 @@ class ViewTestSuite(TestCase):
 
 	def test_index_notloggedin_redirects_to_about(self):
 
-		"""
-		Not logged in users accessing the index page should be redirected to the about page.
-		"""
+		
+		#Not logged in users accessing the index page should be redirected to the about page.
+	
 
 		response_index = self.client.get(reverse('index'))
 		#A user who hasn't logged in shouldn't have any response.content
@@ -103,9 +102,9 @@ class ViewTestSuite(TestCase):
 
 
 	def test_your_bands(self):
-		"""
-		The template should contain a list of your bands.
-		"""
+		
+		#The template should contain a list of your bands.
+		
 
 		#login as jaakko
 		login = self.client.login(username="Jaakko", password="123")
@@ -154,20 +153,46 @@ class ViewTestSuite(TestCase):
 		response_index = self.client.get(reverse('index'))
 		self.assertNotIn("TEST MESSAGE", response_index.content)
 
+       
 
-		#Doesn't find the band????
-	def test_automated_mssage_when_added_to_band(self):
+        def test_Profile_updating(self):
+
+##                #login
+                login = self.client.login(username="Jaakko", password="123")
+		self.assertTrue(login)                
+                
+                #check previous details
+		response_Address = self.client.get(reverse('profile', args=["Jaakko"]))
+                self.assertIn("Winton Drive 24, Glasgow", response_Address.content)
+                self.assertIn("I used to play guitar", response_Address.content)                
+                self.assertIn("guitar", response_Address.content)
+                
+##              #change address
+                create_player("Jaakko","The cake is a lie!","Aperture loboratories",["HandHeld quantum tunneling device"],"Winton Drive, Glasgow")
+	
+                #check that the address, instrument and info have changed
+                response_Address = self.client.get(reverse('profile', args=["Jaakko"]))
+                self.assertIn("Winton Drive, Glasgow", response_Address.content)
+                self.assertIn("The cake is a lie!", response_Address.content)
+                
+                self.assertIn("HandHeld quantum tunneling device", response_Address.content)
+
+        def test_automated_mssage_when_added_to_band(self):
 
 		login = self.client.login(username="Jaakko", password="123")
 		self.assertTrue(login)
 
 		create_band("J", "Glasgow", "The best of the best", "Jaakko", "")
 
-		self.client.post(reverse('edit_band', args=["J"]), {'suggestion':"leif"})
-"""
-Create methods below.
+                response_Address = self.client.get(reverse('index'))
+                self.assertIn("J", response_Address.content)
+		
+                
+           
+                
+####Create methods below.
 
-"""
+
 def create_player(username, description, contact_info, instruments, location):
 	user = User.objects.get_or_create(username = username)[0]
 	user.set_password("123")
@@ -176,7 +201,7 @@ def create_player(username, description, contact_info, instruments, location):
 	p.description = description
 	p.contact_info = contact_info
 	for i in instruments:
-		if i not in p.instruments:
+                if i not in p.instruments:
 			p.instruments.append(i)
 	p.location = location
 	p.save()
@@ -219,9 +244,9 @@ def create_reply(advert, replier, content):
 
 
 
-"""
-Helper methods for the models ? Might be unecessary, as they'd most likely be "get" methods, which are 1 line of in themselves anyway.
-"""
+
+#Helper methods for the models ? Might be unecessary, as they'd most likely be "get" methods, which are 1 line of in themselves anyway.
+
 
 
 if __name__ =='__main__':
