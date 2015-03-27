@@ -63,7 +63,6 @@ class ViewTestSuite(TestCase):
 		c = create_player("Carly", "Wee scottish", "Glasgow Uni xxx", ["bagpipes"], "Glasgow")
 		r = create_player("Reni", "Hi", "My irc is Hax0r", [], "Sofia")
 		l = create_player("Leif", "Australian, kangaroo loving guy", "Please print this form, sign it, scan it and send it to my email. And yes, we're studying computing science.", ["Nothing"], "Moolooloo, Australia")
-		testClient = create_player("test", "Use me for client login in tests", "Capiche?", "", "Testland")
 
 		b1 = create_band("The awesomenauts", "Glasgow", "The best of the best", "Jaakko", ["Alex", "Carly", "Leif"])
 		b2 = create_band("My solo career", "Glasgow", "Just me singing", "Reni")
@@ -81,29 +80,90 @@ class ViewTestSuite(TestCase):
 		"""
 		Not logged in users accessing the index page should be redirected to the about page.
 		"""
-		response = self.client.get(reverse('index'))
-		self.assertRedirects(response, reverse('about'), status_code=302, target_status_code=200, msg_prefix='')
+
+		response_index = self.client.get(reverse('index'))
+		#A user who hasn't logged in shouldn't have any response.content
+		self.assertEqual(response_index.content, '')
+
+		self.assertRedirects(response_index, reverse('about'))
+
+	def test_index_loggedin_does_not_redirect(self):
 
 
-	def test_index_loggedin_delivers_data(self):
 
+		testClient = create_player("test", "Use me for client login in tests", "Capiche?", "", "Testland")
+
+		login = self.client.login(username="test", password="123")
+
+		self.assertEqual(login, True)
+
+		response_index = self.client.get(reverse('index'))
+
+		self.assertEqual(response_index.status_code, 200)
+
+
+	def test_your_bands(self):
 		"""
-		Logged in users shouldn't be redirected from the index page. 
+		The template should contain a list of your bands.
 		"""
 
+		#login as jaakko
+		login = self.client.login(username="Jaakko", password="123")
+		self.assertTrue(login)
 
-		tc = self.client.login(user="test", password="123")
-		self.assertTrue(tc.logged_in)
-		response = self.client.get(reverse('index'))
-		self.assertRedirects(response, reverse('about'), status_code=302, target_status_code=200, msg_prefix='')
-
-
-
-
+		#Get the band list. The name should be in the template.
+		response_your_bands = self.client.get(reverse('your_bands'))
+		self.assertIn("The awesomenauts", response_your_bands.content)
 
 
+		#Send a message to yourself, and see that it's displayed correctly.
+	def test_send_message(self):
+
+		login = self.client.login(username="Jaakko", password="123")
+		self.assertTrue(login)	
+
+		#Index page shouldn't have any mention of "TEST MESSAGE"
+		response_index = self.client.get(reverse('index'))
+		self.assertNotIn("TEST MESSAGE", response_index.content)
+
+		#Send a message to yourself
+		self.client.post(reverse('send_message'), {'suggestion':"Jaakko", 'title':"title", 'content': 'TEST MESSAGE'})
+		response_index = self.client.get(reverse('index'))
+
+		#Message should be displayed on index page.
+		self.assertIn("TEST MESSAGE", response_index.content)
 
 
+	def test_index_displays_only_most_recent_messages(self):
+		#login
+		login = self.client.login(username="Jaakko", password="123")
+		self.assertTrue(login)
+
+		#Send yourself a message and see that it's displayed on index page
+		self.client.post(reverse('send_message'), {'suggestion':"Jaakko", 'title':"title", 'content': 'TEST MESSAGE'})
+		response_index = self.client.get(reverse('index'))
+		self.assertIn("TEST MESSAGE", response_index.content)
+
+		#Index page should display the 4 most recent messages. Fill the page with spam
+		self.client.post(reverse('send_message'), {'suggestion':"Jaakko", 'title':"title", 'content': 'SPAM'})
+		self.client.post(reverse('send_message'), {'suggestion':"Jaakko", 'title':"title", 'content': 'SPAM'})
+		self.client.post(reverse('send_message'), {'suggestion':"Jaakko", 'title':"title", 'content': 'SPAM'})
+		self.client.post(reverse('send_message'), {'suggestion':"Jaakko", 'title':"title", 'content': 'SPAM'})
+
+		#The original message should not be displayed on the index page anymore
+		response_index = self.client.get(reverse('index'))
+		self.assertNotIn("TEST MESSAGE", response_index.content)
+
+
+		#Doesn't find the band????
+	def test_automated_mssage_when_added_to_band(self):
+
+		login = self.client.login(username="Jaakko", password="123")
+		self.assertTrue(login)
+
+		create_band("J", "Glasgow", "The best of the best", "Jaakko", "")
+
+		self.client.post(reverse('edit_band', args=["J"]), {'suggestion':"leif"})
 """
 Create methods below.
 
