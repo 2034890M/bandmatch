@@ -363,6 +363,11 @@ def get_profileDetails(request, username):
 		context_dict['email'] = ''
 		context_dict['contact_info'] =  ''
 		context_dict['location'] = player.location
+		#Display the users data to the user
+	if request.user == user:
+		context_dict['email'] = user.email #only displayed for registered users and if user allows it
+		context_dict['contact_info'] = player.contact_info 
+		context_dict['location'] = player.location
 
 	if player.demo:
 		context_dict['demo'] = player.demo.url #not sure if this is how you get a file url
