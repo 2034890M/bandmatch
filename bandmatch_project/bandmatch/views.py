@@ -152,6 +152,8 @@ def edit_band(request, band_name_slug):
 
 	context_dict['is_member']= 0
 
+	context_dict['messages'] = ''
+
 	if request.user.is_authenticated():
 		player = Player.objects.get(user = request.user)
 		if player in members_list:
@@ -184,6 +186,7 @@ def edit_band(request, band_name_slug):
 				if member != new_member_profile:
 					notify_new.recipients.add(member)
 			notify_new.save()
+			context_dict['messages'] = new_member+" has been added to this band"
 
 
 		if request.POST.__contains__('suggest_mem'):
@@ -204,6 +207,7 @@ def edit_band(request, band_name_slug):
 			for member in band.members.all():
 				notify_removed.recipients.add(member)
 			notify_removed.save()	
+			context_dict['messages'] = removed_member+" has been removed from this band"
 
 		if band_form.is_valid():
 
