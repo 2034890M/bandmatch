@@ -9,6 +9,7 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^bandmatch/', include('bandmatch.urls')),
+    url(r'^$', include('bandmatch.urls'))
 )
 
 
