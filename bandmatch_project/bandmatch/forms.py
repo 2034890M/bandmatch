@@ -17,7 +17,7 @@ class PlayerForm(forms.ModelForm):
 	contact_info = forms.CharField(widget=forms.Textarea) #http://stackoverflow.com/questions/7302889/textfield-missing-in-django-forms
 	description = forms.CharField(widget=forms.Textarea)
 	#Add privacy!
-	demo = forms.FileField(required = False)
+	demo = forms.FileField(required = False, help_text = 'Demo. Mp3 file.')
 	instruments = forms.CharField(max_length = 128, initial = 'None', required = False)
 	location = forms.CharField(max_length = 256, initial = 'Nowhere')
 	image = forms.ImageField(required = False)
@@ -35,7 +35,7 @@ class BandForm(forms.ModelForm):
 	description = forms.CharField(widget=forms.Textarea, help_text = 'Description')
 
 
-	demo = forms.FileField(required = False, help_text = 'Demo')
+	demo = forms.FileField(required = False, help_text = 'Demo. Mp3 file.')
 	image = forms.ImageField(required = False, help_text = 'Image')
 
 	class Meta:
