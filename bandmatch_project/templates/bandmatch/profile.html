@@ -24,22 +24,41 @@
 		</div>
 		</form>	
 	</div>
+
+
 	<div class="panel panel-default">
+
 		<div class="panel-heading"> 
-		<h1> {{username}} </h1>
-		<img style="align:right; float:right;" src="{{pic}}" height="200" alt="A picture of {{first_name}}.">
+		<h1> {{username}}   </h1>
 		</div>
 		<div class="panel-body">
 
-	{% if is_user == 1 %} <a href="{% url 'edit_profile' username %}">Edit Your Profile</a> {% endif %}
+{% if is_user == 1 %} <a href="{% url 'edit_profile' username %}">Edit Your Profile</a> {% endif %}	
+	<div class="row">
 	<div class="panel panel-info">
-		<div class="panel-heading">Name</div>
-		<div class="panel-body">{{first_name}} {{last_name}}</div>
-	</div>
+		<div class="panel-heading">{{first_name}} {{last_name}}</div>
+
+		<div class="panel-body" style="max-height:250px; overflow-y: scroll;">
+		<div class="column col-sm-10">
+			{{description}}
+			</div>
+
+
+<div class="column col-sm-2">
 	<div class="panel panel-info">
-		<div class="panel-heading">Description</div>
-		<div class="panel-body">{{description}}</div>
+			<img style="align:right; float:right;" src="{{pic}}" height="200" width = "144" alt="A picture of {{first_name}}.">
+		
 	</div>
+
+	</div>
+
+		</div>
+	
+
+
+</div>
+</div>
+
 	<div class="panel panel-info">
 		<div class="panel-heading">Demo</div>
 		<div class="panel-body">
@@ -54,10 +73,7 @@
 		<div class="panel-heading">Email</div>
 		<div class="panel-body">{{email}}</div>
 	</div>
-	<div class="panel panel-info">
-		<div class="panel-heading">Contact information</div>
-		<div class="panel-body">{{contact_info}}</div>
-	</div>
+
 	<div class="panel panel-info">
 		<div class="panel-heading">Location</div>
 		<div class="panel-body">{{location}}</div>
@@ -86,4 +102,7 @@
 		{{first_name}} is not a member of any bands.
 		{% endif %}
 	</div>
+</div>
+</div>
+
 {% endblock %}

@@ -6,7 +6,6 @@
 {% block body_block %}
 <div class="panel panel-default">
 	<div class="panel-heading">
-	<img style="align:right; float:right;" src="{{pic}}" height="200" alt="A picture of {{name}}.">
 	<h1> {{name}} </h1>
 	</div>
 	<div class="panel-body">
@@ -16,7 +15,16 @@
 		{% endif %}
 		<div class="panel panel-info">
 			<div class="panel-heading">Description</div>
-			<div class="panel-body">{{description}}</div>
+		<div class="row">
+			<div class="panel-body" style="max-height:250px; overflow-y: scroll;">
+			<div class ="column col-sm-10">
+				{{description}}
+			</div>
+			<div class="column col-sm-2">
+							<img style="align:right; float:right;" src="{{pic}}" height="180" width = "144" alt="A picture of {{name}}.">
+			</div>
+		</div>
+		</div>
 		</div>
 		<div class="panel panel-info">
 			<div class="panel-heading">Demo</div>
