@@ -427,7 +427,14 @@ def edit_profile(request, username):
                             #Demo? Picture?
 
                             if 'image' in request.FILES:
-                                    profile.image = request.FILES['image']
+                                    player.image = request.FILES['image']
+                            elif not player.image:
+								if player.gender == 'm':
+									player.image = settings.STATIC_URL + 'images\m.jpg'
+								elif player.gender == 'f':
+									player.image = settings.STATIC_URL + 'images\pf.jpg'
+								elif player.gender == 'unknown':
+									player.image = settings.STATIC_URL + 'images\o.png'
 
                             if 'demo' in request.FILES:
                                     profile.demo = request.FILES['demo']
